@@ -1,0 +1,9 @@
+{
+  "name": "vue-sandbox",
+  "version": "0.0.1",
+  "description": "A sandbox env. for live-testing Vue components.",
+  "main": "main.js",
+  "repository": "git@github.com:mekkanix/vue-sandbox.git",
+  "author": "polo <paulguzdariviere@gmail.com>",
+  "license": "MIT"
+}
