@@ -7,34 +7,41 @@ const RemoveEmptyScriptsPlugin = require("webpack-remove-empty-scripts")
 const CSSMinimizerPlugin = require('css-minimizer-webpack-plugin')
 
 module.exports = {
-  // DevServer
+  // DevServer (local)
   devServer: {
     port: 9000,
     static: [
       {
-        directory: path.join(__dirname, 'public')
-      },
-      {
-        directory: path.join(__dirname, 'dist'),
-        publicPath: '/assets'
+        directory: path.join(__dirname, 'public'),
+        serveIndex: true,
       },
     ],
   },
-  // Build
+  // Build configuration (local + lib)
   mode: 'development',
-  entry: './main.js',
+  entry: {
+    app: './src/app/main.js',
+    lib: './src/lib/main.js',
+  },
+  resolve: {
+    alias: {
+      '@': path.resolve(__dirname, 'src/'),
+      '@app': path.resolve(__dirname, 'src/app/'),
+      '@lib': path.resolve(__dirname, 'src/lib/'),
+      '@public': path.resolve(__dirname, 'public/'),
+    }
+  },
   output: {
-    library: 'VueSandbox',
+    library: 'VStool',
     libraryTarget: 'umd',
     libraryExport: 'default',
     path: path.resolve(__dirname, './dist/'),
-    publicPath: path.resolve(__dirname, './dist/'),
-    filename: 'vue-sandbox.js',
+    filename: 'vue-sandbox.[name].js',
   },
   module: {
     rules: [
       {
-        test: /\.js$/,
+        test: /\.js$/i,
         use: [
           {
             loader: 'babel-loader',
@@ -46,11 +53,15 @@ module.exports = {
         ]
       },
       {
-        test: /\.vue$/,
+        test: /\.vue$/i,
         loader: 'vue-loader',
       },
       {
-        test: /\.sass$/,
+        test: /\.css$/i,
+        use: ["style-loader", "css-loader"],
+      },
+      {
+        test: /\.s[ac]ss$/i,
         use: [
           MiniCssExtractPlugin.loader,
           'css-loader',
@@ -79,7 +90,7 @@ module.exports = {
   plugins: [
     new VueLoaderPlugin(),
     new MiniCssExtractPlugin({
-      filename: 'vue-sandbox.css',
+      filename: 'vue-sandbox.[name].css',
     }),
     new RemoveEmptyScriptsPlugin(),
     autoprefixer,
