@@ -7,14 +7,14 @@
       >
         Vue Sandbox
       </b-navbar-brand>
-      <b-navbar-nav class="ms-auto">
+      <!-- <b-navbar-nav class="ms-auto">
         <b-form-select
           v-model="selectedComponent"
           :options="fmtComponentSelectOpts"
           size="sm"
           class="mt-3"
         ></b-form-select>
-      </b-navbar-nav>
+      </b-navbar-nav> -->
     </b-navbar>
   </div>
 </template>

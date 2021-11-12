@@ -1,11 +1,14 @@
 <template>
   <div class="vs-app-root">
     <MainToolbar :components="components" />
-    <router-view></router-view>
+    <div class="vs-app-content">
+      <router-view></router-view>
+    </div>
   </div>
 </template>
 
 <script>
+import { mapMutations } from 'vuex'
 import MainToolbar from '@app/components/layout/MainToolbar.vue'
 // import VueSandbox from '@/lib/components/VueSandbox.vue'
 // import VSComponentWrapper from '@/lib/components/VSComponentWrapper.vue'
@@ -25,8 +28,14 @@ export default {
     },
   },
 
-  mounted () {
-    console.log(this.components);
+  methods: {
+    ...mapMutations({
+      setUserComponents: 'user_components/setUserComponents',
+    })
+  },
+
+  created () {
+    this.setUserComponents(this.components)
   },
 }
 </script>

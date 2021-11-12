@@ -10,6 +10,9 @@ module.exports = {
   // DevServer (local)
   devServer: {
     port: 9000,
+    historyApiFallback: {
+      index: 'public/index.html',
+    },
     static: [
       {
         directory: path.join(__dirname, 'public'),

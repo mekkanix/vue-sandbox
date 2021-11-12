@@ -1,5 +1,5 @@
 import OverviewView from '@app/views/OverviewView.vue'
-import CollectionView from '@app/views/CollectionView.vue'
+import ComponentView from '@app/views/ComponentView.vue'
 
 export default [
   {
@@ -8,8 +8,8 @@ export default [
     component: OverviewView,
   },
   {
-    path: '/collection',
-    name: 'collection',
-    component: CollectionView,
+    path: '/component/:name',
+    name: 'component',
+    component: ComponentView,
   },
 ]

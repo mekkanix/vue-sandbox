@@ -1,11 +1,11 @@
 <template>
-  <div>
-    Collection
+  <div class="hello">
+    Hey, Toto!
   </div>
 </template>
 
 <script>
 export default {
-  name: 'OverviewView',
+  name: 'HelloToto'
 }
 </script>
