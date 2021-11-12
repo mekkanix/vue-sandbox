@@ -8,12 +8,12 @@
         Vue Sandbox
       </b-navbar-brand>
       <b-navbar-nav class="ms-auto">
-        <b-nav-item :to="{ name: 'home' }">
-          <b-icon-house></b-icon-house>
-        </b-nav-item>
-        <b-nav-item :to="{ name: 'collection' }">
-          Collection
-        </b-nav-item>
+        <b-form-select
+          v-model="selectedComponent"
+          :options="fmtComponentSelectOpts"
+          size="sm"
+          class="mt-3"
+        ></b-form-select>
       </b-navbar-nav>
     </b-navbar>
   </div>
@@ -22,6 +22,26 @@
 <script>
 export default {
   name: 'MainToolbar',
+
+  props: {
+    components: {
+      type: Array,
+      default: [],
+    },
+  },
+
+  data: () => ({
+    selectedComponent: null,
+  }),
+
+  computed: {
+    fmtComponentSelectOpts () {
+      return this.components.map(component => ({
+        value: component.name,
+        text: component.name,
+      }))
+    },
+  },
 }
 </script>
 

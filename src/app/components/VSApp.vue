@@ -1,6 +1,6 @@
 <template>
   <div class="vs-app-root">
-    <MainToolbar />
+    <MainToolbar :components="components" />
     <router-view></router-view>
   </div>
 </template>
