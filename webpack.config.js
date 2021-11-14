@@ -11,7 +11,7 @@ module.exports = {
   devServer: {
     port: 9000,
     historyApiFallback: {
-      index: 'public/index.html',
+      index: 'index.html',
     },
     static: [
       {
@@ -39,6 +39,7 @@ module.exports = {
     libraryTarget: 'umd',
     libraryExport: 'default',
     path: path.resolve(__dirname, './dist/'),
+    publicPath: '/',
     filename: 'vue-sandbox.[name].js',
   },
   module: {
