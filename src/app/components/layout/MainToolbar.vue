@@ -5,7 +5,7 @@
         :to="{ name: 'home' }"
         toggleable="sm"
       >
-        Vue Sandbox
+        VueSandbox
       </b-navbar-brand>
       <!-- <b-navbar-nav class="ms-auto">
         <b-form-select

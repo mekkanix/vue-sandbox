@@ -1,6 +1,13 @@
 <template>
   <div>
-    Component...
+    <b-button
+      variant="outline-primary"
+      size="sm"
+      :to="{ name: 'home' }"
+    >
+      <b-icon-arrow-left />
+      Back to components
+    </b-button>
   </div>
 </template>
 
