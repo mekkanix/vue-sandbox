@@ -129,6 +129,7 @@ export default {
     flex: 0 0 50%
     padding: 10px
     background: #eee
+    border-right: 1px solid #bbb
 
     .vsc-section-title
       margin: 0 0 4px
@@ -142,7 +143,6 @@ export default {
 
       .vsc-section-nodata
         padding: 6px
-        // background: #ddd
         color: #bbb
         text-align: center
 
@@ -166,9 +166,10 @@ export default {
   .vs-component-viewport-container
     padding: 10px
     width: 100%
-    background: #555
+    background: #eee
 
     .vs-component-viewport
+      min-height: 30px
       background: white
-      border: 1px solid #555
+      border: 1px solid #bbb
 </style>
