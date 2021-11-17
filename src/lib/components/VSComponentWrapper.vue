@@ -1,27 +1,35 @@
 <template>
   <div class="vs-component-wrapper">
-    <div class="vs-component-props">
-      <b-list-group>
-        <b-list-group-item
+    <div class="vs-component-infos">
+      <div class="vsc-section vsc-props">
+        <div class="vsc-section-title">Props</div>
+        <div
           v-for="(prop, i) in currentProps"
           :key="i"
+          class="vsc-prop-field"
         >
-          <div class="vsc-prop-name">{{ prop.name }}</div>
-          <template v-if="!['object', 'array',].includes(prop.type)">
-            <input
-              :type="prop.type"
-              v-model="prop.value"
-              class="form-control"
-            >
-          </template>
-          <template v-else>
-            [Object/Array management]
-          </template>
-        </b-list-group-item>
-      </b-list-group>
+          <label>
+            <div class="vsc-prop-name">{{ prop.name }}</div>
+            <div class="vsc-prop-input">
+              <template v-if="!['object', 'array',].includes(prop.type)">
+                <input
+                  :type="prop.type"
+                  v-model="prop.value"
+                  class="form-control"
+                >
+              </template>
+              <template v-else>
+                [Object/Array management]
+              </template>
+            </div>
+          </label>
+        </div>
+      </div>
     </div>
 
-    <div class="vs-component-viewport" v-html="componentHTMLOutput" />
+    <div class="vs-component-viewport-container">
+      <div class="vs-component-viewport" v-html="componentHTMLOutput" />
+    </div>
   </div>
 </template>
 
@@ -110,6 +118,44 @@ export default {
 .vs-component-wrapper
   display: flex
 
-  .vs-component-props
+  .vs-component-infos
     flex: 0 0 50%
+    padding: 10px
+    background: #eee
+
+    .vsc-section-title
+      margin: 0 0 4px
+      font-size: 20px
+      color: white
+      text-align: center
+
+    .vsc-section
+      padding: 5px 10px 10px
+      background: rgba(0,0,0,0.5)
+
+      &.vsc-props
+        .vsc-prop-field
+          background: white
+          padding: 10px
+          border-bottom: 1px solid #ddd
+
+          label
+            display: flex
+            align-items: center
+            width: 100%
+
+            .vsc-prop-name
+              flex: 1 0 25%
+
+            .vsc-prop-input
+              flex: 0 1 75%
+
+  .vs-component-viewport-container
+    padding: 10px
+    width: 100%
+    background: #555
+
+    .vs-component-viewport
+      background: white
+      border: 1px solid #555
 </style>

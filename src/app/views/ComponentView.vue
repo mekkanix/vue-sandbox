@@ -1,6 +1,6 @@
 <template>
   <div class="vs-view component">
-    <div class="vs-head">
+    <div class="vs-content-head">
       <b-button
         variant="outline-primary"
         size="sm"
@@ -11,7 +11,11 @@
       </b-button>
     </div>
     <div class="vs-content">
-      <VSComponentWrapper v-if="currentComponent" :component="currentComponent" />
+      <VSComponentWrapper
+        v-if="currentComponent"
+        :component="currentComponent"
+        class="vs-component-wrapper-root"
+      />
     </div>
   </div>
 </template>
@@ -45,10 +49,10 @@ export default {
 </script>
 
 <style lang="sass" scoped>
-.vs-head
+.vs-content-head
   padding: 10px 20px
   border-bottom: 1px solid #bbb
 
-.vs-content
-  padding: 50px
+.vs-component-wrapper-root
+  height: calc(100vh - 108px)
 </style>
