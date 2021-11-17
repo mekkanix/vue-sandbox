@@ -3,27 +3,34 @@
     <div class="vs-component-infos">
       <div class="vsc-section vsc-props">
         <div class="vsc-section-title">Props</div>
-        <div
-          v-for="(prop, i) in currentProps"
-          :key="i"
-          class="vsc-prop-field"
-        >
-          <label>
-            <div class="vsc-prop-name">{{ prop.name }}</div>
-            <div class="vsc-prop-input">
-              <template v-if="!['object', 'array',].includes(prop.type)">
-                <input
-                  :type="prop.type"
-                  v-model="prop.value"
-                  class="form-control"
-                >
-              </template>
-              <template v-else>
-                [Object/Array management]
-              </template>
-            </div>
-          </label>
-        </div>
+        <template v-if="currentProps.length">
+          <div
+            v-for="(prop, i) in currentProps"
+            :key="i"
+            class="vsc-prop-field"
+          >
+            <label>
+              <div class="vsc-prop-name">{{ prop.name }}</div>
+              <div class="vsc-prop-input">
+                <template v-if="!['object', 'array',].includes(prop.type)">
+                  <input
+                    :type="prop.type"
+                    v-model="prop.value"
+                    class="form-control"
+                  >
+                </template>
+                <template v-else>
+                  [Object/Array management]
+                </template>
+              </div>
+            </label>
+          </div>
+        </template>
+        <template v-else>
+          <div class="vsc-section-nodata">
+            No props defined for this component.
+          </div>
+        </template>
       </div>
     </div>
 
@@ -132,6 +139,12 @@ export default {
     .vsc-section
       padding: 5px 10px 10px
       background: rgba(0,0,0,0.5)
+
+      .vsc-section-nodata
+        padding: 6px
+        // background: #ddd
+        color: #bbb
+        text-align: center
 
       &.vsc-props
         .vsc-prop-field
