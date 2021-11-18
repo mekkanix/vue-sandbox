@@ -34,6 +34,12 @@ export default {
   name: 'HelloWorld',
   props: {
     msg: String,
+    user: {
+      type: Object,
+      default: () => ({
+        name: 'Guest'
+      })
+    }
   }
 }
 </script>

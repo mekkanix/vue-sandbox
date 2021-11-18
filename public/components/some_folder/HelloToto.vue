@@ -20,6 +20,10 @@ export default {
       type: Object,
       required: true,
     },
+    permissions: {
+      type: Array,
+      required: true,
+    },
     firstDate: Date,
     offTestMsg: String,
   }
