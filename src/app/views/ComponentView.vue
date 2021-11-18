@@ -13,7 +13,7 @@
     <div class="vs-content">
       <VSComponentWrapper
         v-if="currentComponent"
-        :component="currentComponent"
+        :vs-component="currentComponent"
         class="vs-component-wrapper-root"
       />
     </div>
@@ -39,7 +39,7 @@ export default {
       for (const c of this.userComponents) {
         const formattedRouteFilepath = formatComponentPath(this.$route.params.name, true)
         if (c.filepath === formattedRouteFilepath) {
-          return c.component
+          return c
         }
       }
       return null

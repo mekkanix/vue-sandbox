@@ -44,6 +44,7 @@ module.exports = {
   },
   module: {
     rules: [
+      // Pkg-related rules (internal)
       {
         test: /\.js$/i,
         use: [
@@ -66,8 +67,34 @@ module.exports = {
       },
       {
         test: /\.s[ac]ss$/i,
+        exclude: [
+          path.join(__dirname, 'public/components/')
+        ],
         use: [
           MiniCssExtractPlugin.loader,
+          'css-loader',
+          {
+            loader: 'sass-loader',
+            options: {
+              sassOptions: {
+                indentedSyntax: true,
+                includePaths: [
+                  path.resolve(__dirname, 'node_modules'),
+                  path.join(__dirname, 'src/assets/sass'),
+                ]
+              },
+            },
+          },
+        ]
+      },
+      // User-provided components-related rules
+      {
+        test: /\.s[ac]ss$/i,
+        exclude: [
+          path.join(__dirname, 'src/')
+        ],
+        use: [
+          'style-loader',
           'css-loader',
           {
             loader: 'sass-loader',
