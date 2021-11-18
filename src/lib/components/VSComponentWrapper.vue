@@ -1,6 +1,7 @@
 <template>
   <div class="vs-component-wrapper">
     <div class="vs-component-infos">
+      <!-- Informations -->
       <div class="vsc-section vsc-meta">
         <div class="vsc-section-title">Informations</div>
         <div class="vsc-section-frame">
@@ -22,26 +23,26 @@
           </div>
         </div>
       </div>
+      <!-- Props -->
       <div class="vsc-section vsc-props">
         <div class="vsc-section-title">Props</div>
-        <template v-if="currentProps.length">
+        <template v-if="currentFieldsProps.length">
           <div
-            v-for="(prop, i) in currentProps"
+            v-for="(prop, i) in currentFieldsProps"
             :key="i"
             class="vsc-prop-field"
           >
             <label>
               <div class="vsc-prop-name">{{ prop.name }}</div>
               <div class="vsc-prop-input">
-                <template v-if="!['object', 'array',].includes(prop.type)">
+                <VSPropObjectField v-if="prop.type === 'object'" :v-model="prop.value" />
+                <VSPropArrayField v-else-if="prop.type === 'array'" :v-model="prop.value" />
+                <template v-else>
                   <input
                     :type="prop.type"
                     v-model="prop.value"
                     class="form-control"
                   >
-                </template>
-                <template v-else>
-                  [Object/Array management]
                 </template>
               </div>
             </label>
@@ -64,9 +65,16 @@
 <script>
 import Vue from 'vue'
 import { formatFromNativeType, } from '@app/helpers/Formatter.js'
+import { isOfPrimitiveType, } from '@app/helpers/Type.js'
+import VSPropObjectField from '@lib/components/VSPropObjectField.vue'
+import VSPropArrayField from '@lib/components/VSPropArrayField.vue'
 
 export default {
   name: 'VSComponentWrapper',
+  components: {
+    VSPropObjectField,
+    VSPropArrayField,
+  },
 
   props: {
     vsComponent: {
@@ -76,26 +84,24 @@ export default {
   },
 
   data: () => ({
-    currentProps: [],
+    currentFieldsProps: [],
   }),
 
   watch: {
     component: {
       handler () {
-        this.currentProps = this.getFmtPropsList()
+        this.currentFieldsProps = this.getFieldsFormattedProps()
       },
       deep: true,
     }
   },
 
   computed: {
-    componentHTMLOutput () {
-      let instanceConfig = {}
-      if (this.currentProps.length) {
-        instanceConfig.propsData = this.getInstanceFmtCurrentProps()
-      }
-      const componentInstance = new Vue(Object.assign(instanceConfig, this.vsComponent.component))
-      return componentInstance.$mount().$el.outerHTML
+    instanceFormattedProps () {
+      return this.currentFieldsProps.reduce((props, currentProp) => ({
+        ...props,
+        [currentProp.name]: this.formatPropValueFromStrType(currentProp.type, currentProp.value),
+      }), {})
     },
     componentMetaInfos () {
       const c = this.vsComponent
@@ -104,30 +110,31 @@ export default {
         { label: 'Filepath', value: c.filepath, },
       ]
     },
+    componentHTMLOutput () {
+      let instanceConfig = {}
+      if (this.currentFieldsProps.length) {
+        instanceConfig.propsData = this.instanceFormattedProps
+      }
+      const componentInstance = new Vue(Object.assign(instanceConfig, this.vsComponent.component))
+      return componentInstance.$mount().$el.outerHTML
+    },
   },
 
   methods: {
-    getFmtPropsList () {
+    getFieldsFormattedProps () {
       let fmtProps = []
       if (this.vsComponent.component.props) {
         for (const [key, value] of Object.entries(this.vsComponent.component.props)) {
           fmtProps.push({
             name: key,
             type: value.type ? formatFromNativeType(value.type) : formatFromNativeType(value),
-            value: value.type ? value.type() : value(),
+            value: this.parsePropValue(value),
           })
         }
       }
       return fmtProps
     },
-    getInstanceFmtCurrentProps () {
-      let fmtProps = {}
-      for (const prop of this.currentProps) {
-        fmtProps[prop.name] = this.getInstanceFmtProp(prop.type, prop.value)
-      }
-      return fmtProps
-    },
-    getInstanceFmtProp (type, value) {
+    formatPropValueFromStrType (type, value) {
       switch (type) {
         case 'string':
           return value
@@ -140,11 +147,36 @@ export default {
         case 'array':
           return []
       }
-    }
+    },
+    getDefaultPropValue (type) {
+      switch (formatFromNativeType(type)) {
+        case 'string':
+          return ''
+        case 'number':
+          return 0
+        case 'date':
+          return new Date()
+        case 'object':
+          return {}
+        case 'array':
+          return []
+      }
+    },
+    parsePropValue (value) {
+      if (isOfPrimitiveType(value)) {
+        return this.getDefaultPropValue(value)
+      } else {
+        if (value.default) {
+          return typeof value.default === 'function' ? value.default() : value.default
+        } else if (value.type) {
+          return this.getDefaultPropValue(value.type)
+        }
+      }
+    },
   },
 
   created () {
-    this.currentProps = this.getFmtPropsList()
+    this.currentFieldsProps = this.getFieldsFormattedProps()
   },
 }
 </script>
@@ -226,6 +258,7 @@ export default {
                 padding: 2px 0
 
           .vsc-meta-label
+            color: #333
             font-weight: 700
 
   .vs-component-viewport-container
