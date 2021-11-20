@@ -1,4 +1,4 @@
-import { NATIVE2STR_TYPES_MAP } from '@app/constants/Types.js'
+import { NATIVE2STR_TYPES_MAP, NATIVE2HTML_FORM_TYPES_MAP, } from '@app/constants/Types.js'
 
 export const formatComponentPath = (cPath, rev = false) => {
   if (!rev) {
@@ -12,6 +12,15 @@ export const formatComponentPath = (cPath, rev = false) => {
 
 export const formatFromNativeType = (type) => {
   for (const [typeName, nType] of Object.entries(NATIVE2STR_TYPES_MAP)) {
+    if (type === nType) {
+      return typeName
+    }
+  }
+  return undefined
+}
+
+export const formatFromStrType = (type) => {
+  for (const [typeName, nType] of Object.entries(NATIVE2HTML_FORM_TYPES_MAP)) {
     if (type === nType) {
       return typeName
     }

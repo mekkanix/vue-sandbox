@@ -1,5 +1,12 @@
 <template>
-  <div></div>
+  <div>
+    <b-form-input
+      type="text"
+      v-model="value"
+      size="sm"
+      class="form-control"
+    />
+  </div>
 </template>
 
 <script>

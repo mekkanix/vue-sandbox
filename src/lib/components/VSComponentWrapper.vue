@@ -35,14 +35,15 @@
             <label>
               <div class="vsc-prop-name">{{ prop.name }}</div>
               <div class="vsc-prop-input">
-                <VSPropObjectField v-if="prop.type === 'object'" :v-model="prop.value" />
-                <VSPropArrayField v-else-if="prop.type === 'array'" :v-model="prop.value" />
+                <VSPropObjectField v-if="prop.type === '$object'" :v-model="prop.value" />
+                <VSPropArrayField v-else-if="prop.type === '$array'" :v-model="prop.value" />
                 <template v-else>
-                  <input
+                  <b-form-input
                     :type="prop.type"
                     v-model="prop.value"
+                    size="sm"
                     class="form-control"
-                  >
+                  />
                 </template>
               </div>
             </label>
@@ -64,7 +65,7 @@
 
 <script>
 import Vue from 'vue'
-import { formatFromNativeType, } from '@app/helpers/Formatter.js'
+import { formatFromNativeType, formatFromStrType, } from '@app/helpers/Formatter.js'
 import { isOfPrimitiveType, } from '@app/helpers/Type.js'
 import VSPropObjectField from '@lib/components/VSPropObjectField.vue'
 import VSPropArrayField from '@lib/components/VSPropArrayField.vue'
@@ -127,7 +128,7 @@ export default {
         for (const [key, value] of Object.entries(this.vsComponent.component.props)) {
           fmtProps.push({
             name: key,
-            type: value.type ? formatFromNativeType(value.type) : formatFromNativeType(value),
+            type: value.type ? this.parseFieldTypeFromPropType(value.type) : this.parseFieldTypeFromPropType(value),
             value: this.parsePropValue(value),
           })
         }
@@ -136,29 +137,29 @@ export default {
     },
     formatPropValueFromStrType (type, value) {
       switch (type) {
-        case 'string':
+        case 'text':
           return value
         case 'number':
           return parseFloat(value)
         case 'date':
           return new Date()
-        case 'object':
+        case '$object':
           return {}
-        case 'array':
+        case '$array':
           return []
       }
     },
     getDefaultPropValue (type) {
       switch (formatFromNativeType(type)) {
-        case 'string':
+        case 'text':
           return ''
         case 'number':
           return 0
         case 'date':
-          return new Date()
-        case 'object':
+          return new Date() // TODO: Convert to date string
+        case '$object':
           return {}
-        case 'array':
+        case '$array':
           return []
       }
     },
@@ -173,6 +174,9 @@ export default {
         }
       }
     },
+    parseFieldTypeFromPropType (type) {
+      return formatFromStrType(type)
+    }
   },
 
   created () {
