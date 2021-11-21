@@ -8,13 +8,14 @@ export default {
 
   props: {
     value: {
-      type: Object,
+      type: Array,
       validator: (value) => {
         if (Array.isArray(value)) {
           return true
         }
         return false
       },
+      default: () => ([]),
     },
   },
 

@@ -1,11 +1,18 @@
 <template>
-  <div>
-    <b-form-input
+  <div class="vsc-prop-field-object">
+    <!-- <b-form-input
       type="text"
       v-model="value"
       size="sm"
       class="form-control"
-    />
+    /> -->
+    <div
+      v-for="(field, i) in localValue"
+      :key="i"
+      class="vsc-prop-field-wrapper"
+    >
+      <input v-model="field.value" />
+    </div>
   </div>
 </template>
 
@@ -22,30 +29,52 @@ export default {
         }
         return false
       },
+      default: () => ({}),
     },
   },
 
   data: () => ({
-    currentValue: null,
+    localValue: [],
   }),
 
   watch: {
     value: {
       handler (value) {
-        this.currentValue = value
+        console.log('ok')
+        this.localValue = this.formatPropToLocalValue(value)
       },
       deep: true,
     },
-    currentValue: {
+    localValue: {
       handler (value) {
-        this.$emit('input', value)
+        // this.$emit('input', this.formatLocalToPropValue(value))
       },
       deep: true,
     },
   },
 
+  methods: {
+    formatPropToLocalValue (propValue) {
+      let localValue = []
+      for (const [name, value] of Object.entries(propValue)) {
+        localValue.push({
+          name: name,
+          value,
+        })
+      }
+      return localValue
+    },
+    formatLocalToPropValue (localValue) {
+      let propValue = {}
+      for (const field of localValue) {
+        propValue[field.name] = field.value
+      }
+      return propValue
+    },
+  },
+
   created () {
-    this.currentValue = this.value
+    this.localValue = this.formatPropToLocalValue(this.value)
   },
 }
 </script>

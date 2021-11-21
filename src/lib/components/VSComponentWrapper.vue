@@ -26,17 +26,17 @@
       <!-- Props -->
       <div class="vsc-section vsc-props">
         <div class="vsc-section-title">Props</div>
-        <template v-if="currentFieldsProps.length">
+        <template v-if="localFieldsProps.length">
           <div
-            v-for="(prop, i) in currentFieldsProps"
+            v-for="(prop, i) in localFieldsProps"
             :key="i"
             class="vsc-prop-field"
           >
             <label>
               <div class="vsc-prop-name">{{ prop.name }}</div>
               <div class="vsc-prop-input">
-                <VSPropObjectField v-if="prop.type === '$object'" :v-model="prop.value" />
-                <VSPropArrayField v-else-if="prop.type === '$array'" :v-model="prop.value" />
+                <VSPropObjectField v-if="prop.type === '$object'" v-model="prop.value" />
+                <VSPropArrayField v-else-if="prop.type === '$array'" v-model="prop.value" />
                 <template v-else>
                   <b-form-input
                     :type="prop.type"
@@ -65,6 +65,7 @@
 
 <script>
 import Vue from 'vue'
+import { DateTime } from 'luxon'
 import { formatFromNativeType, formatFromStrType, } from '@app/helpers/Formatter.js'
 import { isOfPrimitiveType, } from '@app/helpers/Type.js'
 import VSPropObjectField from '@lib/components/VSPropObjectField.vue'
@@ -85,13 +86,13 @@ export default {
   },
 
   data: () => ({
-    currentFieldsProps: [],
+    localFieldsProps: [],
   }),
 
   watch: {
     component: {
       handler () {
-        this.currentFieldsProps = this.getFieldsFormattedProps()
+        this.localFieldsProps = this.getFieldsFormattedProps()
       },
       deep: true,
     }
@@ -99,7 +100,7 @@ export default {
 
   computed: {
     instanceFormattedProps () {
-      return this.currentFieldsProps.reduce((props, currentProp) => ({
+      return this.localFieldsProps.reduce((props, currentProp) => ({
         ...props,
         [currentProp.name]: this.formatPropValueFromStrType(currentProp.type, currentProp.value),
       }), {})
@@ -113,7 +114,7 @@ export default {
     },
     componentHTMLOutput () {
       let instanceConfig = {}
-      if (this.currentFieldsProps.length) {
+      if (this.localFieldsProps.length) {
         instanceConfig.propsData = this.instanceFormattedProps
       }
       const componentInstance = new Vue(Object.assign(instanceConfig, this.vsComponent.component))
@@ -142,11 +143,11 @@ export default {
         case 'number':
           return parseFloat(value)
         case 'date':
-          return new Date()
+          return new Date() // Parse real prop value
         case '$object':
-          return {}
+          return {} // Parse real prop value
         case '$array':
-          return []
+          return [] // Parse real prop value
       }
     },
     getDefaultPropValue (type) {
@@ -156,9 +157,12 @@ export default {
         case 'number':
           return 0
         case 'date':
-          return new Date() // TODO: Convert to date string
+          return DateTime.now().toString()
         case '$object':
-          return {}
+          return {
+            a: 1,
+            b: 2,
+          }
         case '$array':
           return []
       }
@@ -180,7 +184,7 @@ export default {
   },
 
   created () {
-    this.currentFieldsProps = this.getFieldsFormattedProps()
+    this.localFieldsProps = this.getFieldsFormattedProps()
   },
 }
 </script>
