@@ -10,15 +10,11 @@
 <script>
 import { mapMutations } from 'vuex'
 import MainToolbar from '@app/components/layout/MainToolbar.vue'
-// import VueSandbox from '@/lib/components/VueSandbox.vue'
-// import VSComponentWrapper from '@/lib/components/VSComponentWrapper.vue'
 
 export default {
   name: 'VSApp',
   components: {
     MainToolbar,
-    // VueSandbox,
-    // VSComponentWrapper,
   },
 
   props: {
@@ -40,8 +36,22 @@ export default {
 }
 </script>
 
-<style>
-@import 'bootstrap/dist/css/bootstrap.css';
-@import 'bootstrap-vue/dist/bootstrap-vue.css';
-@import 'bootstrap-vue/dist/bootstrap-vue-icons.css';
+<style lang="sass">
+@import 'bootstrap/dist/css/bootstrap.css'
+@import 'bootstrap-vue/dist/bootstrap-vue.css'
+@import 'bootstrap-vue/dist/bootstrap-vue-icons.css'
+
+// BS Overriding
+.form-control:hover,
+.form-control:focus
+  box-shadow: 0 0 0 0.10rem rgb(13 110 253 / 25%)
+.form-control:hover,
+.form-control:focus
+  border-color: #6697de
+
+.form-control.xs
+  min-height: calc(1em + 0.25rem + 1px)
+  padding: 0.15rem 0.25rem
+  font-size: 0.750rem
+  border-radius: 0.18rem
 </style>

@@ -7,7 +7,7 @@
         :to="{ name: 'home' }"
       >
         <b-icon-arrow-left />
-        Back to gallery
+        Gallery
       </b-button>
     </div>
     <div class="vs-content">

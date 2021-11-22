@@ -160,8 +160,17 @@ export default {
           return DateTime.now().toString()
         case '$object':
           return {
-            a: 1,
-            b: 2,
+            field1: 1,
+            field2: 2,
+            field3: 3,
+            fieldGroup1: {
+              nestedField1: 4,
+              nestedField2: 5,
+              nestedFieldGroup1: {
+                nestedNestedField1: 6
+              }
+            },
+            field4: 7,
           }
         case '$array':
           return []
@@ -226,22 +235,26 @@ export default {
       &.vsc-props
         .vsc-prop-field
           background: white
-          padding: 10px
-          border-bottom: 1px solid #ddd
+          border-bottom: 1px solid #bbb
 
           label
             display: flex
-            align-items: center
+            align-items: stretch
             width: 100%
 
             .vsc-prop-name
               flex: 1 0 25%
-              padding-right: 15px
+              display: flex
+              align-items: center
+              justify-content: right
+              padding: 0 8px
               text-align: right
               font-weight: 700
+              border-right: 1px solid #ddd
 
             .vsc-prop-input
               flex: 0 1 75%
+              padding: 8px 8px
 
       &.vsc-meta
         .vsc-section-frame
