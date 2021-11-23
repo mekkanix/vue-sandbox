@@ -10,7 +10,7 @@
     >
       <div v-if="field.type === '$object'" class="vsc-prop-object">
         <div class="vsc-prop-kname-wrapper">
-          <b-icon-caret-down-fill :font-scale="0.7" class="vsc-prop-kname-icn" />
+          <b-icon-caret-down-fill :font-scale="0.7" color="#555" class="vsc-prop-kname-icn" />
           <div class="vsc-prop-kname">{{ field.name }}</div>
         </div>
         <VSPropObjectField
@@ -88,7 +88,7 @@ export default {
 
   methods: {
     formatPropToLocalValue (propValue, nestedValue = null) {
-      let localValue = nestedValue ?? []
+      let localValue = nestedValue ? nestedValue : []
       for (const [name, value] of Object.entries(propValue)) {
         if (typeof value === 'object' && !Array.isArray(value)) { // Object
           localValue.push({
@@ -121,8 +121,21 @@ export default {
 
 <style lang="sass" scoped>
 .vsc-prop-field-object
+  color: #444
+
   &.nested-field
+    position: relative
     padding-left: 10px
+
+    &::after
+      content: ''
+      display: block
+      position: absolute
+      top: 0
+      bottom: 0
+      left: 5px
+      background: #bbb
+      width: 1px
 
   .vsc-prop-primitive
     display: flex
@@ -141,6 +154,7 @@ export default {
       display: flex
       align-items: center
       min-height: 26px
+      color: #444
 
       .vsc-prop-kname-icn
         position: absolute
