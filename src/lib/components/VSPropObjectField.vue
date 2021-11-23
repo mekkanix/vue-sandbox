@@ -8,12 +8,17 @@
       :key="i"
       class="vsc-prop-field-wrapper"
     >
-      <div v-if="field.type === '$object'" class="vsc-prop-object">
-        <div class="vsc-prop-kname-wrapper">
-          <b-icon-caret-down-fill :font-scale="0.7" color="#555" class="vsc-prop-kname-icn" />
-          <div class="vsc-prop-kname">{{ field.name }}</div>
+      <div
+        v-if="field.type === '$object'"
+        class="vsc-prop-object"
+        :class="{ open: field.open, }"
+      >
+        <div class="vsc-prop-object-kname-box" @click="onKeyNameClick(field)">
+          <b-icon-caret-right-fill :font-scale="0.6" color="#555" class="vsc-prop-object-kname-icn" />
+          <div class="vsc-prop-object-kname">{{ field.name }}</div>
         </div>
         <VSPropObjectField
+          v-if="field.open"
           v-model="field.value"
           :depth="depth + 1"
         />
@@ -66,6 +71,7 @@ export default {
   computed: {
     containerClasses () {
       return {
+        open: this.open,
         'nested-field': !!this.depth,
       }
     },
@@ -95,6 +101,7 @@ export default {
             name,
             type: '$object',
             value,
+            open: true,
           })
         } else if (typeof value === 'object' && Array.isArray(value)) { // Array
           // ...
@@ -111,6 +118,9 @@ export default {
       }
       return propValue
     },
+    onKeyNameClick (field) {
+      field.open = !field.open
+    },
   },
 
   created () {
@@ -125,15 +135,15 @@ export default {
 
   &.nested-field
     position: relative
-    padding-left: 10px
+    padding-left: 16px
 
-    &::after
+    &::before
       content: ''
       display: block
       position: absolute
       top: 0
       bottom: 0
-      left: 5px
+      left: 16px
       background: #bbb
       width: 1px
 
@@ -149,18 +159,22 @@ export default {
       width: 100px
 
   .vsc-prop-object
-    .vsc-prop-kname-wrapper
+    &.open > .vsc-prop-object-kname-box > .vsc-prop-object-kname-icn
+      transform: rotate(90deg)
+
+    .vsc-prop-object-kname-box
       position: relative
       display: flex
       align-items: center
       min-height: 26px
       color: #444
+      cursor: pointer
 
-      .vsc-prop-kname-icn
+      .vsc-prop-object-kname-icn
         position: absolute
-        left: 0
-        top: 8px
-      .vsc-prop-kname
+        left: 5px
+        top: 9px
+      .vsc-prop-object-kname
         padding-left: 15px
         font-size: 14px
 

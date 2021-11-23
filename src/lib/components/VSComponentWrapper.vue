@@ -163,7 +163,7 @@ export default {
             field1: 1,
             field2: 2,
             field3: 3,
-            fieldGroup1: {
+            group1: {
               nestedField1: 4,
               nestedField2: 5,
               nestedFieldGroup1: {
@@ -171,6 +171,10 @@ export default {
               }
             },
             field4: 7,
+            group2: {
+              nestedField1: 4,
+              nestedField2: 5,
+            },
           }
         case '$array':
           return []
