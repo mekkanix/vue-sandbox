@@ -1,6 +1,10 @@
 <template>
   <div class="hello">
     Hey, {{ name }}!
+
+    <pre>
+      {{ user }}
+    </pre>
   </div>
 </template>
 

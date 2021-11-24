@@ -35,8 +35,16 @@
             <label>
               <div class="vsc-prop-name">{{ prop.name }}</div>
               <div class="vsc-prop-input">
-                <VSPropObjectField v-if="prop.type === '$object'" v-model="prop.value" />
-                <VSPropArrayField v-else-if="prop.type === '$array'" v-model="prop.value" />
+                <VSPropObjectField
+                  v-if="prop.type === '$object'"
+                  :value="prop.value"
+                  @update-value="onPropObjectValueUpdate"
+                />
+                <VSPropArrayField
+                  v-else-if="prop.type === '$array'"
+                  :value="prop.value"
+                  @update-value="onPropArrayValueUpdate"
+                />
                 <template v-else>
                   <b-form-input
                     :type="prop.type"
@@ -172,8 +180,8 @@ export default {
             },
             field4: 7,
             group2: {
-              nestedField1: 4,
-              nestedField2: 5,
+              nested2Field1: 4,
+              nested2Field2: 5,
             },
           }
         case '$array':
@@ -192,8 +200,14 @@ export default {
       }
     },
     parseFieldTypeFromPropType (type) {
-      return formatFromStrType(type)
-    }
+      return formatFromNativeType(type)
+    },
+    onPropObjectValueUpdate (value) {
+      console.log(value);
+    },
+    onPropArrayValueUpdate (value) {
+      console.log(value);
+    },
   },
 
   created () {

@@ -50,8 +50,8 @@ export default {
   border-color: #6697de
 
 .form-control.xs
-  min-height: calc(1em + 0.25rem + 1px)
-  padding: 0.15rem 0.25rem
+  min-height: calc(1em + 0.15rem + 1px)
+  padding: 0.10rem 0.25rem
   font-size: 0.750rem
   border-radius: 0.18rem
 </style>

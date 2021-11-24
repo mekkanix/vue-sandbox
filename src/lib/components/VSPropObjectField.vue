@@ -19,7 +19,7 @@
         </div>
         <VSPropObjectField
           v-if="field.open"
-          v-model="field.value"
+          v-model="field.rawValue"
           :depth="depth + 1"
         />
       </div>
@@ -40,10 +40,15 @@
         </div>
       </template>
     </div>
+    <span class="vsc-prop-object-add-btn">
+      <b-icon-plus-circle />
+    </span>
   </div>
 </template>
 
 <script>
+import { formatFromStrType, } from '@app/helpers/Formatter.js'
+
 export default {
   name: 'VSPropObjectField',
 
@@ -86,35 +91,51 @@ export default {
     },
     localValue: {
       handler (value) {
-        // this.$emit('input', this.formatLocalToPropValue(value))
+        this.$emit('update-value', this.formatLocalToPropValue(value))
       },
       deep: true,
     },
   },
 
   methods: {
-    formatPropToLocalValue (propValue, nestedValue = null) {
-      let localValue = nestedValue ? nestedValue : []
+    formatPropToLocalValue (propValue) {
+      let fmtValue = []
       for (const [name, value] of Object.entries(propValue)) {
-        if (typeof value === 'object' && !Array.isArray(value)) { // Object
-          localValue.push({
-            name,
-            type: '$object',
-            value,
-            open: true,
-          })
-        } else if (typeof value === 'object' && Array.isArray(value)) { // Array
-          // ...
-        } else { // Primitive
-          localValue.push({ name, type: '$primitive', value, })
+        if (!value._localFormatted) {
+          if (typeof value === 'object' && !Array.isArray(value)) { // Object
+            const row = {
+              name,
+              type: '$object',
+              rawValue: value,
+              value: this.formatPropToLocalValue(value),
+              open: true,
+              _localFormatted: true,
+            }
+            fmtValue.push(row)
+          } else if (typeof value === 'object' && Array.isArray(value)) { // Array
+            // ...
+          } else { // Primitive
+            fmtValue.push({
+              name,
+              type: typeof value,
+              value,
+              _localFormatted: true,
+            })
+          }
         }
       }
-      return localValue
+      return fmtValue
     },
     formatLocalToPropValue (localValue) {
       let propValue = {}
       for (const field of localValue) {
-        propValue[field.name] = field.value
+        if (field.type === '$object') {
+          propValue[field.name] = this.formatLocalToPropValue(field.value)
+        } else if (field.type === '$array') {
+
+        } else {
+          propValue[field.name] = field.value
+        }
       }
       return propValue
     },
@@ -144,7 +165,7 @@ export default {
       top: 0
       bottom: 0
       left: 16px
-      background: #bbb
+      background: #ddd
       width: 1px
 
   .vsc-prop-primitive
@@ -166,16 +187,25 @@ export default {
       position: relative
       display: flex
       align-items: center
-      min-height: 26px
+      min-height: 22px
+      padding-bottom: 1px
       color: #444
       cursor: pointer
 
       .vsc-prop-object-kname-icn
         position: absolute
-        left: 5px
-        top: 9px
+        left: 4px
+        top: 6px
       .vsc-prop-object-kname
         padding-left: 15px
         font-size: 14px
+
+  .vsc-prop-object-add-btn
+    padding-left: 16px
+    color: #777
+    cursor: pointer
+
+    &:hover
+      color: #333
 
 </style>
