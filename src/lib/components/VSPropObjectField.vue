@@ -27,16 +27,38 @@
 
       </template>
       <template v-else>
-        <div class="vsc-prop-primitive">
-          <div class="vsc-prop-name">
-            {{ field.name }}
-          </div>
-          <b-form-input
-            type="text"
-            v-model="field.value"
-            size="sm"
-            class="vsc-prop-value xs"
-          />
+        <div class="vsc-prop-primitive" :class="{ idle: !field._updating, updating: field._updating, }">
+          <template v-if="!field._updating">
+            <div class="vsc-prop-name">
+              {{ field.name }}:
+            </div>
+            <div class="vsc-prop-value">
+              <VSPrimitiveValue
+                :value="field.value"
+                :type="field.type"
+              />
+            </div>
+          </template>
+          <template v-else>
+            <div class="vsc-prop-name">
+              <b-form-input
+                type="text"
+                v-model="field.name"
+                size="sm"
+                class="vsc-prop-name-input xs"
+                placeholder="Name"
+              />:
+            </div>
+            <div class="vsc-prop-value">
+              <b-form-input
+                type="text"
+                v-model="field.value"
+                size="sm"
+                class="vsc-prop-value-input xs"
+                placeholder="Value"
+              />
+            </div>
+          </template>
         </div>
       </template>
     </div>
@@ -51,9 +73,13 @@
 <script>
 import { cloneDeep } from 'lodash'
 import { convertPropObjectToArray, } from '@app/helpers/Formatter.js'
+import VSPrimitiveValue from '@lib/components/VSPrimitiveValue.vue'
 
 export default {
   name: 'VSPropObjectField',
+  components: {
+    VSPrimitiveValue,
+  },
 
   props: {
     value: {
@@ -116,6 +142,7 @@ export default {
     },
     formatPropObjectFields (fields) {
       for (let field of fields) {
+        field._updating = false
         if (field.type === '$object') {
           field.open = true
           this.formatPropObjectFields(field.value)
@@ -126,7 +153,7 @@ export default {
       return fields
     },
     updateValueFromRaw (fields) {
-      let fmtFields = cloneDeep(fields) // avoid infinite watcher's loop when manipulating fields' values
+      let fmtFields = cloneDeep(fields) // avoid watcher's infinite loop while manipulating `localValue` reference (`fields`)
       for (let field of fmtFields) {
         if (field.type === '$object') {
           field.value = this.formatPropToLocalValue(field.rawValue)
@@ -141,7 +168,11 @@ export default {
       field.open = !field.open
     },
     onAddObjectFieldClick () {
-      console.log(this.localValue);
+      this.localValue.push({
+        type: null,
+        name: null,
+        _updating: true,
+      })
     },
   },
 
@@ -178,7 +209,8 @@ export default {
       font-size: 14px
 
     .vsc-prop-value
-      width: 100px
+      // width: 100px
+      font-size: 14px
 
   .vsc-prop-subobject
     &.open > .vsc-prop-object-kname-box > .vsc-prop-object-kname-icn

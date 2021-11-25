@@ -167,8 +167,8 @@ export default {
         case '$object':
           return {
             field1: 1,
-            field2: 2,
-            field3: 3,
+            field2: 'This is a sentence.',
+            field3: true,
             group1: {
               nestedField1: 4,
               nestedField2: 5,

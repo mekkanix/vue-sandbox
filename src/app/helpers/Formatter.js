@@ -1,3 +1,4 @@
+import { DateTime } from 'luxon'
 import { NATIVE2STR_TYPES_MAP, STR2HTML_FORM_TYPES_MAP, } from '@app/constants/Types.js'
 
 export const formatComponentPath = (cPath, rev = false) => {
@@ -28,6 +29,35 @@ export const formatFromStrType = (type) => {
   return undefined
 }
 
+export const parsePrimitiveValue = (value, type) => {
+  switch (type) {
+    case 'boolean':
+      return Boolean(value)
+    case 'string':
+      return value
+    case 'number':
+      return parseInt(value)
+    case 'date':
+      const dt = DateTime.fromISO(value)
+      return dt.toISO()
+  }
+  return value
+}
+
+export const formatPrimitiveValue = (value, type) => {
+  switch (type) {
+    case 'string':
+      return `"${value}"`
+    case 'boolean':
+    case 'number':
+      return value
+    case 'date':
+      const dt = DateTime.fromISO(value)
+      return dt.toISO()
+  }
+  return value
+}
+
 export const convertPropObjectToArray = (obj) => {
   let fmtValue = []
   for (const [name, value] of Object.entries(obj)) {
@@ -45,7 +75,8 @@ export const convertPropObjectToArray = (obj) => {
       fmtValue.push({
         name,
         type: typeof value,
-        value,
+        rawValue: value,
+        value: parsePrimitiveValue(value, typeof value),
       })
     }
   }
