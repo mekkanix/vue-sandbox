@@ -38,6 +38,11 @@
                 :type="field.type"
               />
             </div>
+            <div class="vsc-prop-actions">
+              <div class="vsc-prop-action edit">
+                <b-icon-pencil-fill :scale="0.7" @click="onEditPropClick(field)" />
+              </div>
+            </div>
           </template>
           <template v-else>
             <div class="vsc-prop-name">
@@ -74,6 +79,14 @@
 import { cloneDeep } from 'lodash'
 import { convertPropObjectToArray, } from '@app/helpers/Formatter.js'
 import VSPrimitiveValue from '@lib/components/VSPrimitiveValue.vue'
+
+/**
+ * !!! TO SOLVE !!!
+ * Actually, component's internal values (such as <field>._updating) cannot be updated
+ * from parent component because v-model bindings don't contain this information (simple "key-value" pairs).
+ *
+ * --> Find a way to communicate such informations between components recursion.
+ */
 
 export default {
   name: 'VSPropObjectField',
@@ -114,7 +127,7 @@ export default {
   watch: {
     localValue: {
       handler (value) {
-        const processedValue = this.updateValueFromRaw(value)
+        const processedValue = this.updateValueFromRawValue(value)
         this.$emit('input', this.formatLocalToPropValue(processedValue))
       },
       deep: true,
@@ -142,27 +155,32 @@ export default {
     },
     formatPropObjectFields (fields) {
       for (let field of fields) {
-        field._updating = false
         if (field.type === '$object') {
           field.open = true
           this.formatPropObjectFields(field.value)
         } else if (field.type === '$array') {
 
+        } else {
+          field._updating = false
         }
       }
       return fields
     },
-    updateValueFromRaw (fields) {
+    updateValueFromRawValue (fields) {
       let fmtFields = cloneDeep(fields) // avoid watcher's infinite loop while manipulating `localValue` reference (`fields`)
       for (let field of fmtFields) {
         if (field.type === '$object') {
-          field.value = this.formatPropToLocalValue(field.rawValue)
-          this.updateValueFromRaw(field.value)
+          field.value = convertPropObjectToArray(field.rawValue)
+          this.updateValueFromRawValue(field.value)
         } else if (field.type === '$array') {
 
         }
       }
       return fmtFields
+    },
+    onEditPropClick (field) {
+      this.resetPropFieldsStates()
+      field._updating = true
     },
     onKeyNameClick (field) {
       field.open = !field.open
@@ -173,6 +191,18 @@ export default {
         name: null,
         _updating: true,
       })
+    },
+    resetPropFieldsStates (nestedValue) {
+      let value = nestedValue ?? this.localValue
+      for (let field of value) {
+        if (field.type === '$object') {
+          this.resetPropFieldsStates(field.value)
+        } else if (field.type === '$array') {
+
+        } else {
+          field._updating = false
+        }
+      }
     },
   },
 
@@ -204,13 +234,32 @@ export default {
     display: flex
     align-items: center
 
+    &:hover .vsc-prop-actions
+      display: flex
+
     .vsc-prop-name
       padding: 0 5px 0 15px
       font-size: 14px
 
     .vsc-prop-value
-      // width: 100px
       font-size: 14px
+
+    .vsc-prop-actions
+      display: none
+      padding-left: 5px
+      align-items: center
+
+      .vsc-prop-action
+        height: 21px
+        flex: 0 0 21px
+        display: flex
+        align-items: center
+        justify-content: center
+        color: #777
+        cursor: pointer
+
+        &:hover
+          color: #333
 
   .vsc-prop-subobject
     &.open > .vsc-prop-object-kname-box > .vsc-prop-object-kname-icn
