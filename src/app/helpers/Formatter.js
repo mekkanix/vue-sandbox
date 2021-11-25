@@ -35,7 +35,7 @@ export const convertPropObjectToArray = (obj) => {
       const row = {
         name,
         type: '$object',
-        raw: value,
+        rawValue: value,
         value: convertPropObjectToArray(value),
       }
       fmtValue.push(row)

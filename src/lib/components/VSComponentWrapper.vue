@@ -37,13 +37,11 @@
               <div class="vsc-prop-input">
                 <VSPropObjectField
                   v-if="prop.type === '$object'"
-                  :value="prop.value"
-                  @update-value="prop.value = $event"
+                  v-model="prop.value"
                 />
                 <VSPropArrayField
                   v-else-if="prop.type === '$array'"
-                  :value="prop.value"
-                  @update-value="prop.value = $event"
+                  v-model="prop.value"
                 />
                 <template v-else>
                   <b-form-input
@@ -185,7 +183,7 @@ export default {
             },
           }
         case '$array':
-          return []
+          return ['toto', 'tata', 'titi']
       }
     },
     parsePropValue (value) {

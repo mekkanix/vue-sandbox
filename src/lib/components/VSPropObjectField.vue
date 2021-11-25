@@ -10,7 +10,7 @@
     >
       <div
         v-if="field.type === '$object'"
-        class="vsc-prop-object"
+        class="vsc-prop-subobject"
         :class="{ open: field.open, }"
       >
         <div class="vsc-prop-object-kname-box" @click="onKeyNameClick(field)">
@@ -19,9 +19,8 @@
         </div>
         <VSPropObjectField
           v-show="field.open"
-          :value="field.raw"
+          v-model="field.rawValue"
           :depth="depth + 1"
-          @update-value="field.raw = $event"
         />
       </div>
       <template v-else-if="field.type === '$array'">
@@ -50,6 +49,7 @@
 </template>
 
 <script>
+import { cloneDeep } from 'lodash'
 import { convertPropObjectToArray, } from '@app/helpers/Formatter.js'
 
 export default {
@@ -86,15 +86,10 @@ export default {
   },
 
   watch: {
-    value: {
-      handler (value) {
-        this.localValue = this.formatPropToLocalValue(value)
-      },
-      deep: true,
-    },
     localValue: {
       handler (value) {
-        this.$emit('update-value', this.formatLocalToPropValue(value))
+        const processedValue = this.updateValueFromRaw(value)
+        this.$emit('input', this.formatLocalToPropValue(processedValue))
       },
       deep: true,
     },
@@ -103,34 +98,7 @@ export default {
   methods: {
     formatPropToLocalValue (propValue) {
       let fmtValue = convertPropObjectToArray(propValue)
-      console.log(fmtValue);
       fmtValue = this.formatPropObjectFields(fmtValue)
-      // console.log(fmtValue);
-      // let fmtValue = []
-      // for (const [name, value] of Object.entries(propValue)) {
-      //   if (!value._localFormatted) {
-      //     if (typeof value === 'object' && !Array.isArray(value)) { // Object
-      //       const row = {
-      //         name,
-      //         type: '$object',
-      //         rawValue: value,
-      //         value: this.formatPropToLocalValue(value),
-      //         open: true,
-      //         _localFormatted: true,
-      //       }
-      //       fmtValue.push(row)
-      //     } else if (typeof value === 'object' && Array.isArray(value)) { // Array
-      //       // ...
-      //     } else { // Primitive
-      //       fmtValue.push({
-      //         name,
-      //         type: typeof value,
-      //         value,
-      //         _localFormatted: true,
-      //       })
-      //     }
-      //   }
-      // }
       return fmtValue
     },
     formatLocalToPropValue (localValue) {
@@ -156,6 +124,18 @@ export default {
         }
       }
       return fields
+    },
+    updateValueFromRaw (fields) {
+      let fmtFields = cloneDeep(fields) // avoid infinite watcher's loop when manipulating fields' values
+      for (let field of fmtFields) {
+        if (field.type === '$object') {
+          field.value = this.formatPropToLocalValue(field.rawValue)
+          this.updateValueFromRaw(field.value)
+        } else if (field.type === '$array') {
+
+        }
+      }
+      return fmtFields
     },
     onKeyNameClick (field) {
       field.open = !field.open
@@ -200,7 +180,7 @@ export default {
     .vsc-prop-value
       width: 100px
 
-  .vsc-prop-object
+  .vsc-prop-subobject
     &.open > .vsc-prop-object-kname-box > .vsc-prop-object-kname-icn
       transform: rotate(90deg)
 
