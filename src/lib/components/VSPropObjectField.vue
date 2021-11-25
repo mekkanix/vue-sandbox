@@ -21,6 +21,7 @@
           v-show="field.open"
           v-model="field.rawValue"
           :depth="depth + 1"
+          @edit-prop="onEditNestedProp"
         />
       </div>
       <template v-else-if="field.type === '$array'">
@@ -39,8 +40,8 @@
               />
             </div>
             <div class="vsc-prop-actions">
-              <div class="vsc-prop-action edit">
-                <b-icon-pencil-fill :scale="0.7" @click="onEditPropClick(field)" />
+              <div class="vsc-prop-action edit" @click="onEditPropClick(field)">
+                <b-icon-pencil-fill :scale="0.7" />
               </div>
             </div>
           </template>
@@ -85,7 +86,8 @@ import VSPrimitiveValue from '@lib/components/VSPrimitiveValue.vue'
  * Actually, component's internal values (such as <field>._updating) cannot be updated
  * from parent component because v-model bindings don't contain this information (simple "key-value" pairs).
  *
- * --> Find a way to communicate such informations between components recursion.
+ * --> Find a way to communicate such informations through components' recursion.
+ * [OK] Ascendant communication is done, via child-to-parent custom event.
  */
 
 export default {
@@ -180,7 +182,11 @@ export default {
     },
     onEditPropClick (field) {
       this.resetPropFieldsStates()
+      this.$emit('edit-prop', field)
       field._updating = true
+    },
+    onEditNestedProp () {
+      this.resetPropFieldsStates()
     },
     onKeyNameClick (field) {
       field.open = !field.open
