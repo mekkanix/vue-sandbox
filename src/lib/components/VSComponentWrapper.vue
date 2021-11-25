@@ -38,12 +38,12 @@
                 <VSPropObjectField
                   v-if="prop.type === '$object'"
                   :value="prop.value"
-                  @update-value="onPropObjectValueUpdate"
+                  @update-value="prop.value = $event"
                 />
                 <VSPropArrayField
                   v-else-if="prop.type === '$array'"
                   :value="prop.value"
-                  @update-value="onPropArrayValueUpdate"
+                  @update-value="prop.value = $event"
                 />
                 <template v-else>
                   <b-form-input
@@ -174,7 +174,7 @@ export default {
             group1: {
               nestedField1: 4,
               nestedField2: 5,
-              nestedFieldGroup1: {
+              nestedGroup1: {
                 nestedNestedField1: 6
               }
             },
@@ -203,10 +203,10 @@ export default {
       return formatFromNativeType(type)
     },
     onPropObjectValueUpdate (value) {
-      console.log(value);
+      // console.log(value);
     },
     onPropArrayValueUpdate (value) {
-      console.log(value);
+      // console.log(value);
     },
   },
 

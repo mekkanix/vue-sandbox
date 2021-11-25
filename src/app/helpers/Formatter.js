@@ -27,3 +27,27 @@ export const formatFromStrType = (type) => {
   }
   return undefined
 }
+
+export const convertPropObjectToArray = (obj) => {
+  let fmtValue = []
+  for (const [name, value] of Object.entries(obj)) {
+    if (typeof value === 'object' && !Array.isArray(value)) { // Object
+      const row = {
+        name,
+        type: '$object',
+        raw: value,
+        value: convertPropObjectToArray(value),
+      }
+      fmtValue.push(row)
+    } else if (typeof value === 'object' && Array.isArray(value)) { // Array
+    //   // ...
+    } else { // Primitive
+      fmtValue.push({
+        name,
+        type: typeof value,
+        value,
+      })
+    }
+  }
+  return fmtValue
+}

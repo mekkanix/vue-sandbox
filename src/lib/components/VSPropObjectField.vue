@@ -18,9 +18,10 @@
           <div class="vsc-prop-object-kname">{{ field.name }}</div>
         </div>
         <VSPropObjectField
-          v-if="field.open"
-          v-model="field.rawValue"
+          v-show="field.open"
+          :value="field.raw"
           :depth="depth + 1"
+          @update-value="field.raw = $event"
         />
       </div>
       <template v-else-if="field.type === '$array'">
@@ -40,14 +41,16 @@
         </div>
       </template>
     </div>
-    <span class="vsc-prop-object-add-btn">
-      <b-icon-plus-circle />
-    </span>
+    <div class="vsc-prop-row-actions">
+      <span class="vsc-prop-object-add-btn">
+        <b-icon-plus-circle :scale="0.8" @click="onAddObjectFieldClick" />
+      </span>
+    </div>
   </div>
 </template>
 
 <script>
-import { formatFromStrType, } from '@app/helpers/Formatter.js'
+import { convertPropObjectToArray, } from '@app/helpers/Formatter.js'
 
 export default {
   name: 'VSPropObjectField',
@@ -99,31 +102,35 @@ export default {
 
   methods: {
     formatPropToLocalValue (propValue) {
-      let fmtValue = []
-      for (const [name, value] of Object.entries(propValue)) {
-        if (!value._localFormatted) {
-          if (typeof value === 'object' && !Array.isArray(value)) { // Object
-            const row = {
-              name,
-              type: '$object',
-              rawValue: value,
-              value: this.formatPropToLocalValue(value),
-              open: true,
-              _localFormatted: true,
-            }
-            fmtValue.push(row)
-          } else if (typeof value === 'object' && Array.isArray(value)) { // Array
-            // ...
-          } else { // Primitive
-            fmtValue.push({
-              name,
-              type: typeof value,
-              value,
-              _localFormatted: true,
-            })
-          }
-        }
-      }
+      let fmtValue = convertPropObjectToArray(propValue)
+      console.log(fmtValue);
+      fmtValue = this.formatPropObjectFields(fmtValue)
+      // console.log(fmtValue);
+      // let fmtValue = []
+      // for (const [name, value] of Object.entries(propValue)) {
+      //   if (!value._localFormatted) {
+      //     if (typeof value === 'object' && !Array.isArray(value)) { // Object
+      //       const row = {
+      //         name,
+      //         type: '$object',
+      //         rawValue: value,
+      //         value: this.formatPropToLocalValue(value),
+      //         open: true,
+      //         _localFormatted: true,
+      //       }
+      //       fmtValue.push(row)
+      //     } else if (typeof value === 'object' && Array.isArray(value)) { // Array
+      //       // ...
+      //     } else { // Primitive
+      //       fmtValue.push({
+      //         name,
+      //         type: typeof value,
+      //         value,
+      //         _localFormatted: true,
+      //       })
+      //     }
+      //   }
+      // }
       return fmtValue
     },
     formatLocalToPropValue (localValue) {
@@ -139,8 +146,22 @@ export default {
       }
       return propValue
     },
+    formatPropObjectFields (fields) {
+      for (let field of fields) {
+        if (field.type === '$object') {
+          field.open = true
+          this.formatPropObjectFields(field.value)
+        } else if (field.type === '$array') {
+
+        }
+      }
+      return fields
+    },
     onKeyNameClick (field) {
       field.open = !field.open
+    },
+    onAddObjectFieldClick () {
+      console.log(this.localValue);
     },
   },
 
@@ -200,12 +221,14 @@ export default {
         padding-left: 15px
         font-size: 14px
 
-  .vsc-prop-object-add-btn
-    padding-left: 16px
-    color: #777
-    cursor: pointer
+  .vsc-prop-row-actions
+    margin-left: 15px
 
-    &:hover
-      color: #333
+    .vsc-prop-object-add-btn
+      color: #777
+      cursor: pointer
+
+      &:hover
+        color: #333
 
 </style>
