@@ -20,6 +20,7 @@
         <VSPropObjectField
           v-show="field.open"
           v-model="field.rawValue"
+          :formatted-value="localValue"
           :depth="depth + 1"
           @edit-prop="onEditNestedProp"
         />
@@ -28,8 +29,8 @@
 
       </template>
       <template v-else>
-        <div class="vsc-prop-primitive" :class="{ idle: !field._updating, updating: field._updating, }">
-          <template v-if="!field._updating">
+        <div class="vsc-prop-primitive" :class="{ idle: !field._editing, updating: field._editing, }">
+          <template v-if="!field._editing">
             <div class="vsc-prop-name">
               {{ field.name }}:
             </div>
@@ -83,7 +84,7 @@ import VSPrimitiveValue from '@lib/components/VSPrimitiveValue.vue'
 
 /**
  * !!! TO SOLVE !!!
- * Actually, component's internal values (such as <field>._updating) cannot be updated
+ * Actually, component's internal values (such as <field>._editing) cannot be updated
  * from parent component because v-model bindings don't contain this information (simple "key-value" pairs).
  *
  * --> Find a way to communicate such informations through components' recursion.
@@ -115,6 +116,7 @@ export default {
 
   data: () => ({
     localValue: [],
+    localEditing: false,
   }),
 
   computed: {
@@ -163,7 +165,7 @@ export default {
         } else if (field.type === '$array') {
 
         } else {
-          field._updating = false
+          field._editing = false
         }
       }
       return fields
@@ -183,10 +185,12 @@ export default {
     onEditPropClick (field) {
       this.resetPropFieldsStates()
       this.$emit('edit-prop', field)
-      field._updating = true
+      field._editing = true
+      this.localEditing = true
     },
     onEditNestedProp () {
       this.resetPropFieldsStates()
+      this.localEditing = false
     },
     onKeyNameClick (field) {
       field.open = !field.open
@@ -195,7 +199,7 @@ export default {
       this.localValue.push({
         type: null,
         name: null,
-        _updating: true,
+        _editing: true,
       })
     },
     resetPropFieldsStates (nestedValue) {
@@ -206,7 +210,7 @@ export default {
         } else if (field.type === '$array') {
 
         } else {
-          field._updating = false
+          field._editing = false
         }
       }
     },
