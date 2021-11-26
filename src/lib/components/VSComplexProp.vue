@@ -83,7 +83,7 @@ export default {
 
         } else {
           newField._editing = false
-          newField.value = field.value
+          newField.value = this.convertToFillableValue(field.value)
         }
         fields.push(newField)
       }
@@ -115,6 +115,9 @@ export default {
       }
       return value
     },
+    convertToFillableValue (value) {
+      return value.toString()
+    },
     resetPropFieldsStates (nestedValue) {
       let value = nestedValue ?? this.lcaoValue
       for (let field of value) {
@@ -128,10 +131,10 @@ export default {
       }
     },
     onEditObjectValue (field) {
-      console.log(field);
+      // console.log(field);
     },
     onEditArrayValue (field) {
-      console.log(field);
+      // console.log(field);
     },
   },
 
