@@ -82,3 +82,7 @@ export const convertPropObjectToArray = (obj) => {
   }
   return fmtValue
 }
+
+export const convertPropArrayToObject = (arr) => {
+  return arr
+}

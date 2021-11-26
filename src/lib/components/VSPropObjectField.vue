@@ -4,7 +4,7 @@
     :class="containerClasses"
   >
     <div
-      v-for="(field, i) in localValue"
+      v-for="(field, i) in modelValue"
       :key="i"
       class="vsc-prop-field-wrapper"
     >
@@ -19,10 +19,9 @@
         </div>
         <VSPropObjectField
           v-show="field.open"
-          v-model="field.rawValue"
-          :formatted-value="localValue"
+          v-model="field.value"
           :depth="depth + 1"
-          @edit-prop="onEditNestedProp"
+          @edit-prop="onEditPropClick"
         />
       </div>
       <template v-else-if="field.type === '$array'">
@@ -78,18 +77,7 @@
 </template>
 
 <script>
-import { cloneDeep } from 'lodash'
-import { convertPropObjectToArray, } from '@app/helpers/Formatter.js'
 import VSPrimitiveValue from '@lib/components/VSPrimitiveValue.vue'
-
-/**
- * !!! TO SOLVE !!!
- * Actually, component's internal values (such as <field>._editing) cannot be updated
- * from parent component because v-model bindings don't contain this information (simple "key-value" pairs).
- *
- * --> Find a way to communicate such informations through components' recursion.
- * [OK] Ascendant communication is done, via child-to-parent custom event.
- */
 
 export default {
   name: 'VSPropObjectField',
@@ -99,14 +87,8 @@ export default {
 
   props: {
     value: {
-      type: Object,
-      validator: (value) => {
-        if (typeof value === 'object') {
-          return true
-        }
-        return false
-      },
-      default: () => ({}),
+      type: Array,
+      required: true,
     },
     depth: {
       type: Number,
@@ -115,95 +97,45 @@ export default {
   },
 
   data: () => ({
-    localValue: [],
-    localEditing: false,
+    modelValue: [],
   }),
 
   computed: {
     containerClasses () {
       return {
         open: this.open,
-        'nested-field': !!this.depth,
+        'nested-field': this.depth > 0,
       }
     },
   },
 
   watch: {
-    localValue: {
+    modelValue: {
       handler (value) {
-        const processedValue = this.updateValueFromRawValue(value)
-        this.$emit('input', this.formatLocalToPropValue(processedValue))
+        this.$emit('input', value)
       },
       deep: true,
     },
   },
 
   methods: {
-    formatPropToLocalValue (propValue) {
-      let fmtValue = convertPropObjectToArray(propValue)
-      fmtValue = this.formatPropObjectFields(fmtValue)
-      return fmtValue
-    },
-    formatLocalToPropValue (localValue) {
-      let propValue = {}
-      for (const field of localValue) {
-        if (field.type === '$object') {
-          propValue[field.name] = this.formatLocalToPropValue(field.value)
-        } else if (field.type === '$array') {
-
-        } else {
-          propValue[field.name] = field.value
-        }
-      }
-      return propValue
-    },
-    formatPropObjectFields (fields) {
-      for (let field of fields) {
-        if (field.type === '$object') {
-          field.open = true
-          this.formatPropObjectFields(field.value)
-        } else if (field.type === '$array') {
-
-        } else {
-          field._editing = false
-        }
-      }
-      return fields
-    },
-    updateValueFromRawValue (fields) {
-      let fmtFields = cloneDeep(fields) // avoid watcher's infinite loop while manipulating `localValue` reference (`fields`)
-      for (let field of fmtFields) {
-        if (field.type === '$object') {
-          field.value = convertPropObjectToArray(field.rawValue)
-          this.updateValueFromRawValue(field.value)
-        } else if (field.type === '$array') {
-
-        }
-      }
-      return fmtFields
-    },
     onEditPropClick (field) {
       this.resetPropFieldsStates()
       this.$emit('edit-prop', field)
       field._editing = true
-      this.localEditing = true
-    },
-    onEditNestedProp () {
-      this.resetPropFieldsStates()
-      this.localEditing = false
     },
     onKeyNameClick (field) {
       field.open = !field.open
     },
     onAddObjectFieldClick () {
-      this.localValue.push({
+      this.modelValue.push({
         type: null,
         name: null,
         _editing: true,
       })
     },
     resetPropFieldsStates (nestedValue) {
-      let value = nestedValue ?? this.localValue
+      let value = nestedValue ?? this.modelValue
       for (let field of value) {
         if (field.type === '$object') {
           this.resetPropFieldsStates(field.value)
@@ -217,7 +149,7 @@ export default {
   },
 
   created () {
-    this.localValue = this.formatPropToLocalValue(this.value)
+    this.modelValue = this.value
   },
 }
 </script>

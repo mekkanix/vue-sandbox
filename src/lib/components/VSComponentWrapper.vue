@@ -35,14 +35,20 @@
             <label>
               <div class="vsc-prop-name">{{ prop.name }}</div>
               <div class="vsc-prop-input">
-                <VSPropObjectField
-                  v-if="prop.type === '$object'"
+                <VSComplexProp
+                  v-if="['$object', '$array'].includes(prop.type)"
                   v-model="prop.value"
                 />
+                <!-- <VSPropWrapper v-model="prop.value">
+                  <VSPropObjectField
+                    v-if="prop.type === '$object'"
+                    v-model="prop.value"
+                  />
+                </VSPropWrapper>
                 <VSPropArrayField
                   v-else-if="prop.type === '$array'"
                   v-model="prop.value"
-                />
+                /> -->
                 <template v-else>
                   <b-form-input
                     :type="prop.type"
@@ -72,14 +78,16 @@
 <script>
 import Vue from 'vue'
 import { DateTime } from 'luxon'
-import { formatFromNativeType, formatFromStrType, } from '@app/helpers/Formatter.js'
+import { formatFromNativeType, } from '@app/helpers/Formatter.js'
 import { isOfPrimitiveType, } from '@app/helpers/Type.js'
+import VSComplexProp from '@lib/components/VSComplexProp.vue'
 import VSPropObjectField from '@lib/components/VSPropObjectField.vue'
 import VSPropArrayField from '@lib/components/VSPropArrayField.vue'
 
 export default {
   name: 'VSComponentWrapper',
   components: {
+    VSComplexProp,
     VSPropObjectField,
     VSPropArrayField,
   },
