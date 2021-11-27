@@ -21,7 +21,7 @@
           v-show="field.open"
           v-model="field.value"
           :depth="depth + 1"
-          @edit-prop="onEditPropClick"
+          @field-edit="onEditPropClick"
         />
       </div>
       <template v-else-if="field.type === '$array'">
@@ -51,16 +51,17 @@
                 type="text"
                 v-model="field.name"
                 size="sm"
-                class="vsc-prop-name-input xs"
+                class="vsc-prop-input-name xs"
                 placeholder="Name"
               />:
             </div>
             <div class="vsc-prop-value">
               <b-form-input
                 type="text"
-                v-model="field.value"
+                v-model="field.userValue"
                 size="sm"
-                class="vsc-prop-value-input xs"
+                class="vsc-prop-input-value xs"
+                :class="{ 'errored': field._error }"
                 placeholder="Value"
               />
             </div>
@@ -121,7 +122,7 @@ export default {
   methods: {
     onEditPropClick (field) {
       this.resetPropFieldsStates()
-      this.$emit('edit-prop', field)
+      this.$emit('field-edit', field)
       field._editing = true
     },
     onKeyNameClick (field) {

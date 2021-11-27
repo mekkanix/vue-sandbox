@@ -1,18 +1,14 @@
 <template>
   <span class="vs-primitive-value" :class="cssClasses">
-    {{ formatPrimitiveValue(value, type) }}
+    {{ formattedValue }}
   </span>
 </template>
 
 <script>
-import { formatPrimitiveValue, } from '@app/helpers/Formatter.js'
+import { formatPrimitiveValueToCode, } from '@app/helpers/Formatter.js'
 
 export default {
   name: 'VSPrimitiveValue',
-
-  data: () => ({
-    formatPrimitiveValue: formatPrimitiveValue,
-  }),
 
   props: {
     value: {
@@ -27,6 +23,9 @@ export default {
   },
 
   computed: {
+    formattedValue () {
+      return formatPrimitiveValueToCode(this.value, this.type)
+    },
     cssClasses () {
       return {
         't-boolean': this.type === 'boolean',

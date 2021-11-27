@@ -39,24 +39,13 @@
                   v-if="['$object', '$array'].includes(prop.type)"
                   v-model="prop.value"
                 />
-                <!-- <VSPropWrapper v-model="prop.value">
-                  <VSPropObjectField
-                    v-if="prop.type === '$object'"
-                    v-model="prop.value"
-                  />
-                </VSPropWrapper>
-                <VSPropArrayField
-                  v-else-if="prop.type === '$array'"
+                <b-form-input
+                  v-else
+                  :type="prop.type"
                   v-model="prop.value"
-                /> -->
-                <template v-else>
-                  <b-form-input
-                    :type="prop.type"
-                    v-model="prop.value"
-                    size="sm"
-                    class="form-control"
-                  />
-                </template>
+                  size="sm"
+                  class="form-control"
+                />
               </div>
             </label>
           </div>

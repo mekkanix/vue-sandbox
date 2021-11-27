@@ -3,18 +3,23 @@
     <VSPropObjectField
       v-if="typeof modelValue === 'object' && !Array.isArray(modelValue)"
       v-model="localValue"
-      @edit-prop="onEditObjectValue"
+      @field-edit="onEditObjectFieldValue"
     />
     <VSPropArrayField
       v-else-if="Array.isArray(modelValue)"
       v-model="localValue"
-      @edit-prop="onEditArrayValue"
+      @field-edit="onEditArrayFieldValue"
     />
   </div>
 </template>
 
 <script>
-import { parsePrimitiveValue, convertPropObjectToArray, convertPropArrayToObject, } from '@app/helpers/Formatter.js'
+import {
+  parsePrimitiveValue,
+  formatPrimitiveValueToCode,
+  convertPropObjectToArray,
+  convertPropArrayToObject,
+} from '@app/helpers/Formatter.js'
 import VSPropObjectField from '@lib/components/VSPropObjectField.vue'
 import VSPropArrayField from '@lib/components/VSPropArrayField.vue'
 
@@ -52,7 +57,7 @@ export default {
     },
     localValue: {
       handler (value) {
-        const updatedValue = this.updateValueFromRawValue(value)
+        const updatedValue = this.updateInternalFieldValues(value)
         this.modelValue = this.formatLocalToModelValue(updatedValue)
       },
       deep: true,
@@ -83,7 +88,9 @@ export default {
 
         } else {
           newField._editing = false
-          newField.value = this.convertToFillableValue(field.value)
+          newField._error = false
+          newField.userValue = formatPrimitiveValueToCode(field.rawValue, field.type)
+          newField.value = field.rawValue.toString()
         }
         fields.push(newField)
       }
@@ -102,21 +109,55 @@ export default {
       }
       return propValue
     },
-    updateValueFromRawValue (value) {
-      // let udpatedValue = cloneDeep(value) // avoid watcher's infinite loop while manipulating `modelValue` reference (`fields`)
+    updateInternalFieldValues (value) {
       for (let field of value) {
         if (field.type === '$object') {
-          this.updateValueFromRawValue(field.value)
+          this.updateInternalFieldValues(field.value)
         } else if (field.type === '$array') {
 
-        } else if (field.value !== field.rawValue) {
-          field.rawValue = parsePrimitiveValue(field.value, field.type)
+        } else {
+          if (this.isValidCodeValue(field.userValue)) {
+            field._error = false
+            const parsedValue = JSON.parse(field.userValue)
+            if (parsedValue !== field.value) {
+              field.rawValue = parsedValue
+              field.value = field.rawValue.toString()
+            }
+          } else {
+            field._error = true
+            // field.rawValue = field.value
+            // field.userValue = formatPrimitiveValueToCode(field.rawValue, field.type)
+            // field.value = field.rawValue.toString()
+          }
+          // const isValidValue = this.checkForValidPrimitive(field.userValue)
+          // console.log(isValidValue);
+          // field.rawValue = parsePrimitiveValue(field.value, field.type)
         }
       }
       return value
     },
-    convertToFillableValue (value) {
-      return value.toString()
+    isValidCodeValue (value) {
+      // NOTE: Use this code basis if custom validation processes/errors are needed.
+      // For now, simple `JSON.parse` error handling makes the trick for generic error management.
+      // ("Don't reinvent the wheel, huh?")
+      // ==========
+      /* const stringDelimiters = value.match(/"|'/g)
+      const validString = !!(stringDelimiters && stringDelimiters.length === 2)
+      const validBoolean = ['true', 'false',].includes(value)
+      const validNumber = !isNaN(parseInt(value))
+      console.log(value, validString, validBoolean, validNumber);
+      return validString || validBoolean || validNumber */
+
+      try {
+        JSON.parse(value)
+        return true
+      } catch (e) {
+        return false
+      }
+    },
+    checkForValidPrimitive (value) {
+      console.log(value)
+      // console.log(JSON.parse(value))
     },
     resetPropFieldsStates (nestedValue) {
       let value = nestedValue ?? this.lcaoValue
@@ -130,11 +171,13 @@ export default {
         }
       }
     },
-    onEditObjectValue (field) {
-      // console.log(field);
+    onEditObjectFieldValue (field) {
+      if (field.type === 'string') {
+        // field.value = `"${field.value}"`
+      }
     },
-    onEditArrayValue (field) {
-      // console.log(field);
+    onEditArrayFieldValue (field) {
+      console.log(field);
     },
   },
 

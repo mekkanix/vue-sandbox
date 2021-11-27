@@ -44,13 +44,13 @@ export const parsePrimitiveValue = (value, type) => {
   return value
 }
 
-export const formatPrimitiveValue = (value, type) => {
+export const formatPrimitiveValueToCode = (value, type) => {
   switch (type) {
     case 'string':
       return `"${value}"`
     case 'boolean':
     case 'number':
-      return value
+      return value.toString()
     case 'date':
       const dt = DateTime.fromISO(value)
       return dt.toISO()
