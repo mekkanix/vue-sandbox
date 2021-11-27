@@ -125,13 +125,11 @@ export default {
             }
           } else {
             field._error = true
-            // field.rawValue = field.value
-            // field.userValue = formatPrimitiveValueToCode(field.rawValue, field.type)
-            // field.value = field.rawValue.toString()
           }
-          // const isValidValue = this.checkForValidPrimitive(field.userValue)
-          // console.log(isValidValue);
-          // field.rawValue = parsePrimitiveValue(field.value, field.type)
+          const formattedRawValue = formatPrimitiveValueToCode(field.rawValue, field.type)
+          if (!field._editing  && field.userValue !== formattedRawValue) {
+            field.userValue = formattedRawValue
+          }
         }
       }
       return value
