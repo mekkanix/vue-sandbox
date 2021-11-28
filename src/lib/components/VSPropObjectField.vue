@@ -61,7 +61,7 @@
                 v-model="field.userValue"
                 size="sm"
                 class="vsc-prop-input-value xs"
-                :class="{ 'errored': field._error }"
+                :class="{ 'errored': field._initialized && field._error }"
                 placeholder="Value"
               />
             </div>
@@ -130,9 +130,13 @@ export default {
     },
     onAddObjectFieldClick () {
       this.modelValue.push({
+        _initialized: false,
+        _editing: true,
         type: null,
         name: null,
-        _editing: true,
+        value: null,
+        rawValue: null,
+        userValue: ''
       })
     },
     resetPropFieldsStates (nestedValue) {

@@ -87,6 +87,7 @@ export default {
         } else if (field.type === '$array') {
 
         } else {
+          newField._initialized = true
           newField._editing = false
           newField._error = false
           newField.userValue = formatPrimitiveValueToCode(field.rawValue, field.type)
@@ -116,6 +117,11 @@ export default {
         } else if (field.type === '$array') {
 
         } else {
+          // Initialize field once user fills the value
+          if (!field._initialized && field.userValue !== '') {
+            field._initialized = true
+          }
+          // Handle user input validation & update
           if (this.isValidCodeValue(field.userValue)) {
             field._error = false
             const parsedValue = JSON.parse(field.userValue)
@@ -126,10 +132,10 @@ export default {
             }
           } else {
             field._error = true
-          }
-          const formattedRawValue = formatPrimitiveValueToCode(field.rawValue, field.type)
-          if (!field._editing  && field.userValue !== formattedRawValue) {
-            field.userValue = formattedRawValue
+            const formattedRawValue = formatPrimitiveValueToCode(field.rawValue, field.type)
+            if (!field._editing  && field.userValue !== formattedRawValue) {
+              field.userValue = formattedRawValue
+            }
           }
         }
       }
