@@ -31,7 +31,10 @@
         <div class="vsc-prop-primitive" :class="{ idle: !field._editing, updating: field._editing, }">
           <template v-if="!field._editing">
             <div class="vsc-prop-name">
-              {{ field.name }}:
+              <div class="vsc-prop-name-wrapper">
+                <div class="vsc-prop-name-label">{{ field.name }}</div>
+              </div>
+              <div class="vsc-prop-colon">:</div>
             </div>
             <div class="vsc-prop-value">
               <VSPrimitiveValue
@@ -47,20 +50,27 @@
           </template>
           <template v-else>
             <div class="vsc-prop-name">
-              <b-form-input
-                type="text"
-                v-model="field.name"
-                size="sm"
-                class="vsc-prop-input-name xs"
-                placeholder="Name"
-              />:
+              <div class="vsc-prop-name-wrapper">
+                <b-form-input
+                  type="text"
+                  v-model="field.name"
+                  ref="inputKeyName"
+                  size="sm"
+                  class="vsc-prop-input input-name xs"
+                  :style="keyNameInputStyles"
+                  placeholder="Name"
+                />
+                <div class="vsc-prop-v-input v-input-name" ref="vInputKeyName">{{ field.name }}</div>
+              </div>
+              <div class="vsc-prop-colon">:</div>
             </div>
             <div class="vsc-prop-value">
               <b-form-input
                 type="text"
                 v-model="field.userValue"
+                ref="inputKeyValue"
                 size="sm"
-                class="vsc-prop-input-value xs"
+                class="vsc-prop-input input-value xs"
                 :class="{ 'errored': field._initialized && field._error }"
                 placeholder="Value"
               />
@@ -99,6 +109,8 @@ export default {
 
   data: () => ({
     modelValue: [],
+    initializingField: false,
+    vKeyNameInputWidth: 0,
   }),
 
   computed: {
@@ -108,11 +120,17 @@ export default {
         'nested-field': this.depth > 0,
       }
     },
+    keyNameInputStyles () {
+      return {
+        width: `${this.vKeyNameInputWidth}px`,
+      }
+    },
   },
 
   watch: {
     modelValue: {
       handler (value) {
+        this.handleLocalFieldUpdate(value)
         this.$emit('input', value)
       },
       deep: true,
@@ -120,6 +138,18 @@ export default {
   },
 
   methods: {
+    handleLocalFieldUpdate (localValue) {
+      this.$nextTick(() => {
+        this.handleDOMUpdates()
+      })
+    },
+    handleDOMUpdates () {
+      const $inputKeyName = this.$refs.inputKeyName && this.$refs.inputKeyName.length ? this.$refs.inputKeyName[0].$el : null
+      const $vInputKeyName = this.$refs.vInputKeyName && this.$refs.vInputKeyName.length ? this.$refs.vInputKeyName[0] : null
+      if ($inputKeyName && $vInputKeyName) {
+        this.vKeyNameInputWidth = $vInputKeyName.offsetWidth
+      }
+    },
     onEditPropClick (field) {
       this.resetPropFieldsStates()
       this.$emit('field-edit', field)
@@ -129,15 +159,19 @@ export default {
       field.open = !field.open
     },
     onAddObjectFieldClick () {
-      this.modelValue.push({
-        _initialized: false,
-        _editing: true,
-        type: null,
-        name: null,
-        value: null,
-        rawValue: null,
-        userValue: ''
-      })
+      if (!this.initializingField) {
+        this.resetPropFieldsStates()
+        this.modelValue.push({
+          _initialized: false,
+          _editing: true,
+          type: null,
+          name: null,
+          value: null,
+          rawValue: null,
+          userValue: ''
+        })
+        this.initializingField = true
+      }
     },
     resetPropFieldsStates (nestedValue) {
       let value = nestedValue ?? this.modelValue
@@ -163,6 +197,7 @@ export default {
 .vsc-prop-field-object
   color: #444
 
+  // Nested objects-specific content
   &.nested-field
     position: relative
     padding-left: 16px
@@ -177,21 +212,58 @@ export default {
       background: #ddd
       width: 1px
 
+  // Primitive value
   .vsc-prop-primitive
     display: flex
     align-items: center
+    padding: 0 0 0 15px
+
+    &.idle .vsc-prop-name
+      border: 1px solid transparent
+
+      .vsc-prop-colon
+        margin-left: 1px
+
+      &.vsc-prop-colon
+        margin-left: 1px
 
     &:hover .vsc-prop-actions
       display: flex
 
-    .vsc-prop-name
-      padding: 0 5px 0 15px
+    // - Generic input-related content
+    .vsc-prop-input
+      padding: 0
       font-size: 14px
+    
+    .vsc-prop-v-input
+      position: absolute
+      height: 100%
+      min-width: 50px
+      padding: 0
+      font-size: 14px
+      border: 1px solid transparent
+
+    // - Specific input-related content
+    .vsc-prop-name
+      display: inline-flex
+      align-items: baseline
+      margin: 0 5px 0 0
+      font-size: 14px
+
+      .vsc-prop-name-wrapper
+        position: relative
+        
+        .input-name
+          width: 50px
+        .v-input-name
+          top: 0
+          pointer-events: none
+          visibility: hidden
 
     .vsc-prop-value
       font-size: 14px
 
-      .vsc-prop-input-value
+      .input-value
         &.errored
           border-color: #dd0000
 

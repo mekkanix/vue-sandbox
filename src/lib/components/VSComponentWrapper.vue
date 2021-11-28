@@ -32,22 +32,20 @@
             :key="i"
             class="vsc-prop-field"
           >
-            <label>
-              <div class="vsc-prop-name">{{ prop.name }}</div>
-              <div class="vsc-prop-input">
-                <VSComplexProp
-                  v-if="['$object', '$array'].includes(prop.type)"
-                  v-model="prop.value"
-                />
-                <b-form-input
-                  v-else
-                  :type="prop.type"
-                  v-model="prop.value"
-                  size="sm"
-                  class="form-control"
-                />
-              </div>
-            </label>
+            <div class="vsc-prop-name">{{ prop.name }}</div>
+            <div class="vsc-prop-input">
+              <VSComplexProp
+                v-if="['$object', '$array'].includes(prop.type)"
+                v-model="prop.value"
+              />
+              <b-form-input
+                v-else
+                :type="prop.type"
+                v-model="prop.value"
+                size="sm"
+                class="form-control"
+              />
+            </div>
           </div>
         </template>
         <template v-else>
@@ -247,27 +245,25 @@ export default {
 
       &.vsc-props
         .vsc-prop-field
+          display: flex
+          align-items: stretch
+          width: 100%
           background: white
           border-bottom: 1px solid #bbb
 
-          label
+          .vsc-prop-name
+            flex: 1 0 25%
             display: flex
-            align-items: stretch
-            width: 100%
+            align-items: center
+            justify-content: right
+            padding: 0 8px
+            text-align: right
+            font-weight: 700
+            border-right: 1px solid #ddd
 
-            .vsc-prop-name
-              flex: 1 0 25%
-              display: flex
-              align-items: center
-              justify-content: right
-              padding: 0 8px
-              text-align: right
-              font-weight: 700
-              border-right: 1px solid #ddd
-
-            .vsc-prop-input
-              flex: 0 1 75%
-              padding: 8px 8px
+          .vsc-prop-input
+            flex: 0 1 75%
+            padding: 8px 8px
 
       &.vsc-meta
         .vsc-section-frame
