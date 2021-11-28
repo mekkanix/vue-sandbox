@@ -59,6 +59,7 @@
                   class="vsc-prop-input input-name xs"
                   :style="keyNameInputStyles"
                   placeholder="Name"
+                  autocomplete="none"
                 />
                 <div class="vsc-prop-v-input v-input-name" ref="vInputKeyName">{{ field.name }}</div>
               </div>
@@ -75,6 +76,7 @@
                   :class="{ 'errored': field._initialized && field._error }"
                   :style="keyValueInputStyles"
                   placeholder="Value"
+                  autocomplete="none"
                 />
                 <div class="vsc-prop-v-input v-input-value" ref="vInputKeyValue">{{ field.userValue }}</div>
               </div>
@@ -100,7 +102,7 @@
     </div>
     <div class="vsc-prop-row-actions">
       <span class="vsc-prop-object-add-btn">
-        <b-icon-plus-circle :scale="0.8" @click="onAddObjectFieldClick" />
+        <b-icon-plus-circle :scale="0.8" @click="onAddNewPropClick" />
       </span>
     </div>
   </div>
@@ -175,10 +177,10 @@ export default {
       const $inputKeyValue = this.$refs.inputKeyValue && this.$refs.inputKeyValue.length ? this.$refs.inputKeyValue[0].$el : null
       const $vInputKeyValue = this.$refs.vInputKeyValue && this.$refs.vInputKeyValue.length ? this.$refs.vInputKeyValue[0] : null
       if ($inputKeyName && $vInputKeyName) {
-        this.vKeyNameInputWidth = $vInputKeyName.offsetWidth
+        this.vKeyNameInputWidth = $inputKeyName.value ? $vInputKeyName.offsetWidth : 40
       }
       if ($inputKeyValue && $vInputKeyValue) {
-        this.vKeyValueInputWidth = $vInputKeyValue.offsetWidth
+        this.vKeyValueInputWidth = $inputKeyValue.value ? $vInputKeyValue.offsetWidth : 40
       }
     },
     onEditPropClick (field) {
@@ -200,18 +202,18 @@ export default {
         field._editing = false
       }
     },
-    onAddObjectFieldClick () {
+    onAddNewPropClick () {
       if (!this.initializingField) {
-        this.resetPropFieldsStates()
-        this.modelValue.push({
+        const newField = {
           _initialized: false,
           _editing: true,
           type: null,
           name: null,
           value: null,
           rawValue: null,
-          userValue: ''
-        })
+          userValue: '',
+        }
+        this.modelValue.push(newField)
         this.initializingField = true
       }
     },
@@ -296,8 +298,8 @@ export default {
       .vsc-prop-v-input
         position: absolute
         top: 25px
+        min-width: 40px
         height: 100%
-        min-width: 50px
         padding: 0
         white-space: nowrap
         font-size: 14px
@@ -313,7 +315,7 @@ export default {
       font-size: 14px
         
       .input-name
-        width: 50px
+        // width: 40px
 
     .vsc-prop-value
       flex: 1 1 auto
@@ -323,7 +325,7 @@ export default {
 
       .input-value
         width: auto
-        min-width: 50px
+        // min-width: 40px
 
     .vsc-prop-actions
       display: none

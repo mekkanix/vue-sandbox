@@ -3,7 +3,8 @@
     <VSPropObjectField
       v-if="typeof modelValue === 'object' && !Array.isArray(modelValue)"
       v-model="localValue"
-      @field-edit="onEditObjectFieldValue"
+      @field-edit="onEditObjectField"
+      @field-add="onAddObjectField"
     />
     <VSPropArrayField
       v-else-if="Array.isArray(modelValue)"
@@ -89,7 +90,7 @@ export default {
 
         } else {
           newField._initialized = true
-          newField._editing = false
+          newField._editing = newField._editing ? newField._editing : false
           newField._canceling = false
           newField._error = false
           newField.userValue = formatPrimitiveValueToCode(field.rawValue, field.type)
@@ -190,10 +191,13 @@ export default {
         }
       }
     },
-    onEditObjectFieldValue (field) {
+    onEditObjectField (field) {
       if (field.type === 'string') {
         // field.value = `"${field.value}"`
       }
+    },
+    onAddObjectField (field) {
+      console.log(field);
     },
     onEditArrayFieldValue (field) {
       console.log(field);
