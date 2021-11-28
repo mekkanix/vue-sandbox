@@ -209,6 +209,26 @@ export default {
 }
 </script>
 
+<style lang="sass">
+@import 'bootstrap/dist/css/bootstrap.css'
+@import 'bootstrap-vue/dist/bootstrap-vue.css'
+@import 'bootstrap-vue/dist/bootstrap-vue-icons.css'
+
+// BS Overriding
+.form-control:hover,
+.form-control:focus
+  box-shadow: none
+.form-control:hover,
+.form-control:focus
+  border-color: #6697de
+
+.form-control.xs
+  min-height: calc(1em + 0.15rem + 1px)
+  padding: 0.10rem 0.25rem
+  font-size: 0.750rem
+  border-radius: 0.18rem
+</style>
+
 <style lang="sass" scoped>
 .vs-component-wrapper
   display: flex

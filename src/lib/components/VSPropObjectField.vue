@@ -254,7 +254,19 @@ export default {
       .vsc-prop-input
         padding: 0
         font-size: 14px
-      
+        box-shadow: none
+        border: 1px dashed transparent
+        border-bottom-color: #aeb4ba
+        border-radius: 0
+
+        &:hover,
+        &:focus
+          border-bottom-color: #5687ce
+        
+        &.errored
+          border-bottom-style: solid
+          border-bottom-color: #dd0000
+ 
       .vsc-prop-v-input
         position: absolute
         top: 25px
@@ -286,9 +298,6 @@ export default {
       .input-value
         width: auto
         min-width: 50px
-
-        &.errored
-          border-color: #dd0000
 
     .vsc-prop-actions
       display: none

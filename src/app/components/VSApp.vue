@@ -44,7 +44,7 @@ export default {
 // BS Overriding
 .form-control:hover,
 .form-control:focus
-  box-shadow: 0 0 0 0.10rem rgb(13 110 253 / 25%)
+  box-shadow: none
 .form-control:hover,
 .form-control:focus
   border-color: #6697de
