@@ -187,6 +187,10 @@ export default {
     .vsc-prop-value
       font-size: 14px
 
+      .vsc-prop-input-value
+        &.errored
+          border-color: #dd0000
+
     .vsc-prop-actions
       display: none
       padding-left: 5px

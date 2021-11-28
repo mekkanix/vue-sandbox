@@ -121,6 +121,7 @@ export default {
             const parsedValue = JSON.parse(field.userValue)
             if (parsedValue !== field.value) {
               field.rawValue = parsedValue
+              field.type = typeof parsedValue
               field.value = field.rawValue.toString()
             }
           } else {
