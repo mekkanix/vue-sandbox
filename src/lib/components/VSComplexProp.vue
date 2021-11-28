@@ -14,6 +14,7 @@
 </template>
 
 <script>
+import { clone, } from 'lodash'
 import {
   parsePrimitiveValue,
   formatPrimitiveValueToCode,
@@ -89,9 +90,11 @@ export default {
         } else {
           newField._initialized = true
           newField._editing = false
+          newField._canceling = false
           newField._error = false
           newField.userValue = formatPrimitiveValueToCode(field.rawValue, field.type)
           newField.value = field.rawValue.toString()
+          newField.initialValue = newField.rawValue
         }
         fields.push(newField)
       }
@@ -121,20 +124,31 @@ export default {
           if (!field._initialized && field.userValue !== '') {
             field._initialized = true
           }
-          // Handle user input validation & update
-          if (this.isValidCodeValue(field.userValue)) {
-            field._error = false
-            const parsedValue = JSON.parse(field.userValue)
-            if (parsedValue !== field.value) {
-              field.rawValue = parsedValue
-              field.type = typeof parsedValue
-              field.value = field.rawValue.toString()
-            }
+          if (field._canceling) {
+            field.rawValue = field.initialValue
+            field.value = field.rawValue.toString()
+            field.userValue = formatPrimitiveValueToCode(field.rawValue, field.type)
+            field._canceling = false
           } else {
-            field._error = true
-            const formattedRawValue = formatPrimitiveValueToCode(field.rawValue, field.type)
-            if (!field._editing  && field.userValue !== formattedRawValue) {
-              field.userValue = formattedRawValue
+            // Handle user input validation & update
+            if (this.isValidCodeValue(field.userValue)) {
+              field._error = false
+              const parsedValue = JSON.parse(field.userValue)
+              if (parsedValue !== field.value) {
+                field.rawValue = parsedValue
+                field.type = typeof parsedValue
+                field.value = field.rawValue.toString()
+              }
+              if (!field._editing) {
+                field.initialValue = field.rawValue
+              }
+            } else {
+              field._error = true
+              if (!field._editing) {
+                field.userValue = formatPrimitiveValueToCode(field.initialValue, field.type)
+                field.rawValue = field.initialValue
+                field.value = field.rawValue.toString()
+              }
             }
           }
         }

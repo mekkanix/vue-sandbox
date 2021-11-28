@@ -78,6 +78,11 @@
                 />
                 <div class="vsc-prop-v-input v-input-value" ref="vInputKeyValue">{{ field.userValue }}</div>
               </div>
+              <div class="vsc-prop-actions">
+                <div class="vsc-prop-action edit" @click="onCancelPropEditClick(field)">
+                  <b-icon-x-circle :scale="0.9" />
+                </div>
+              </div>
             </div>
           </template>
         </div>
@@ -92,6 +97,7 @@
 </template>
 
 <script>
+import { clone, } from 'lodash'
 import VSPrimitiveValue from '@lib/components/VSPrimitiveValue.vue'
 
 export default {
@@ -173,6 +179,11 @@ export default {
     onKeyNameClick (field) {
       this.resetPropFieldsStates()
       field.open = !field.open
+    },
+    onCancelPropEditClick (field) {
+      field._editing = false
+      field._canceling = true
+      field.rawValue = field.initialValue
     },
     onAddObjectFieldClick () {
       if (!this.initializingField) {
