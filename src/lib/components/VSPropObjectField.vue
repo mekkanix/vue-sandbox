@@ -31,7 +31,7 @@
         <div class="vsc-prop-primitive" :class="{ idle: !field._editing, updating: field._editing, }">
           <template v-if="!field._editing">
             <div class="vsc-prop-name">
-              <div class="vsc-prop-name-wrapper">
+              <div class="vsc-prop-kv-wrapper vsc-prop-name-wrapper">
                 <div class="vsc-prop-name-label">{{ field.name }}</div>
               </div>
               <div class="vsc-prop-colon">:</div>
@@ -41,16 +41,16 @@
                 :value="field.value"
                 :type="field.type"
               />
-            </div>
-            <div class="vsc-prop-actions">
-              <div class="vsc-prop-action edit" @click="onEditPropClick(field)">
-                <b-icon-pencil-fill :scale="0.7" />
+              <div class="vsc-prop-actions">
+                <div class="vsc-prop-action edit" @click="onEditPropClick(field)">
+                  <b-icon-pencil-fill :scale="0.7" />
+                </div>
               </div>
             </div>
           </template>
           <template v-else>
             <div class="vsc-prop-name">
-              <div class="vsc-prop-name-wrapper">
+              <div class="vsc-prop-kv-wrapper vsc-prop-name-wrapper">
                 <b-form-input
                   type="text"
                   v-model="field.name"
@@ -65,15 +65,19 @@
               <div class="vsc-prop-colon">:</div>
             </div>
             <div class="vsc-prop-value">
-              <b-form-input
-                type="text"
-                v-model="field.userValue"
-                ref="inputKeyValue"
-                size="sm"
-                class="vsc-prop-input input-value xs"
-                :class="{ 'errored': field._initialized && field._error }"
-                placeholder="Value"
-              />
+              <div class="vsc-prop-kv-wrapper vsc-prop-value-wrapper">
+                <b-form-input
+                  type="text"
+                  v-model="field.userValue"
+                  ref="inputKeyValue"
+                  size="sm"
+                  class="vsc-prop-input input-value xs"
+                  :class="{ 'errored': field._initialized && field._error }"
+                  :style="keyValueInputStyles"
+                  placeholder="Value"
+                />
+                <div class="vsc-prop-v-input v-input-value" ref="vInputKeyValue">{{ field.userValue }}</div>
+              </div>
             </div>
           </template>
         </div>
@@ -111,6 +115,7 @@ export default {
     modelValue: [],
     initializingField: false,
     vKeyNameInputWidth: 0,
+    vKeyValueInputWidth: 0,
   }),
 
   computed: {
@@ -123,6 +128,11 @@ export default {
     keyNameInputStyles () {
       return {
         width: `${this.vKeyNameInputWidth}px`,
+      }
+    },
+    keyValueInputStyles () {
+      return {
+        width: `${this.vKeyValueInputWidth}px`,
       }
     },
   },
@@ -146,8 +156,13 @@ export default {
     handleDOMUpdates () {
       const $inputKeyName = this.$refs.inputKeyName && this.$refs.inputKeyName.length ? this.$refs.inputKeyName[0].$el : null
       const $vInputKeyName = this.$refs.vInputKeyName && this.$refs.vInputKeyName.length ? this.$refs.vInputKeyName[0] : null
+      const $inputKeyValue = this.$refs.inputKeyValue && this.$refs.inputKeyValue.length ? this.$refs.inputKeyValue[0].$el : null
+      const $vInputKeyValue = this.$refs.vInputKeyValue && this.$refs.vInputKeyValue.length ? this.$refs.vInputKeyValue[0] : null
       if ($inputKeyName && $vInputKeyName) {
         this.vKeyNameInputWidth = $vInputKeyName.offsetWidth
+      }
+      if ($inputKeyValue && $vInputKeyValue) {
+        this.vKeyValueInputWidth = $vInputKeyValue.offsetWidth
       }
     },
     onEditPropClick (field) {
@@ -214,6 +229,7 @@ export default {
 
   // Primitive value
   .vsc-prop-primitive
+    position: relative
     display: flex
     align-items: center
     padding: 0 0 0 15px
@@ -231,17 +247,24 @@ export default {
       display: flex
 
     // - Generic input-related content
-    .vsc-prop-input
-      padding: 0
-      font-size: 14px
-    
-    .vsc-prop-v-input
-      position: absolute
-      height: 100%
-      min-width: 50px
-      padding: 0
-      font-size: 14px
-      border: 1px solid transparent
+    .vsc-prop-kv-wrapper
+      position: relative
+
+      .vsc-prop-input
+        padding: 0
+        font-size: 14px
+      
+      .vsc-prop-v-input
+        position: absolute
+        top: 25px
+        height: 100%
+        min-width: 50px
+        padding: 0
+        white-space: nowrap
+        font-size: 14px
+        border: 1px solid transparent
+        pointer-events: none
+        visibility: hidden
 
     // - Specific input-related content
     .vsc-prop-name
@@ -249,21 +272,20 @@ export default {
       align-items: baseline
       margin: 0 5px 0 0
       font-size: 14px
-
-      .vsc-prop-name-wrapper
-        position: relative
         
-        .input-name
-          width: 50px
-        .v-input-name
-          top: 0
-          pointer-events: none
-          visibility: hidden
+      .input-name
+        width: 50px
 
     .vsc-prop-value
+      flex: 1 1 auto
+      display: flex
+      position: relative
       font-size: 14px
 
       .input-value
+        width: auto
+        min-width: 50px
+
         &.errored
           border-color: #dd0000
 
