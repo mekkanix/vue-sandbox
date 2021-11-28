@@ -171,6 +171,7 @@ export default {
       field._editing = true
     },
     onKeyNameClick (field) {
+      this.resetPropFieldsStates()
       field.open = !field.open
     },
     onAddObjectFieldClick () {
