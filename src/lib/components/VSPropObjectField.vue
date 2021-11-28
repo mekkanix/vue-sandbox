@@ -79,8 +79,18 @@
                 <div class="vsc-prop-v-input v-input-value" ref="vInputKeyValue">{{ field.userValue }}</div>
               </div>
               <div class="vsc-prop-actions">
-                <div class="vsc-prop-action edit" @click="onCancelPropEditClick(field)">
+                <div
+                  class="vsc-prop-action cancel-edit"
+                  @click="onCancelPropEditClick(field)"
+                >
                   <b-icon-x-circle :scale="0.9" />
+                </div>
+                <div
+                  v-if="!field._error"
+                  class="vsc-prop-action validate-edit"
+                  @click="onValidatePropEditClick(field)"
+                >
+                  <b-icon-check-circle :scale="0.9" />
                 </div>
               </div>
             </div>
@@ -184,6 +194,11 @@ export default {
       field._editing = false
       field._canceling = true
       field.rawValue = field.initialValue
+    },
+    onValidatePropEditClick (field) {
+      if (!field._error) {
+        field._editing = false
+      }
     },
     onAddObjectFieldClick () {
       if (!this.initializingField) {
