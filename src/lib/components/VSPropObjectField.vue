@@ -196,10 +196,12 @@ export default {
       field._editing = false
       field._canceling = true
       field.rawValue = field.initialValue
+      this.initializingField = false
     },
     onValidatePropEditClick (field) {
       if (!field._error) {
         field._editing = false
+        this.initializingField = false
       }
     },
     onAddNewPropClick () {
@@ -228,6 +230,7 @@ export default {
           field._editing = false
         }
       }
+      this.initializingField = false
     },
   },
 

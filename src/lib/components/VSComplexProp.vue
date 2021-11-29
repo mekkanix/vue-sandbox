@@ -115,27 +115,32 @@ export default {
       return propValue
     },
     updateInternalFieldValues (value) {
-      for (let field of value) {
+      for (let [i, field] of value.entries()) {
         if (field.type === '$object') {
           this.updateInternalFieldValues(field.value)
         } else if (field.type === '$array') {
 
         } else {
-          // Initialize field once user fills the value
-          if (!field._initialized && field.userValue !== '') {
+          const strNullValue = 'null'
+          // Initialize field once user fills name & value
+          if (!field._initialized && field.name !== '' && field.userValue !== '') {
             field._initialized = true
           }
           if (field._canceling) {
-            field.rawValue = field.initialValue
-            field.value = field.rawValue.toString()
-            field.userValue = formatPrimitiveValueToCode(field.rawValue, field.type)
-            field._canceling = false
+            if (!field._initialized) {
+              value.splice(i, 1)
+            } else {
+              field.rawValue = field.initialValue
+              field.value = field.rawValue !== null ? field.rawValue.toString() : strNullValue
+              field.type = field.rawValue !== null ? typeof field.rawValue : strNullValue
+              field.userValue = formatPrimitiveValueToCode(field.rawValue, field.type)
+              field._canceling = false
+            }
           } else {
             // Handle user input validations & updates
             if (this.isValidCodeValue(field.userValue)) {
               field._error = false
               const parsedValue = JSON.parse(field.userValue)
-              const strNullValue = 'null'
               field.rawValue = parsedValue
               field.type = parsedValue !== null ? typeof parsedValue : strNullValue
               field.value = parsedValue !== null ? field.rawValue.toString() : strNullValue
