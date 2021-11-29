@@ -80,6 +80,7 @@ export default {
           name: field.name,
           type: field.type,
           rawValue: field.rawValue,
+          _deleting: field._deleting ? field._deleting : false,
         }
         if (field.type === '$object') {
           newField.open = true
@@ -88,11 +89,10 @@ export default {
 
         } else {
           newField._initialized = true
-          newField._editing = newField._editing ? newField._editing : false
-          newField._canceling = newField._canceling ? newField._canceling : false
-          newField._validating = newField._validating ? newField._validating : false
-          newField._deleting = newField._deleting ? newField._deleting : false
-          newField._error = newField._error ? newField._error : false
+          newField._editing = field._editing ? field._editing : false
+          newField._canceling = field._canceling ? field._canceling : false
+          newField._validating = field._validating ? field._validating : false
+          newField._error = field._error ? field._error : false
           newField.userValue = formatPrimitiveValueToCode(field.rawValue, field.type)
           newField.value = field.rawValue !== null ? field.rawValue.toString() : null
           newField.initialName = newField.name
@@ -117,12 +117,17 @@ export default {
     },
     updateInternalFieldValues (value) {
       for (let [i, field] of value.entries()) {
+        // Object field updates
         if (field.type === '$object') {
           this.updateInternalFieldValues(field.value)
+          // - Deleting
+          if (field._deleting) {
+            console.log(field);
+            value.splice(i, 1)
+          }
         } else if (field.type === '$array') {
 
-        } else {
-          // Primitive Field updates
+        } else { // Primitive Field updates
           const strNullValue = 'null'
           // - Initialize if validated
           if (!field._initialized && field._validating) {

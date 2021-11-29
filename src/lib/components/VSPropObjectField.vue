@@ -13,9 +13,19 @@
         class="vsc-prop-subobject"
         :class="{ open: field.open, }"
       >
-        <div class="vsc-prop-object-kname-box" @click="onNestedGroupKeyNameClick(field)">
-          <b-icon-caret-right-fill :font-scale="0.6" color="#555" class="vsc-prop-object-kname-icn" />
-          <div class="vsc-prop-object-kname">{{ field.name }}</div>
+        <div class="vsc-prop-object-kname-box">
+          <div class="vsc-prop-object-kname-wrapper" @click="onNestedGroupKeyNameClick(field)">
+            <b-icon-caret-right-fill :font-scale="0.6" color="#555" class="vsc-prop-object-kname-icn" />
+            <div class="vsc-prop-object-kname">{{ field.name }}</div>
+          </div>
+          <div class="vsc-prop-object-actions">
+            <div
+              class="vsc-prop-action delete"
+              @click="onDeletePropClick(field)"
+            >
+              <b-icon-trash-fill :scale="0.9" />
+            </div>
+          </div>
         </div>
         <VSPropObjectField
           v-show="field.open"
@@ -258,6 +268,7 @@ export default {
       })
     },
     onDeletePropClick (field) {
+      this.resetPropFieldsStates()
       field._deleting = true
     },
     resetPropFieldsStates (nestedValue) {
@@ -291,7 +302,7 @@ export default {
 .vsc-prop-field-object
   color: #444
 
-  // Nested objects-specific content
+  // Nested objects-specific content (via CSS class)
   &.nested-field
     position: relative
     padding-left: 16px
@@ -305,6 +316,44 @@ export default {
       left: 16px
       background: #ddd
       width: 1px
+
+  // Nested objects
+  .vsc-prop-subobject
+    font-size: 14px
+
+    &.open > .vsc-prop-object-kname-box > .vsc-prop-object-kname-wrapper > .vsc-prop-object-kname-icn
+      transform: rotate(90deg)
+
+    .vsc-prop-object-kname-box
+      position: relative
+      display: flex
+      align-items: center
+      min-height: 22px
+      padding-bottom: 1px
+      color: #444
+      cursor: pointer
+
+      &:hover .vsc-prop-object-actions
+        display: flex
+
+      .vsc-prop-object-kname-wrapper
+        .vsc-prop-object-kname-icn
+          position: absolute
+          left: 4px
+          top: 6px
+        .vsc-prop-object-kname
+          padding-left: 15px
+          font-size: 14px
+
+      .vsc-prop-object-actions
+        display: none
+        padding-left: 5px
+        align-items: center
+        color: #777
+        cursor: pointer
+
+        &:hover
+          color: #333
 
   // Primitive value
   .vsc-prop-primitive
@@ -393,27 +442,6 @@ export default {
 
         &:hover
           color: #333
-
-  .vsc-prop-subobject
-    &.open > .vsc-prop-object-kname-box > .vsc-prop-object-kname-icn
-      transform: rotate(90deg)
-
-    .vsc-prop-object-kname-box
-      position: relative
-      display: flex
-      align-items: center
-      min-height: 22px
-      padding-bottom: 1px
-      color: #444
-      cursor: pointer
-
-      .vsc-prop-object-kname-icn
-        position: absolute
-        left: 4px
-        top: 6px
-      .vsc-prop-object-kname
-        padding-left: 15px
-        font-size: 14px
 
   .vsc-prop-row-actions
     margin-left: 15px
