@@ -94,7 +94,7 @@ export default {
           newField._canceling = false
           newField._error = false
           newField.userValue = formatPrimitiveValueToCode(field.rawValue, field.type)
-          newField.value = field.rawValue.toString()
+          newField.value = field.rawValue !== null ? field.rawValue.toString() : null
           newField.initialValue = newField.rawValue
         }
         fields.push(newField)
@@ -131,15 +131,14 @@ export default {
             field.userValue = formatPrimitiveValueToCode(field.rawValue, field.type)
             field._canceling = false
           } else {
-            // Handle user input validation & update
+            // Handle user input validations & updates
             if (this.isValidCodeValue(field.userValue)) {
               field._error = false
               const parsedValue = JSON.parse(field.userValue)
-              if (parsedValue !== field.value) {
-                field.rawValue = parsedValue
-                field.type = typeof parsedValue
-                field.value = field.rawValue.toString()
-              }
+              const strNullValue = 'null'
+              field.rawValue = parsedValue
+              field.type = parsedValue !== null ? typeof parsedValue : strNullValue
+              field.value = parsedValue !== null ? field.rawValue.toString() : strNullValue
               if (!field._editing) {
                 field.initialValue = field.rawValue
               }
@@ -175,12 +174,8 @@ export default {
         return false
       }
     },
-    checkForValidPrimitive (value) {
-      console.log(value)
-      // console.log(JSON.parse(value))
-    },
     resetPropFieldsStates (nestedValue) {
-      let value = nestedValue ?? this.lcaoValue
+      let value = nestedValue ? nestedValue : this.localValue
       for (let field of value) {
         if (field.type === '$object') {
           this.resetPropFieldsStates(field.value)

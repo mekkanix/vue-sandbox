@@ -1,6 +1,6 @@
 <template>
   <span class="vs-primitive-value" :class="cssClasses">
-    {{ formattedValue }}
+    {{ codeFormattedValue }}
   </span>
 </template>
 
@@ -13,21 +13,21 @@ export default {
   props: {
     value: {
       type: [Boolean, String, Number, Date,],
-      required: true,
     },
     type: {
       type: String,
       required: true,
-      validator: value => ['boolean', 'string', 'number', 'date',].includes(value),
+      validator: value => ['boolean', 'string', 'number', 'date', 'null'].includes(value),
     },
   },
 
   computed: {
-    formattedValue () {
+    codeFormattedValue () {
       return formatPrimitiveValueToCode(this.value, this.type)
     },
     cssClasses () {
       return {
+        't-null': this.type === 'null',
         't-boolean': this.type === 'boolean',
         't-string': this.type === 'string',
         't-number': this.type === 'number',
@@ -40,10 +40,12 @@ export default {
 
 <style lang="sass" scoped>
 .vs-primitive-value
+  &.t-null
+    color: #ba4b00
   &.t-boolean
-    color: #7e21be
+    color: #ba4b00
   &.t-string
     color: #148e15
   &.t-number
-    color: #ba5b10
+    color: #ba4b00
 </style>

@@ -218,7 +218,7 @@ export default {
       }
     },
     resetPropFieldsStates (nestedValue) {
-      let value = nestedValue ?? this.modelValue
+      let value = nestedValue ? nestedValue : this.modelValue
       for (let field of value) {
         if (field.type === '$object') {
           this.resetPropFieldsStates(field.value)
@@ -283,18 +283,18 @@ export default {
         padding: 0
         font-size: 14px
         box-shadow: none
-        border: 1px dashed transparent
-        border-bottom-color: #aeb4ba
+        border: 1px solid transparent
+        border-bottom-color: #8e949a
         border-radius: 0
 
         &:hover,
         &:focus
-          border-bottom-color: #5687ce
-        
+          border-bottom-color: #3667ae
+
         &.errored
           border-bottom-style: solid
           border-bottom-color: #dd0000
- 
+
       .vsc-prop-v-input
         position: absolute
         top: 25px
@@ -313,7 +313,7 @@ export default {
       align-items: baseline
       margin: 0 5px 0 0
       font-size: 14px
-        
+
       .input-name
         // width: 40px
 

@@ -168,7 +168,7 @@ export default {
               nestedField1: 4,
               nestedField2: 5,
               nestedGroup1: {
-                nestedNestedField1: 6
+                nestedNestedField1: null,
               }
             },
             field4: 7,

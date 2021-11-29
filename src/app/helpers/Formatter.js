@@ -31,6 +31,8 @@ export const formatFromStrType = (type) => {
 
 export const parsePrimitiveValue = (value, type) => {
   switch (type) {
+    case 'null':
+      return value
     case 'boolean':
       return Boolean(value)
     case 'string':
@@ -46,6 +48,8 @@ export const parsePrimitiveValue = (value, type) => {
 
 export const formatPrimitiveValueToCode = (value, type) => {
   switch (type) {
+    case 'null':
+      return `${value}`
     case 'string':
       return `"${value}"`
     case 'boolean':
@@ -61,20 +65,23 @@ export const formatPrimitiveValueToCode = (value, type) => {
 export const convertPropObjectToArray = (obj) => {
   let fmtValue = []
   for (const [name, value] of Object.entries(obj)) {
-    if (typeof value === 'object' && !Array.isArray(value)) { // Object
-      const row = {
-        name,
-        type: '$object',
-        rawValue: value,
-        value: convertPropObjectToArray(value),
+    const isArray = Array.isArray(value)
+    if (typeof value === 'object' && value !== null) {
+      if (!isArray) { // Object
+        const row = {
+          name,
+          type: '$object',
+          rawValue: value,
+          value: convertPropObjectToArray(value),
+        }
+        fmtValue.push(row)
+      } else { // Array
+        // ...
       }
-      fmtValue.push(row)
-    } else if (typeof value === 'object' && Array.isArray(value)) { // Array
-    //   // ...
     } else { // Primitive
       fmtValue.push({
         name,
-        type: typeof value,
+        type: value !== null ? typeof value : 'null',
         rawValue: value,
         value: parsePrimitiveValue(value, typeof value),
       })
