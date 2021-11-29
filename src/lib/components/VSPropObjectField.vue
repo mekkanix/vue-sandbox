@@ -13,7 +13,7 @@
         class="vsc-prop-subobject"
         :class="{ open: field.open, }"
       >
-        <div class="vsc-prop-object-kname-box" @click="onKeyNameClick(field)">
+        <div class="vsc-prop-object-kname-box" @click="onNestedGroupKeyNameClick(field)">
           <b-icon-caret-right-fill :font-scale="0.6" color="#555" class="vsc-prop-object-kname-icn" />
           <div class="vsc-prop-object-kname">{{ field.name }}</div>
         </div>
@@ -21,7 +21,7 @@
           v-show="field.open"
           v-model="field.value"
           :depth="depth + 1"
-          @edit-field="onEditPropClick"
+          @delete-field="onDeletePropClick"
           @reset-fields="resetPropFieldsStates"
         />
       </div>
@@ -45,6 +45,13 @@
               <div class="vsc-prop-actions">
                 <div class="vsc-prop-action edit" @click="onEditPropClick(field)">
                   <b-icon-pencil-fill :scale="0.7" />
+                </div>
+                <div
+                  v-if="field._initialized"
+                  class="vsc-prop-action delete"
+                  @click="onDeletePropClick(field)"
+                >
+                  <b-icon-trash-fill :scale="0.9" />
                 </div>
               </div>
             </div>
@@ -84,17 +91,24 @@
               </div>
               <div class="vsc-prop-actions">
                 <div
+                  v-if="!field._error"
+                  class="vsc-prop-action validate-edit"
+                  @click="onValidatePropEditClick(field)"
+                >
+                  <b-icon-check-circle :scale="0.9" />
+                </div>
+                <div
                   class="vsc-prop-action cancel-edit"
                   @click="onCancelPropEditClick(field)"
                 >
                   <b-icon-x-circle :scale="0.9" />
                 </div>
                 <div
-                  v-if="!field._error"
-                  class="vsc-prop-action validate-edit"
-                  @click="onValidatePropEditClick(field)"
+                  v-if="field._initialized"
+                  class="vsc-prop-action delete"
+                  @click="onDeletePropClick(field)"
                 >
-                  <b-icon-check-circle :scale="0.9" />
+                  <b-icon-trash-fill :scale="0.9" />
                 </div>
               </div>
             </div>
@@ -198,10 +212,12 @@ export default {
       field._editing = true
       this.$nextTick(() => {
         this.autosetInputsElements()
-        this.$inputKeyValue.focus()
+        if (this.$inputKeyValue) {
+          this.$inputKeyValue.focus()
+        }
       })
     },
-    onKeyNameClick (field) {
+    onNestedGroupKeyNameClick (field) {
       this.resetPropFieldsStates()
       field.open = !field.open
     },
@@ -223,6 +239,7 @@ export default {
         _editing: true,
         _canceling: false,
         _validating: false,
+        _deleting: false,
         _error: false,
         type: null,
         name: null,
@@ -235,8 +252,13 @@ export default {
       this.modelValue.push(newField)
       this.$nextTick(() => {
         this.autosetInputsElements()
-        this.$inputKeyName.focus()
+        if (this.$inputKeyName) {
+          this.$inputKeyName.focus()
+        }
       })
+    },
+    onDeletePropClick (field) {
+      field._deleting = true
     },
     resetPropFieldsStates (nestedValue) {
       let value = nestedValue ? nestedValue : this.modelValue

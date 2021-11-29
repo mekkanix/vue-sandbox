@@ -3,12 +3,10 @@
     <VSPropObjectField
       v-if="typeof modelValue === 'object' && !Array.isArray(modelValue)"
       v-model="localValue"
-      @edit-field="onEditObjectField"
     />
     <VSPropArrayField
       v-else-if="Array.isArray(modelValue)"
       v-model="localValue"
-      @edit-field="onEditArrayFieldValue"
     />
   </div>
 </template>
@@ -93,6 +91,7 @@ export default {
           newField._editing = newField._editing ? newField._editing : false
           newField._canceling = newField._canceling ? newField._canceling : false
           newField._validating = newField._validating ? newField._validating : false
+          newField._deleting = newField._deleting ? newField._deleting : false
           newField._error = newField._error ? newField._error : false
           newField.userValue = formatPrimitiveValueToCode(field.rawValue, field.type)
           newField.value = field.rawValue !== null ? field.rawValue.toString() : null
@@ -123,12 +122,13 @@ export default {
         } else if (field.type === '$array') {
 
         } else {
-          // Field updates handling
+          // Primitive Field updates
           const strNullValue = 'null'
-          // Initialize field once user fills name & value
+          // - Initialize if validated
           if (!field._initialized && field._validating) {
             field._initialized = true
           }
+          // - Canceling (edit)
           if (field._canceling) {
             if (!field._initialized) {
               value.splice(i, 1)
@@ -141,27 +141,32 @@ export default {
               field._canceling = false
             }
           } else {
-            // Handle user input validations & updates
+            // - [continuing] Valid code provided (name & value)
             if (isValidPropName(field.name) && isValidCodeValue(field.userValue)) {
               field._error = false
               const parsedValue = JSON.parse(field.userValue)
               field.rawValue = parsedValue
               field.type = parsedValue !== null ? typeof parsedValue : strNullValue
               field.value = parsedValue !== null ? field.rawValue.toString() : strNullValue
+              // -- Field's values update if editing done
               if (!field._editing) {
                 field.initialName = field.name
                 field.initialValue = field.rawValue
                 field._validating = false
               }
-            } else {
+            } else { // -- Invalid code provided (error)
               field._error = true
-              if (!field._editing) {
+              if (!field._editing) { // --- Reset to field's previous values if editing done
                 field.rawName = field.initialName
                 field.userValue = formatPrimitiveValueToCode(field.initialValue, field.type)
                 field.rawValue = field.initialValue
                 field.value = field.rawValue !== null ? field.rawValue.toString() : null
               }
             }
+          }
+          // - Deleting
+          if (field._deleting) {
+            value.splice(i, 1)
           }
         }
       }
@@ -179,14 +184,6 @@ export default {
         }
       }
     },
-    onEditObjectField (field) {
-      if (field.type === 'string') {
-        // field.value = `"${field.value}"`
-      }
-    },
-    // onAddObjectField (field) {
-    //   console.log(field);
-    // },
     onEditArrayFieldValue (field) {
       console.log(field);
     },
