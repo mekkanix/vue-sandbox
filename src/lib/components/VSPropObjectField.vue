@@ -57,6 +57,7 @@
                   ref="inputKeyName"
                   size="sm"
                   class="vsc-prop-input input-name xs"
+                  :class="{ 'errored': field._initialized && field._error }"
                   :style="keyNameInputStyles"
                   placeholder="Name"
                   autocomplete="none"
@@ -201,6 +202,7 @@ export default {
     onValidatePropEditClick (field) {
       if (!field._error) {
         field._editing = false
+        field._validating = true
         this.initializingField = false
       }
     },
@@ -214,6 +216,8 @@ export default {
           value: null,
           rawValue: null,
           userValue: '',
+          initialName: null,
+          initialValue: null,
         }
         this.modelValue.push(newField)
         this.initializingField = true

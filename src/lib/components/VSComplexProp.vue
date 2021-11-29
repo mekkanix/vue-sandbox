@@ -92,9 +92,11 @@ export default {
           newField._initialized = true
           newField._editing = newField._editing ? newField._editing : false
           newField._canceling = false
+          newField._validating = false
           newField._error = false
           newField.userValue = formatPrimitiveValueToCode(field.rawValue, field.type)
           newField.value = field.rawValue !== null ? field.rawValue.toString() : null
+          newField.initialName = newField.name
           newField.initialValue = newField.rawValue
         }
         fields.push(newField)
@@ -121,9 +123,10 @@ export default {
         } else if (field.type === '$array') {
 
         } else {
+          // Field updates handling
           const strNullValue = 'null'
           // Initialize field once user fills name & value
-          if (!field._initialized && field.name !== '' && field.userValue !== '') {
+          if (!field._initialized && field._validating) {
             field._initialized = true
           }
           if (field._canceling) {
@@ -131,6 +134,7 @@ export default {
               value.splice(i, 1)
             } else {
               field.rawValue = field.initialValue
+              field.name = field.initialName
               field.value = field.rawValue !== null ? field.rawValue.toString() : strNullValue
               field.type = field.rawValue !== null ? typeof field.rawValue : strNullValue
               field.userValue = formatPrimitiveValueToCode(field.rawValue, field.type)
@@ -138,27 +142,33 @@ export default {
             }
           } else {
             // Handle user input validations & updates
-            if (this.isValidCodeValue(field.userValue)) {
+            if (this.isValidPropName(field.name) && this.isValidCodeValue(field.userValue)) {
               field._error = false
               const parsedValue = JSON.parse(field.userValue)
               field.rawValue = parsedValue
               field.type = parsedValue !== null ? typeof parsedValue : strNullValue
               field.value = parsedValue !== null ? field.rawValue.toString() : strNullValue
               if (!field._editing) {
+                field.initialName = field.name
                 field.initialValue = field.rawValue
+                field._validating = false
               }
             } else {
               field._error = true
               if (!field._editing) {
+                field.rawName = field.initialName
                 field.userValue = formatPrimitiveValueToCode(field.initialValue, field.type)
                 field.rawValue = field.initialValue
-                field.value = field.rawValue.toString()
+                field.value = field.rawValue !== null ? field.rawValue.toString() : null
               }
             }
           }
         }
       }
       return value
+    },
+    isValidPropName (name) {
+      return name !== null ? name.toString().search(/[a-z]/i) !== -1 : false
     },
     isValidCodeValue (value) {
       // NOTE: Use this code basis if custom validation processes/errors are needed.
