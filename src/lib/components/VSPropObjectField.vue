@@ -21,7 +21,8 @@
           v-show="field.open"
           v-model="field.value"
           :depth="depth + 1"
-          @field-edit="onEditPropClick"
+          @edit-field="onEditPropClick"
+          @reset-fields="resetPropFieldsStates"
         />
       </div>
       <template v-else-if="field.type === '$array'">
@@ -59,7 +60,7 @@
                   class="vsc-prop-input input-name xs"
                   :class="{ 'errored': field._initialized && field._error }"
                   :style="keyNameInputStyles"
-                  placeholder="Name"
+                  placeholder="name"
                   autocomplete="none"
                 />
                 <div class="vsc-prop-v-input v-input-name" ref="vInputKeyName">{{ field.name }}</div>
@@ -76,7 +77,7 @@
                   class="vsc-prop-input input-value xs"
                   :class="{ 'errored': field._initialized && field._error }"
                   :style="keyValueInputStyles"
-                  placeholder="Value"
+                  placeholder="value"
                   autocomplete="none"
                 />
                 <div class="vsc-prop-v-input v-input-value" ref="vInputKeyValue">{{ field.userValue }}</div>
@@ -111,6 +112,7 @@
 
 <script>
 import { clone, } from 'lodash'
+import { isValidPropName, isValidCodeValue, } from '@app/helpers/Validator.js'
 import VSPrimitiveValue from '@lib/components/VSPrimitiveValue.vue'
 
 export default {
@@ -132,7 +134,10 @@ export default {
 
   data: () => ({
     modelValue: [],
-    initializingField: false,
+    $inputKeyName: null,
+    $inputKeyValue: null,
+    $vInputKeyName: null,
+    $vInputKeyValue: null,
     vKeyNameInputWidth: 0,
     vKeyValueInputWidth: 0,
   }),
@@ -159,6 +164,7 @@ export default {
   watch: {
     modelValue: {
       handler (value) {
+        this.autosetInputsElements()
         this.handleLocalFieldUpdate(value)
         this.$emit('input', value)
       },
@@ -167,26 +173,30 @@ export default {
   },
 
   methods: {
+    autosetInputsElements () {
+      this.$nextTick(() => {
+        this.$inputKeyName = this.$refs.inputKeyName && this.$refs.inputKeyName.length ? this.$refs.inputKeyName[0].$el : null
+        this.$inputKeyValue = this.$refs.inputKeyValue && this.$refs.inputKeyValue.length ? this.$refs.inputKeyValue[0].$el : null
+        this.$vInputKeyName = this.$refs.vInputKeyName && this.$refs.vInputKeyName.length ? this.$refs.vInputKeyName[0] : null
+        this.$vInputKeyValue = this.$refs.vInputKeyValue && this.$refs.vInputKeyValue.length ? this.$refs.vInputKeyValue[0] : null
+      })
+    },
     handleLocalFieldUpdate (localValue) {
       this.$nextTick(() => {
         this.handleDOMUpdates()
       })
     },
     handleDOMUpdates () {
-      const $inputKeyName = this.$refs.inputKeyName && this.$refs.inputKeyName.length ? this.$refs.inputKeyName[0].$el : null
-      const $vInputKeyName = this.$refs.vInputKeyName && this.$refs.vInputKeyName.length ? this.$refs.vInputKeyName[0] : null
-      const $inputKeyValue = this.$refs.inputKeyValue && this.$refs.inputKeyValue.length ? this.$refs.inputKeyValue[0].$el : null
-      const $vInputKeyValue = this.$refs.vInputKeyValue && this.$refs.vInputKeyValue.length ? this.$refs.vInputKeyValue[0] : null
-      if ($inputKeyName && $vInputKeyName) {
-        this.vKeyNameInputWidth = $inputKeyName.value ? $vInputKeyName.offsetWidth : 40
+      if (this.$inputKeyName && this.$vInputKeyName) {
+        this.vKeyNameInputWidth = this.$inputKeyName.value ? this.$vInputKeyName.offsetWidth : 40
       }
-      if ($inputKeyValue && $vInputKeyValue) {
-        this.vKeyValueInputWidth = $inputKeyValue.value ? $vInputKeyValue.offsetWidth : 40
+      if (this.$inputKeyValue && this.$vInputKeyValue) {
+        this.vKeyValueInputWidth = this.$inputKeyValue.value ? this.$vInputKeyValue.offsetWidth : 40
       }
     },
     onEditPropClick (field) {
       this.resetPropFieldsStates()
-      this.$emit('field-edit', field)
+      this.$emit('edit-field', field)
       field._editing = true
     },
     onKeyNameClick (field) {
@@ -197,44 +207,49 @@ export default {
       field._editing = false
       field._canceling = true
       field.rawValue = field.initialValue
-      this.initializingField = false
     },
     onValidatePropEditClick (field) {
       if (!field._error) {
         field._editing = false
         field._validating = true
-        this.initializingField = false
       }
     },
     onAddNewPropClick () {
-      if (!this.initializingField) {
-        const newField = {
-          _initialized: false,
-          _editing: true,
-          type: null,
-          name: null,
-          value: null,
-          rawValue: null,
-          userValue: '',
-          initialName: null,
-          initialValue: null,
-        }
-        this.modelValue.push(newField)
-        this.initializingField = true
+      this.resetPropFieldsStates()
+      const newField = {
+        _initialized: false,
+        _editing: true,
+        _canceling: false,
+        _validating: false,
+        _error: false,
+        type: null,
+        name: null,
+        value: null,
+        rawValue: null,
+        userValue: '',
+        initialName: null,
+        initialValue: null,
       }
+      this.modelValue.push(newField)
     },
     resetPropFieldsStates (nestedValue) {
       let value = nestedValue ? nestedValue : this.modelValue
-      for (let field of value) {
+      for (let [i, field] of value.entries()) {
         if (field.type === '$object') {
           this.resetPropFieldsStates(field.value)
         } else if (field.type === '$array') {
 
         } else {
           field._editing = false
+
+          if (!field._initialized && (!isValidPropName(field.name) || !isValidCodeValue(field.userValue))) {
+            value.splice(i, 1)
+          } else {
+            field._initialized = true
+          }
         }
       }
-      this.initializingField = false
+      this.$emit('reset-fields')
     },
   },
 

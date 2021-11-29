@@ -23,7 +23,9 @@ export default {
 
   computed: {
     codeFormattedValue () {
-      return formatPrimitiveValueToCode(this.value, this.type)
+      // This is needed because passing an empty string "" to a prop makes Vue convert it to `true`
+      const value = this.value === true && this.type === 'string' ? '' : this.value
+      return formatPrimitiveValueToCode(value, this.type)
     },
     cssClasses () {
       return {

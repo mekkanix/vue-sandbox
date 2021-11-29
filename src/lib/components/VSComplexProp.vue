@@ -3,13 +3,12 @@
     <VSPropObjectField
       v-if="typeof modelValue === 'object' && !Array.isArray(modelValue)"
       v-model="localValue"
-      @field-edit="onEditObjectField"
-      @field-add="onAddObjectField"
+      @edit-field="onEditObjectField"
     />
     <VSPropArrayField
       v-else-if="Array.isArray(modelValue)"
       v-model="localValue"
-      @field-edit="onEditArrayFieldValue"
+      @edit-field="onEditArrayFieldValue"
     />
   </div>
 </template>
@@ -22,6 +21,7 @@ import {
   convertPropObjectToArray,
   convertPropArrayToObject,
 } from '@app/helpers/Formatter.js'
+import { isValidPropName, isValidCodeValue, } from '@app/helpers/Validator.js'
 import VSPropObjectField from '@lib/components/VSPropObjectField.vue'
 import VSPropArrayField from '@lib/components/VSPropArrayField.vue'
 
@@ -91,9 +91,9 @@ export default {
         } else {
           newField._initialized = true
           newField._editing = newField._editing ? newField._editing : false
-          newField._canceling = false
-          newField._validating = false
-          newField._error = false
+          newField._canceling = newField._canceling ? newField._canceling : false
+          newField._validating = newField._validating ? newField._validating : false
+          newField._error = newField._error ? newField._error : false
           newField.userValue = formatPrimitiveValueToCode(field.rawValue, field.type)
           newField.value = field.rawValue !== null ? field.rawValue.toString() : null
           newField.initialName = newField.name
@@ -142,7 +142,7 @@ export default {
             }
           } else {
             // Handle user input validations & updates
-            if (this.isValidPropName(field.name) && this.isValidCodeValue(field.userValue)) {
+            if (isValidPropName(field.name) && isValidCodeValue(field.userValue)) {
               field._error = false
               const parsedValue = JSON.parse(field.userValue)
               field.rawValue = parsedValue
@@ -167,28 +167,6 @@ export default {
       }
       return value
     },
-    isValidPropName (name) {
-      return name !== null ? name.toString().search(/[a-z]/i) !== -1 : false
-    },
-    isValidCodeValue (value) {
-      // NOTE: Use this code basis if custom validation processes/errors are needed.
-      // For now, simple `JSON.parse` error handling makes the trick for generic error management.
-      // ("Don't reinvent the wheel, huh?")
-      // ==========
-      /* const stringDelimiters = value.match(/"|'/g)
-      const validString = !!(stringDelimiters && stringDelimiters.length === 2)
-      const validBoolean = ['true', 'false',].includes(value)
-      const validNumber = !isNaN(parseInt(value))
-      console.log(value, validString, validBoolean, validNumber);
-      return validString || validBoolean || validNumber */
-
-      try {
-        JSON.parse(value)
-        return true
-      } catch (e) {
-        return false
-      }
-    },
     resetPropFieldsStates (nestedValue) {
       let value = nestedValue ? nestedValue : this.localValue
       for (let field of value) {
@@ -206,9 +184,9 @@ export default {
         // field.value = `"${field.value}"`
       }
     },
-    onAddObjectField (field) {
-      console.log(field);
-    },
+    // onAddObjectField (field) {
+    //   console.log(field);
+    // },
     onEditArrayFieldValue (field) {
       console.log(field);
     },
