@@ -104,7 +104,7 @@
     </div>
     <div class="vsc-prop-row-actions">
       <span class="vsc-prop-object-add-btn">
-        <b-icon-plus-circle :scale="0.8" @click="onAddNewPropClick" />
+        <b-icon-plus-circle :scale="0.8" @click="onAddPropClick" />
       </span>
     </div>
   </div>
@@ -164,9 +164,11 @@ export default {
   watch: {
     modelValue: {
       handler (value) {
-        this.autosetInputsElements()
-        this.handleLocalFieldUpdate(value)
-        this.$emit('input', value)
+        this.$nextTick(() => {
+          this.autosetInputsElements()
+          this.handleLocalFieldUpdate(value)
+          this.$emit('input', value)
+        })
       },
       deep: true,
     },
@@ -174,17 +176,13 @@ export default {
 
   methods: {
     autosetInputsElements () {
-      this.$nextTick(() => {
-        this.$inputKeyName = this.$refs.inputKeyName && this.$refs.inputKeyName.length ? this.$refs.inputKeyName[0].$el : null
-        this.$inputKeyValue = this.$refs.inputKeyValue && this.$refs.inputKeyValue.length ? this.$refs.inputKeyValue[0].$el : null
-        this.$vInputKeyName = this.$refs.vInputKeyName && this.$refs.vInputKeyName.length ? this.$refs.vInputKeyName[0] : null
-        this.$vInputKeyValue = this.$refs.vInputKeyValue && this.$refs.vInputKeyValue.length ? this.$refs.vInputKeyValue[0] : null
-      })
+      this.$inputKeyName = this.$refs.inputKeyName && this.$refs.inputKeyName.length ? this.$refs.inputKeyName[0].$el : null
+      this.$inputKeyValue = this.$refs.inputKeyValue && this.$refs.inputKeyValue.length ? this.$refs.inputKeyValue[0].$el : null
+      this.$vInputKeyName = this.$refs.vInputKeyName && this.$refs.vInputKeyName.length ? this.$refs.vInputKeyName[0] : null
+      this.$vInputKeyValue = this.$refs.vInputKeyValue && this.$refs.vInputKeyValue.length ? this.$refs.vInputKeyValue[0] : null
     },
     handleLocalFieldUpdate (localValue) {
-      this.$nextTick(() => {
-        this.handleDOMUpdates()
-      })
+      this.handleDOMUpdates()
     },
     handleDOMUpdates () {
       if (this.$inputKeyName && this.$vInputKeyName) {
@@ -198,6 +196,10 @@ export default {
       this.resetPropFieldsStates()
       this.$emit('edit-field', field)
       field._editing = true
+      this.$nextTick(() => {
+        this.autosetInputsElements()
+        this.$inputKeyValue.focus()
+      })
     },
     onKeyNameClick (field) {
       this.resetPropFieldsStates()
@@ -214,7 +216,7 @@ export default {
         field._validating = true
       }
     },
-    onAddNewPropClick () {
+    onAddPropClick () {
       this.resetPropFieldsStates()
       const newField = {
         _initialized: false,
@@ -231,6 +233,10 @@ export default {
         initialValue: null,
       }
       this.modelValue.push(newField)
+      this.$nextTick(() => {
+        this.autosetInputsElements()
+        this.$inputKeyName.focus()
+      })
     },
     resetPropFieldsStates (nestedValue) {
       let value = nestedValue ? nestedValue : this.modelValue
