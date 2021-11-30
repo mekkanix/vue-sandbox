@@ -1,5 +1,5 @@
 export const isValidPropName = (name) => {
-  return name !== null ? name.toString().search(/[a-z]/i) !== -1 : false
+  return name !== null ? name.toString().search(/^([a-zA-Z_\$])([a-zA-Z0-9_\$])*$/i) !== -1 : false
 }
 
 export const isValidCodePrimitiveValue = (value) => {
@@ -14,13 +14,14 @@ export const isValidCodePrimitiveValue = (value) => {
   console.log(value, validString, validBoolean, validNumber);
   return validString || validBoolean || validNumber */
   const primitives = ['boolean', 'string', 'number', 'date',]
+  const specialValues = ['""', 'null',]
 
   if (value === '""') {
     return true
   }
 
   try {
-    if (['""', 'null'].includes(value) || JSON.parse(value)) {
+    if (specialValues.includes(value) || JSON.parse(value)) {
       const parsedValue = JSON.parse(value)
       // console.log(parsedValue);
       if (parsedValue === null || primitives.includes(typeof parsedValue)) {

@@ -132,7 +132,7 @@ export default {
         } else { // Primitive Field updates
           const strNullValue = 'null'
           // - Initialize if validated
-          if (!field._initialized && field._validating) {
+          if (field._validating && !field._initialized) {
             field._initialized = true
           }
           // - Canceling (edit)
@@ -164,7 +164,7 @@ export default {
             } else { // -- Invalid code provided (error)
               field._error = true
               if (!field._editing) { // --- Reset to field's previous values if editing done
-                field.rawName = field.initialName
+                field.name = field.initialName
                 field.userValue = formatPrimitiveValueToCode(field.initialValue, field.type)
                 field.rawValue = field.initialValue
                 field.value = field.rawValue !== null ? field.rawValue.toString() : null

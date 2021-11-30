@@ -172,10 +172,6 @@ export default {
               }
             },
             field4: 7,
-            group2: {
-              nested2Field1: 4,
-              nested2Field2: 5,
-            },
           }
         case '$array':
           return ['toto', 'tata', 'titi']
