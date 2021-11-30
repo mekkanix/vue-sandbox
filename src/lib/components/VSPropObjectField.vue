@@ -136,7 +136,7 @@
 
 <script>
 import { clone, } from 'lodash'
-import { isValidPropName, isValidCodeValue, } from '@app/helpers/Validator.js'
+import { isValidPropName, isValidCodePrimitiveValue, } from '@app/helpers/Validator.js'
 import VSPrimitiveValue from '@lib/components/VSPrimitiveValue.vue'
 
 export default {
@@ -281,7 +281,7 @@ export default {
         } else {
           field._editing = false
 
-          if (!field._initialized && (!isValidPropName(field.name) || !isValidCodeValue(field.userValue))) {
+          if (!field._initialized && (!isValidPropName(field.name) || !isValidCodePrimitiveValue(field.userValue))) {
             value.splice(i, 1)
           } else {
             field._initialized = true
@@ -319,8 +319,6 @@ export default {
 
   // Nested objects
   .vsc-prop-subobject
-    font-size: 14px
-
     &.open > .vsc-prop-object-kname-box > .vsc-prop-object-kname-wrapper > .vsc-prop-object-kname-icn
       transform: rotate(90deg)
 
@@ -350,6 +348,7 @@ export default {
         padding-left: 5px
         align-items: center
         color: #777
+        font-size: 14px
         cursor: pointer
 
         &:hover
@@ -413,9 +412,6 @@ export default {
       margin: 0 5px 0 0
       font-size: 14px
 
-      .input-name
-        // width: 40px
-
     .vsc-prop-value
       flex: 1 1 auto
       display: flex
@@ -424,7 +420,6 @@ export default {
 
       .input-value
         width: auto
-        // min-width: 40px
 
     .vsc-prop-actions
       display: none

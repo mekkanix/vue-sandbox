@@ -2,7 +2,7 @@ export const isValidPropName = (name) => {
   return name !== null ? name.toString().search(/[a-z]/i) !== -1 : false
 }
 
-export const isValidCodeValue = (value) => {
+export const isValidCodePrimitiveValue = (value) => {
   // NOTE: Use this code basis if custom validation processes/errors are needed.
   // For now, simple `JSON.parse` error handling makes the trick for generic error management.
   // ("Don't reinvent the wheel, huh?")
@@ -13,10 +13,23 @@ export const isValidCodeValue = (value) => {
   const validNumber = !isNaN(parseInt(value))
   console.log(value, validString, validBoolean, validNumber);
   return validString || validBoolean || validNumber */
+  const primitives = ['boolean', 'string', 'number', 'date',]
+
+  if (value === '""') {
+    return true
+  }
 
   try {
-    JSON.parse(value)
-    return true
+    if (JSON.parse(value)) {
+      const parsedValue = JSON.parse(value)
+      if (parsedValue === null || primitives.includes(typeof parsedValue)) {
+        return true
+      }
+      if (typeof parsedValue === 'object' || Array.isArray(parsedValue)) {
+        return false
+      }
+      return true
+    }
   } catch (e) {
     return false
   }

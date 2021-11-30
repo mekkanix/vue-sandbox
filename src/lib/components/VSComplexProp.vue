@@ -14,12 +14,13 @@
 <script>
 import { clone, } from 'lodash'
 import {
+  formatFromNativeStrType,
   parsePrimitiveValue,
   formatPrimitiveValueToCode,
   convertPropObjectToArray,
   convertPropArrayToObject,
 } from '@app/helpers/Formatter.js'
-import { isValidPropName, isValidCodeValue, } from '@app/helpers/Validator.js'
+import { isValidPropName, isValidCodePrimitiveValue, } from '@app/helpers/Validator.js'
 import VSPropObjectField from '@lib/components/VSPropObjectField.vue'
 import VSPropArrayField from '@lib/components/VSPropArrayField.vue'
 
@@ -88,7 +89,7 @@ export default {
         } else if (field.type === '$array') {
 
         } else {
-          newField._initialized = true
+          newField._initialized = field._initialized ? field._initialized : false
           newField._editing = field._editing ? field._editing : false
           newField._canceling = field._canceling ? field._canceling : false
           newField._validating = field._validating ? field._validating : false
@@ -119,10 +120,11 @@ export default {
       for (let [i, field] of value.entries()) {
         // Object field updates
         if (field.type === '$object') {
-          this.updateInternalFieldValues(field.value)
+          if (!field._editing) {
+            this.updateInternalFieldValues(field.value)
+          }
           // - Deleting
           if (field._deleting) {
-            console.log(field);
             value.splice(i, 1)
           }
         } else if (field.type === '$array') {
@@ -141,17 +143,17 @@ export default {
               field.rawValue = field.initialValue
               field.name = field.initialName
               field.value = field.rawValue !== null ? field.rawValue.toString() : strNullValue
-              field.type = field.rawValue !== null ? typeof field.rawValue : strNullValue
+              field.type = this.getFormattedType(field.rawValue)
               field.userValue = formatPrimitiveValueToCode(field.rawValue, field.type)
               field._canceling = false
             }
           } else {
             // - [continuing] Valid code provided (name & value)
-            if (isValidPropName(field.name) && isValidCodeValue(field.userValue)) {
+            if (isValidPropName(field.name) && isValidCodePrimitiveValue(field.userValue)) {
               field._error = false
-              const parsedValue = JSON.parse(field.userValue)
+              const parsedValue = this.parseUserCodeValue(field.userValue)
               field.rawValue = parsedValue
-              field.type = parsedValue !== null ? typeof parsedValue : strNullValue
+              field.type = this.getFormattedType(parsedValue)
               field.value = parsedValue !== null ? field.rawValue.toString() : strNullValue
               // -- Field's values update if editing done
               if (!field._editing) {
@@ -176,6 +178,18 @@ export default {
         }
       }
       return value
+    },
+    getFormattedType (value) {
+      if (Array.isArray(value)) {
+        return '$array'
+      } else if (value === null) {
+        return 'null'
+      } else {
+        return formatFromNativeStrType(typeof value)
+      }
+    },
+    parseUserCodeValue (value) {
+      return value === '""' ? "" : JSON.parse(value)
     },
     resetPropFieldsStates (nestedValue) {
       let value = nestedValue ? nestedValue : this.localValue
