@@ -12,13 +12,11 @@
 </template>
 
 <script>
-import { clone, } from 'lodash'
+import { cloneDeep, sortBy, } from 'lodash'
 import {
   formatFromNativeStrType,
-  parsePrimitiveValue,
   formatPrimitiveValueToCode,
   convertPropObjectToArray,
-  convertPropArrayToObject,
 } from '@app/helpers/Formatter.js'
 import { isValidPropName, isValidCodePrimitiveValue, } from '@app/helpers/Validator.js'
 import VSPropObjectField from '@lib/components/VSPropObjectField.vue'
@@ -68,8 +66,10 @@ export default {
   methods: {
     formatLocalValue (initValue) {
       if (typeof initValue === 'object' && !Array.isArray(initValue)) { // Object
-        const formattedValue = convertPropObjectToArray(initValue)
-        return this.formatLocalValueFields(formattedValue)
+        let formattedValue = convertPropObjectToArray(initValue)
+        formattedValue = this.formatLocalValueFields(formattedValue)
+        formattedValue = this.formatLocalValueFields(formattedValue)
+        return formattedValue
       } else { // Array
         return []
       }
@@ -178,6 +178,17 @@ export default {
         }
       }
       return value
+    },
+    sortLocalFields (fields) {
+      let sortedFields = sortBy(fields, [field => field.name])
+      for (let field of sortedFields) {
+        if (field.type === '$object') {
+          field.value = this.sortLocalFields(field.value)
+        } else if (field.type === '$array') {
+
+        }
+      }
+      return sortedFields
     },
     getFormattedType (value) {
       if (Array.isArray(value)) {
