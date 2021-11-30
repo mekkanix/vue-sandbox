@@ -79,6 +79,8 @@
                   :style="keyNameInputStyles"
                   placeholder="name"
                   autocomplete="none"
+                  @keyup.enter.native="onValidatePropEditClick(field)"
+                  @keyup.esc.native="onCancelPropEditClick(field)"
                 />
                 <div class="vsc-prop-v-input v-input-name" ref="vInputKeyName">{{ field.name }}</div>
               </div>
@@ -96,6 +98,8 @@
                   :style="keyValueInputStyles"
                   placeholder="value"
                   autocomplete="none"
+                  @keyup.enter.native="onValidatePropEditClick(field)"
+                  @keyup.esc.native="onCancelPropEditClick(field)"
                 />
                 <div class="vsc-prop-v-input v-input-value" ref="vInputKeyValue">{{ field.userValue }}</div>
               </div>
@@ -233,7 +237,7 @@ export default {
     },
     onCancelPropEditClick (field) {
       field._editing = false
-      field._canceling = true
+      field._cancelling = true
       field.rawValue = field.initialValue
     },
     onValidatePropEditClick (field) {
@@ -247,7 +251,7 @@ export default {
       const newField = {
         _initialized: false,
         _editing: true,
-        _canceling: false,
+        _cancelling: false,
         _validating: false,
         _deleting: false,
         _error: false,

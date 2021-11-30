@@ -91,7 +91,7 @@ export default {
         } else {
           newField._initialized = true
           newField._editing = field._editing ? field._editing : false
-          newField._canceling = field._canceling ? field._canceling : false
+          newField._cancelling = field._cancelling ? field._cancelling : false
           newField._validating = field._validating ? field._validating : false
           newField._error = field._error ? field._error : false
           newField.userValue = formatPrimitiveValueToCode(field.rawValue, field.type)
@@ -136,7 +136,7 @@ export default {
             field._initialized = true
           }
           // - Canceling (edit)
-          if (field._canceling) {
+          if (field._cancelling) {
             if (!field._initialized) {
               value.splice(i, 1)
             } else {
@@ -145,7 +145,7 @@ export default {
               field.value = field.rawValue !== null ? field.rawValue.toString() : strNullValue
               field.type = this.getFormattedType(field.rawValue)
               field.userValue = formatPrimitiveValueToCode(field.rawValue, field.type)
-              field._canceling = false
+              field._cancelling = false
             }
           } else {
             // - [continuing] Valid code provided (name & value)
