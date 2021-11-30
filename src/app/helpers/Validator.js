@@ -20,8 +20,9 @@ export const isValidCodePrimitiveValue = (value) => {
   }
 
   try {
-    if (JSON.parse(value)) {
+    if (['""', 'null'].includes(value) || JSON.parse(value)) {
       const parsedValue = JSON.parse(value)
+      // console.log(parsedValue);
       if (parsedValue === null || primitives.includes(typeof parsedValue)) {
         return true
       }

@@ -89,7 +89,7 @@ export default {
         } else if (field.type === '$array') {
 
         } else {
-          newField._initialized = field._initialized ? field._initialized : false
+          newField._initialized = true
           newField._editing = field._editing ? field._editing : false
           newField._canceling = field._canceling ? field._canceling : false
           newField._validating = field._validating ? field._validating : false
