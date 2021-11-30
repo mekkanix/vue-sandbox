@@ -121,6 +121,7 @@ export default {
       return propValue
     },
     computeLocalFields (value) {
+      const strNullValue = 'null'
       for (let [i, field] of value.entries()) {
         // Object field updates
         if (field.type === '$object') {
@@ -134,53 +135,91 @@ export default {
         } else if (field.type === '$array') {
 
         } else { // Primitive Field updates
-          const strNullValue = 'null'
-          // - Initialize if validated
-          if (field._validating && !field._initialized) {
-            field._initialized = true
-          }
+
+          // - Change type to object/array if requested
           if (field._converting) {
-            console.log(field);
-          }
-          // - Canceling (edit)
-          if (field._cancelling) {
-            if (!field._initialized) {
-              value.splice(i, 1)
-            } else {
-              field.rawValue = field.initialValue
-              field.name = field.initialName
-              field.value = field.rawValue !== null ? field.rawValue.toString() : strNullValue
-              field.type = this.getFormattedType(field.rawValue)
-              field.userValue = formatPrimitiveValueToCode(field.rawValue, field.type)
-              field._cancelling = false
+            field.type = field._converting
+            field.open = true
+            if (field.type === '$object') {
+              // -- Add object field's attrs 
+              this.$set(field, 'value', [])
+              this.$set(field.value, 0, {
+                type: 'string',
+                name: 'attr',
+                value: field.value,
+                rawValue: field.rawValue,
+                userValue: field.userValue,
+                initialName: 'test',
+                initialValue: field.initialValue,
+                _initialized: true,
+                _editing: true,
+                _cancelling: false,
+                _error: false,
+                _validating: false,
+                _converting: false,
+              })
+              this.$set(field, 'rawValue', {})
+              // -- Remove no necessary other attrs 
+              delete field.initialName
+              delete field.initialValue
+              delete field.userValue
+              delete field._initialized
+              delete field._editing
+              delete field._cancelling
+              delete field._error
+              delete field._validating
+              delete field._converting
+              console.log(field);
+            } else if (field.type === '$array') {
+
             }
-          } else {
-            // - [continuing] Valid code provided (name & value)
-            if (isValidPropName(field.name) && isValidCodePrimitiveValue(field.userValue)) {
-              field._error = false
-              const parsedValue = this.parseUserCodeValue(field.userValue)
-              field.rawValue = parsedValue
-              field.type = this.getFormattedType(parsedValue)
-              field.value = parsedValue !== null ? field.rawValue.toString() : strNullValue
-              // -- Field's values update if editing done
-              if (!field._editing) {
-                field.initialName = field.name
-                field.initialValue = field.rawValue
-                field._validating = false
-              }
-            } else { // -- Invalid code provided (error)
-              field._error = true
-              if (!field._editing) { // --- Reset to field's previous values if editing done
-                field.name = field.initialName
-                field.userValue = formatPrimitiveValueToCode(field.initialValue, field.type)
+          }
+          if (!['$object', '$array',].includes(field.type)) {
+            // - Initialize if validated
+            if (field._validating && !field._initialized) {
+              field._initialized = true
+            }
+            // - Cancelling (edit)
+            if (field._cancelling) {
+              if (!field._initialized) {
+                value.splice(i, 1)
+              } else {
                 field.rawValue = field.initialValue
-                field.value = field.rawValue !== null ? field.rawValue.toString() : null
+                field.name = field.initialName
+                field.value = field.rawValue !== null ? field.rawValue.toString() : strNullValue
+                field.type = this.getFormattedType(field.rawValue)
+                field.userValue = formatPrimitiveValueToCode(field.rawValue, field.type)
+                field._cancelling = false
+              }
+            } else {
+              // - [continuing] Valid code provided (name & value)
+              if (isValidPropName(field.name) && isValidCodePrimitiveValue(field.userValue)) {
+                field._error = false
+                const parsedValue = this.parseUserCodeValue(field.userValue)
+                field.rawValue = parsedValue
+                field.type = this.getFormattedType(parsedValue)
+                field.value = parsedValue !== null ? field.rawValue.toString() : strNullValue
+                // -- Field's values update if editing done
+                if (!field._editing) {
+                  field.initialName = field.name
+                  field.initialValue = field.rawValue
+                  field._validating = false
+                }
+              } else { // -- Invalid code provided (error)
+                field._error = true
+                if (!field._editing) { // --- Reset to field's previous values if editing done
+                  field.name = field.initialName
+                  field.userValue = formatPrimitiveValueToCode(field.initialValue, field.type)
+                  field.rawValue = field.initialValue
+                  field.value = field.rawValue !== null ? field.rawValue.toString() : null
+                }
+              }
+
+              // - Deleting
+              if (field._deleting) {
+                value.splice(i, 1)
               }
             }
-          }
-          // - Deleting
-          if (field._deleting) {
-            value.splice(i, 1)
           }
         }
       }
