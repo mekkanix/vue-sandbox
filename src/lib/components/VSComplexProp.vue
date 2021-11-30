@@ -56,7 +56,7 @@ export default {
     },
     localValue: {
       handler (value) {
-        let updatedValue = this.updateInternalFieldValues(value)
+        let updatedValue = this.computeLocalFields(value)
         // Sorting localValue here causes an infinite loop of this watcher,
         // because sorting it changes its internal state and re-call the watcher
         // TODO:  Maybe use a separate "sort button" feature to avoid this problem.
@@ -120,12 +120,12 @@ export default {
       }
       return propValue
     },
-    updateInternalFieldValues (value) {
+    computeLocalFields (value) {
       for (let [i, field] of value.entries()) {
         // Object field updates
         if (field.type === '$object') {
           if (!field._editing) {
-            this.updateInternalFieldValues(field.value)
+            this.computeLocalFields(field.value)
           }
           // - Deleting
           if (field._deleting) {
