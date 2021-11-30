@@ -165,6 +165,7 @@ export default {
             field2: 'This is a sentence.',
             field3: true,
             group1: {
+              xoxo: true,
               nestedField1: 4,
               nestedField2: 5,
               nestedGroup1: {

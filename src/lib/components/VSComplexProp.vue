@@ -56,7 +56,10 @@ export default {
     },
     localValue: {
       handler (value) {
-        const updatedValue = this.updateInternalFieldValues(value)
+        let updatedValue = this.updateInternalFieldValues(value)
+        // Sorting localValue here causes an infinite loop of this watcher,
+        // because sorting it changes its internal state and re-call the watcher
+        // TODO:  Maybe use a separate "sort button" feature to avoid this problem.
         this.modelValue = this.formatLocalToModelValue(updatedValue)
       },
       deep: true,
@@ -68,7 +71,7 @@ export default {
       if (typeof initValue === 'object' && !Array.isArray(initValue)) { // Object
         let formattedValue = convertPropObjectToArray(initValue)
         formattedValue = this.formatLocalValueFields(formattedValue)
-        formattedValue = this.formatLocalValueFields(formattedValue)
+        formattedValue = this.sortLocalFields(formattedValue)
         return formattedValue
       } else { // Array
         return []
