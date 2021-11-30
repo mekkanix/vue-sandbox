@@ -12,7 +12,7 @@
 </template>
 
 <script>
-import { cloneDeep, sortBy, } from 'lodash'
+import { sortBy, } from 'lodash'
 import {
   formatFromNativeStrType,
   formatPrimitiveValueToCode,
@@ -96,6 +96,7 @@ export default {
           newField._editing = field._editing ? field._editing : false
           newField._cancelling = field._cancelling ? field._cancelling : false
           newField._validating = field._validating ? field._validating : false
+          newField._converting = field._converting ? field._converting : false
           newField._error = field._error ? field._error : false
           newField.userValue = formatPrimitiveValueToCode(field.rawValue, field.type)
           newField.value = field.rawValue !== null ? field.rawValue.toString() : null
@@ -137,6 +138,9 @@ export default {
           // - Initialize if validated
           if (field._validating && !field._initialized) {
             field._initialized = true
+          }
+          if (field._converting) {
+            console.log(field);
           }
           // - Canceling (edit)
           if (field._cancelling) {
@@ -228,3 +232,7 @@ export default {
   },
 }
 </script>
+
+<style lang="sass" scoped>
+@import url('https://fonts.googleapis.com/css2?family=Source+Code+Pro:wght@400;700&display=swap')
+</style>

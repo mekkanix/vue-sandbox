@@ -63,6 +63,20 @@
                 >
                   <b-icon-trash-fill :scale="0.9" />
                 </div>
+                <div
+                  v-if="field._initialized"
+                  class="vsc-prop-action convert2object"
+                  @click="onConvertToObjectPropClick(field)"
+                >
+                  <span>{}</span>
+                </div>
+                <div
+                  v-if="field._initialized"
+                  class="vsc-prop-action convert2array"
+                  @click="onConvertToArrayPropClick(field)"
+                >
+                  <span>[]</span>
+                </div>
               </div>
             </div>
           </template>
@@ -254,6 +268,7 @@ export default {
         _cancelling: false,
         _validating: false,
         _deleting: false,
+        _converting: false,
         _error: false,
         type: null,
         name: null,
@@ -274,6 +289,12 @@ export default {
     onDeletePropClick (field) {
       this.resetPropFieldsStates()
       field._deleting = true
+    },
+    onConvertToObjectPropClick (field) {
+      field._converting = '$object'
+    },
+    onConvertToArrayPropClick (field) {
+      field._converting = '$array'
     },
     resetPropFieldsStates (nestedValue) {
       let value = nestedValue ? nestedValue : this.modelValue
@@ -349,7 +370,7 @@ export default {
 
       .vsc-prop-object-actions
         display: none
-        padding-left: 5px
+        padding-left: 10px
         align-items: center
         color: #777
         font-size: 14px
@@ -427,10 +448,11 @@ export default {
 
     .vsc-prop-actions
       display: none
-      padding-left: 5px
+      padding-left: 10px
       align-items: center
 
       .vsc-prop-action
+        width: 21px
         height: 21px
         flex: 0 0 21px
         display: flex
@@ -438,6 +460,16 @@ export default {
         justify-content: center
         color: #777
         cursor: pointer
+
+        &.convert2object,
+        &.convert2array
+          font-family: 'Source Code Pro', monospace
+          font-size: 12px
+          font-weight: 700
+
+          span
+            position: relative
+            top: -1px
 
         &:hover
           color: #333
