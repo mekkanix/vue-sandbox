@@ -135,30 +135,34 @@ export default {
         } else if (field.type === '$array') {
 
         } else { // Primitive Field updates
-
           // - Change type to object/array if requested
           if (field._converting) {
-            field.type = field._converting
-            field.open = true
+            this.resetPropFieldsStates()
+            this.$set(field, 'type', field._converting)
+            this.$set(field, 'open', true)
             if (field.type === '$object') {
               // -- Add object field's attrs 
               this.$set(field, 'value', [])
-              this.$set(field.value, 0, {
+              const nestedField = {
                 type: 'string',
                 name: 'attr',
                 value: field.value,
                 rawValue: field.rawValue,
                 userValue: field.userValue,
-                initialName: 'test',
+                initialName: 'attr',
                 initialValue: field.initialValue,
                 _initialized: true,
-                _editing: true,
+                _deleting: false,
+                _editing: false,
                 _cancelling: false,
                 _error: false,
                 _validating: false,
                 _converting: false,
+              }
+              this.$set(field.value, 0, nestedField)
+              this.$set(field, 'rawValue', {
+                [nestedField.name]: nestedField.rawValue,
               })
-              this.$set(field, 'rawValue', {})
               // -- Remove no necessary other attrs 
               delete field.initialName
               delete field.initialValue
@@ -169,17 +173,17 @@ export default {
               delete field._error
               delete field._validating
               delete field._converting
-              console.log(field);
             } else if (field.type === '$array') {
 
             }
           }
+          // - Start primitive type processing
           if (!['$object', '$array',].includes(field.type)) {
-            // - Initialize if validated
+            // -- Initialize if validated
             if (field._validating && !field._initialized) {
               field._initialized = true
             }
-            // - Cancelling (edit)
+            // -- Cancelling (edit)
             if (field._cancelling) {
               if (!field._initialized) {
                 value.splice(i, 1)
@@ -192,22 +196,22 @@ export default {
                 field._cancelling = false
               }
             } else {
-              // - [continuing] Valid code provided (name & value)
+              // -- [continuing] Valid code provided (name & value)
               if (isValidPropName(field.name) && isValidCodePrimitiveValue(field.userValue)) {
                 field._error = false
                 const parsedValue = this.parseUserCodeValue(field.userValue)
                 field.rawValue = parsedValue
                 field.type = this.getFormattedType(parsedValue)
                 field.value = parsedValue !== null ? field.rawValue.toString() : strNullValue
-                // -- Field's values update if editing done
+                // --- Field's values update if editing done
                 if (!field._editing) {
                   field.initialName = field.name
                   field.initialValue = field.rawValue
                   field._validating = false
                 }
-              } else { // -- Invalid code provided (error)
+              } else { // --- Invalid code provided (error)
                 field._error = true
-                if (!field._editing) { // --- Reset to field's previous values if editing done
+                if (!field._editing) { // ---- Reset to field's previous values if editing done
                   field.name = field.initialName
                   field.userValue = formatPrimitiveValueToCode(field.initialValue, field.type)
                   field.rawValue = field.initialValue
