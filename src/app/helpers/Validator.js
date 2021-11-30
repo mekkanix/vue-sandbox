@@ -14,11 +14,7 @@ export const isValidCodePrimitiveValue = (value) => {
   console.log(value, validString, validBoolean, validNumber);
   return validString || validBoolean || validNumber */
   const primitives = ['boolean', 'string', 'number', 'date',]
-  const specialValues = ['""', 'null',]
-
-  if (value === '""') {
-    return true
-  }
+  const specialValues = ['null', 'false', '""']
 
   try {
     if (specialValues.includes(value) || JSON.parse(value)) {
