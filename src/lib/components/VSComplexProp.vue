@@ -12,7 +12,7 @@
 </template>
 
 <script>
-import { sortBy, } from 'lodash'
+import { sortBy, cloneDeep, } from 'lodash'
 import {
   formatFromNativeStrType,
   formatPrimitiveValueToCode,
@@ -120,9 +120,9 @@ export default {
       }
       return propValue
     },
-    computeLocalFields (value) {
+    computeLocalFields (localFields) {
       const strNullValue = 'null'
-      for (let [i, field] of value.entries()) {
+      for (let [i, field] of localFields.entries()) {
         // Object field updates
         if (field.type === '$object') {
           if (!field._editing) {
@@ -130,7 +130,7 @@ export default {
           }
           // - Deleting
           if (field._deleting) {
-            value.splice(i, 1)
+            localFields.splice(i, 1)
           }
         } else if (field.type === '$array') {
 
@@ -186,7 +186,7 @@ export default {
             // -- Cancelling (edit)
             if (field._cancelling) {
               if (!field._initialized) {
-                value.splice(i, 1)
+                localFields.splice(i, 1)
               } else {
                 field.rawValue = field.initialValue
                 field.name = field.initialName
@@ -197,7 +197,10 @@ export default {
               }
             } else {
               // -- [continuing] Valid code provided (name & value)
-              if (isValidPropName(field.name) && isValidCodePrimitiveValue(field.userValue)) {
+              const validPropName = isValidPropName(field.name)
+              const uniquePropName = this.isUniqueFieldPropName(field.name, localFields)
+              const validPropValue = isValidCodePrimitiveValue(field.userValue)
+              if (validPropName && uniquePropName && validPropValue) {
                 field._error = false
                 const parsedValue = this.parseUserCodeValue(field.userValue)
                 field.rawValue = parsedValue
@@ -209,7 +212,7 @@ export default {
                   field.initialValue = field.rawValue
                   field._validating = false
                 }
-              } else { // --- Invalid code provided (error)
+              } else { // --- Invalid code-value or prop name provided (error)
                 field._error = true
                 if (!field._editing) { // ---- Reset to field's previous values if editing done
                   field.name = field.initialName
@@ -221,13 +224,13 @@ export default {
 
               // - Deleting
               if (field._deleting) {
-                value.splice(i, 1)
+                localFields.splice(i, 1)
               }
             }
           }
         }
       }
-      return value
+      return localFields
     },
     sortLocalFields (fields) {
       let sortedFields = sortBy(fields, [field => field.name])
@@ -239,6 +242,12 @@ export default {
         }
       }
       return sortedFields
+    },
+    isUniqueFieldPropName (propName, localFields) {
+      const matches = localFields.filter(field => {
+        return propName === field.name
+      })
+      return !(matches.length > 1)
     },
     getFormattedType (value) {
       if (Array.isArray(value)) {
