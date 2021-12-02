@@ -13,12 +13,36 @@
         class="vsc-prop-subobject"
         :class="{ open: field.open, }"
       >
-        <div class="vsc-prop-object-kname-box">
-          <div class="vsc-prop-object-kname-wrapper" @click="onNestedGroupKeyNameClick(field)">
+        <div class="vsc-prop-kname-box">
+          <div class="vsc-prop-kname-wrapper" @click="onNestedGroupKeyNameClick(field)">
             <b-icon-caret-right-fill :font-scale="0.6" color="#555" class="vsc-prop-object-kname-icn" />
-            <div class="vsc-prop-object-kname">{{ field.name }}</div>
+              <div class="vsc-prop-object-kname">
+                <template v-if="!field._editing">{{ field.name }}</template>
+                <template v-else>
+                  <b-form-input
+                    type="text"
+                    v-model="field.name"
+                    ref="inputKeyName"
+                    size="sm"
+                    class="vsc-prop-input input-name xs"
+                    :class="{ 'errored': field._initialized && field._error }"
+                    :style="keyNameInputStyles"
+                    placeholder="name"
+                    autocomplete="none"
+                    @keyup.enter.native="onValidatePropEditClick(field)"
+                    @keyup.esc.native="onCancelPropEditClick(field)"
+                  />
+                  <div class="vsc-prop-v-input v-input-name" ref="vInputKeyName">{{ field.name }}</div>
+                </template>
+              </div>
           </div>
           <div class="vsc-prop-object-actions">
+            <div
+              class="vsc-prop-action edit"
+              @click="onEditPropClick(field)"
+            >
+              <b-icon-pencil-fill :scale="0.7" />
+            </div>
             <div
               class="vsc-prop-action delete"
               @click="onDeletePropClick(field)"
@@ -153,7 +177,6 @@
 </template>
 
 <script>
-import { clone, } from 'lodash'
 import { isValidPropName, isValidCodePrimitiveValue, } from '@app/helpers/Validator.js'
 import VSPrimitiveValue from '@lib/components/VSPrimitiveValue.vue'
 
@@ -327,6 +350,68 @@ export default {
 .vsc-prop-field-object
   color: #444
 
+  // Generic
+  .vsc-prop-kv-wrapper,
+  .vsc-prop-kname-wrapper
+    position: relative
+
+    .vsc-prop-input
+      padding: 0
+      font-size: 14px
+      box-shadow: none
+      border: 1px solid transparent
+      border-bottom-color: #8e949a
+      border-radius: 0
+
+      &:hover,
+      &:focus
+        border-bottom-color: #3667ae
+
+      &.errored
+        border-bottom-style: solid
+        border-bottom-color: #dd0000
+
+    .vsc-prop-v-input
+      position: absolute
+      top: 25px
+      min-width: 40px
+      height: 100%
+      padding: 0
+      white-space: nowrap
+      font-size: 14px
+      border: 1px solid transparent
+      pointer-events: none
+      visibility: hidden
+
+  .vsc-prop-actions, .vsc-prop-object-actions
+    display: none
+    padding-left: 10px
+    align-items: center
+    font-size: 14px
+
+    .vsc-prop-action
+      width: 21px
+      height: 21px
+      flex: 0 0 21px
+      display: flex
+      align-items: center
+      justify-content: center
+      color: #777
+      cursor: pointer
+
+      &:hover
+        color: #333
+      
+      &.convert2object,
+      &.convert2array
+        font-family: 'Source Code Pro', monospace
+        font-size: 12px
+        font-weight: 700
+
+        span
+          position: relative
+          top: -1px
+
   // Nested objects-specific content (via CSS class)
   &.nested-field
     position: relative
@@ -344,10 +429,10 @@ export default {
 
   // Nested objects
   .vsc-prop-subobject
-    &.open > .vsc-prop-object-kname-box > .vsc-prop-object-kname-wrapper > .vsc-prop-object-kname-icn
+    &.open > .vsc-prop-kname-box > .vsc-prop-kname-wrapper > .vsc-prop-object-kname-icn
       transform: rotate(90deg)
 
-    .vsc-prop-object-kname-box
+    .vsc-prop-kname-box
       position: relative
       display: flex
       align-items: center
@@ -359,7 +444,7 @@ export default {
       &:hover .vsc-prop-object-actions
         display: flex
 
-      .vsc-prop-object-kname-wrapper
+      .vsc-prop-kname-wrapper
         .vsc-prop-object-kname-icn
           position: absolute
           left: 4px
@@ -367,17 +452,6 @@ export default {
         .vsc-prop-object-kname
           padding-left: 15px
           font-size: 14px
-
-      .vsc-prop-object-actions
-        display: none
-        padding-left: 10px
-        align-items: center
-        color: #777
-        font-size: 14px
-        cursor: pointer
-
-        &:hover
-          color: #333
 
   // Primitive value
   .vsc-prop-primitive
@@ -398,39 +472,6 @@ export default {
     &:hover .vsc-prop-actions
       display: flex
 
-    // - Generic input-related content
-    .vsc-prop-kv-wrapper
-      position: relative
-
-      .vsc-prop-input
-        padding: 0
-        font-size: 14px
-        box-shadow: none
-        border: 1px solid transparent
-        border-bottom-color: #8e949a
-        border-radius: 0
-
-        &:hover,
-        &:focus
-          border-bottom-color: #3667ae
-
-        &.errored
-          border-bottom-style: solid
-          border-bottom-color: #dd0000
-
-      .vsc-prop-v-input
-        position: absolute
-        top: 25px
-        min-width: 40px
-        height: 100%
-        padding: 0
-        white-space: nowrap
-        font-size: 14px
-        border: 1px solid transparent
-        pointer-events: none
-        visibility: hidden
-
-    // - Specific input-related content
     .vsc-prop-name
       display: inline-flex
       align-items: baseline
@@ -445,34 +486,6 @@ export default {
 
       .input-value
         width: auto
-
-    .vsc-prop-actions
-      display: none
-      padding-left: 10px
-      align-items: center
-
-      .vsc-prop-action
-        width: 21px
-        height: 21px
-        flex: 0 0 21px
-        display: flex
-        align-items: center
-        justify-content: center
-        color: #777
-        cursor: pointer
-
-        &.convert2object,
-        &.convert2array
-          font-family: 'Source Code Pro', monospace
-          font-size: 12px
-          font-weight: 700
-
-          span
-            position: relative
-            top: -1px
-
-        &:hover
-          color: #333
 
   .vsc-prop-row-actions
     margin-left: 15px

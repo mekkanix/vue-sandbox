@@ -84,6 +84,10 @@ export default {
           name: field.name,
           type: field.type,
           rawValue: field.rawValue,
+          _editing: field._editing ? field._editing : false,
+          _error: field._error ? field._error : false,
+          _cancelling: field._cancelling ? field._cancelling : false,
+          _validating: field._validating ? field._validating : false,
           _deleting: field._deleting ? field._deleting : false,
         }
         if (field.type === '$object') {
@@ -93,11 +97,7 @@ export default {
 
         } else {
           newField._initialized = true
-          newField._editing = field._editing ? field._editing : false
-          newField._cancelling = field._cancelling ? field._cancelling : false
-          newField._validating = field._validating ? field._validating : false
           newField._converting = field._converting ? field._converting : false
-          newField._error = field._error ? field._error : false
           newField.userValue = formatPrimitiveValueToCode(field.rawValue, field.type)
           newField.value = field.rawValue !== null ? field.rawValue.toString() : null
           newField.initialName = newField.name
@@ -125,12 +125,16 @@ export default {
       for (let [i, field] of localFields.entries()) {
         // Object field updates
         if (field.type === '$object') {
-          if (!field._editing) {
-            this.computeLocalFields(field.value)
+          if (field._editing) {
+            // Update internal field values here...
           }
           // - Deleting
           if (field._deleting) {
             localFields.splice(i, 1)
+          }
+          
+          if (!field._editing && !field._deleting) {
+            this.computeLocalFields(field.value)
           }
         } else if (field.type === '$array') {
 
@@ -168,10 +172,6 @@ export default {
               delete field.initialValue
               delete field.userValue
               delete field._initialized
-              delete field._editing
-              delete field._cancelling
-              delete field._error
-              delete field._validating
               delete field._converting
             } else if (field.type === '$array') {
 
@@ -244,9 +244,7 @@ export default {
       return sortedFields
     },
     isUniqueFieldPropName (propName, localFields) {
-      const matches = localFields.filter(field => {
-        return propName === field.name
-      })
+      const matches = localFields.filter(field => propName === field.name)
       return !(matches.length > 1)
     },
     getFormattedType (value) {
