@@ -58,7 +58,7 @@ export default {
       handler (value) {
         let updatedValue = this.computeLocalFields(value)
         // Sorting localValue here causes an infinite loop of this watcher,
-        // because sorting it changes its internal state and re-call the watcher
+        // because sorting it changes its internal state and re-call the watcher.
         // TODO:  Maybe use a separate "sort button" feature to avoid this problem.
         this.modelValue = this.formatLocalToModelValue(updatedValue)
       },
@@ -84,6 +84,7 @@ export default {
           name: field.name,
           type: field.type,
           rawValue: field.rawValue,
+          initialName: field.name,
           _editing: field._editing ? field._editing : false,
           _error: field._error ? field._error : false,
           _cancelling: field._cancelling ? field._cancelling : false,
@@ -100,16 +101,14 @@ export default {
           newField._converting = field._converting ? field._converting : false
           newField.userValue = formatPrimitiveValueToCode(field.rawValue, field.type)
           newField.value = field.rawValue !== null ? field.rawValue.toString() : null
-          newField.initialName = newField.name
-          newField.initialValue = newField.rawValue
         }
         fields.push(newField)
       }
       return fields
     },
-    formatLocalToModelValue (modelValue) {
+    formatLocalToModelValue (value) {
       let propValue = {}
-      for (const field of modelValue) {
+      for (const field of value) {
         if (field.type === '$object') {
           propValue[field.name] = this.formatLocalToModelValue(field.value)
         } else if (field.type === '$array') {
@@ -125,14 +124,32 @@ export default {
       for (let [i, field] of localFields.entries()) {
         // Object field updates
         if (field.type === '$object') {
-          if (field._editing) {
-            // Update internal field values here...
+          if (field._cancelling) {
+            if (!field._initialized) {
+              this.$delete(localFields, i)
+            } else {
+              field.name = field.initialName
+              field._cancelling = false
+            }
+          } else {
+            if (isValidPropName(field.name) && this.isUniqueFieldPropName(field.name, localFields)) {
+              field._error = false
+              if (!field._editing) {
+                field.initialName = field.name
+                field._validating = false
+              }
+            } else {
+              field._error = true
+              if (!field._editing) { // - Reset to field's previous values if editing done
+                field.name = field.initialName
+              }
+            }
           }
           // - Deleting
           if (field._deleting) {
-            localFields.splice(i, 1)
+            this.$delete(localFields, i)
           }
-          
+
           if (!field._editing && !field._deleting) {
             this.computeLocalFields(field.value)
           }
@@ -140,12 +157,12 @@ export default {
 
         } else { // Primitive Field updates
           // - Change type to object/array if requested
-          if (field._converting) {
+          if (field._converting && !field._error) {
             this.resetPropFieldsStates()
             this.$set(field, 'type', field._converting)
             this.$set(field, 'open', true)
             if (field.type === '$object') {
-              // -- Add object field's attrs 
+              // -- Add object field's attrs
               this.$set(field, 'value', [])
               const nestedField = {
                 type: 'string',
@@ -164,15 +181,15 @@ export default {
                 _converting: false,
               }
               this.$set(field.value, 0, nestedField)
-              this.$set(field, 'rawValue', {
-                [nestedField.name]: nestedField.rawValue,
-              })
-              // -- Remove no necessary other attrs 
-              delete field.initialName
-              delete field.initialValue
-              delete field.userValue
-              delete field._initialized
-              delete field._converting
+              // this.$set(field, 'rawValue', {
+              //   [nestedField.name]: nestedField.rawValue,
+              // })
+              this.$set(field.rawValue, nestedField.name, nestedField.rawValue)
+              // -- Remove no necessary other attrs
+              this.$delete(field, 'initialValue')
+              this.$delete(field, 'userValue')
+              this.$delete(field, '_initialized')
+              this.$delete(field, '_converting')
             } else if (field.type === '$array') {
 
             }
@@ -186,7 +203,7 @@ export default {
             // -- Cancelling (edit)
             if (field._cancelling) {
               if (!field._initialized) {
-                localFields.splice(i, 1)
+                this.$delete(localFields, i)
               } else {
                 field.rawValue = field.initialValue
                 field.name = field.initialName

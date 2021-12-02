@@ -3,22 +3,128 @@
     class="vsc-prop-field-object"
     :class="containerClasses"
   >
-    <div
-      v-for="(field, i) in modelValue"
-      :key="i"
-      class="vsc-prop-field-wrapper"
-    >
+    <template v-if="modelValue.length">
       <div
-        v-if="field.type === '$object'"
-        class="vsc-prop-subobject"
-        :class="{ open: field.open, }"
+        v-for="(field, i) in modelValue"
+        :key="i"
+        class="vsc-prop-field-wrapper"
       >
-        <div class="vsc-prop-kname-box">
-          <div class="vsc-prop-kname-wrapper" @click="onNestedGroupKeyNameClick(field)">
-            <b-icon-caret-right-fill :font-scale="0.6" color="#555" class="vsc-prop-object-kname-icn" />
-              <div class="vsc-prop-object-kname">
-                <template v-if="!field._editing">{{ field.name }}</template>
-                <template v-else>
+        <div
+          v-if="field.type === '$object'"
+          class="vsc-prop-subobject"
+          :class="{ open: field.open, }"
+        >
+          <div class="vsc-prop-kname-box">
+            <div class="vsc-prop-kname-wrapper" @click="onNestedGroupKeyNameClick(field)">
+              <b-icon-caret-right-fill :font-scale="0.6" color="#555" class="vsc-prop-object-kname-icn" />
+                <div class="vsc-prop-object-kname">
+                  <template v-if="!field._editing">{{ field.name }}</template>
+                  <template v-else>
+                    <b-form-input
+                      type="text"
+                      v-model="field.name"
+                      ref="inputKeyName"
+                      size="sm"
+                      class="vsc-prop-input input-name xs"
+                      :class="{ 'errored': field._initialized && field._error }"
+                      :style="keyNameInputStyles"
+                      placeholder="name"
+                      autocomplete="none"
+                      @keyup.enter.native="onValidatePropEditClick(field)"
+                      @keyup.esc.native="onCancelPropEditClick(field)"
+                      @click.stop
+                    />
+                    <div class="vsc-prop-v-input v-input-name" ref="vInputKeyName">{{ field.name }}</div>
+                  </template>
+                </div>
+            </div>
+            <div class="vsc-prop-object-actions">
+              <div
+                v-if="!field._editing"
+                class="vsc-prop-action edit"
+                @click="onEditPropClick(field)"
+              >
+                <b-icon-pencil-fill :scale="0.7" />
+              </div>
+              <template v-if="field._editing">
+                <div
+                  v-if="!field._error"
+                  class="vsc-prop-action validate-edit"
+                  @click="onValidatePropEditClick(field)"
+                >
+                  <b-icon-check-circle :scale="0.9" />
+                </div>
+                <div
+                  class="vsc-prop-action cancel-edit"
+                  @click="onCancelPropEditClick(field)"
+                >
+                  <b-icon-x-circle :scale="0.9" />
+                </div>
+              </template>
+              <div
+                class="vsc-prop-action delete"
+                @click="onDeletePropClick(field)"
+              >
+                <b-icon-trash-fill :scale="0.9" />
+              </div>
+            </div>
+          </div>
+          <VSPropObjectField
+            v-show="field.open"
+            v-model="field.value"
+            :depth="depth + 1"
+            @delete-field="onDeletePropClick"
+            @reset-fields="resetPropFieldsStates"
+          />
+        </div>
+        <template v-else-if="field.type === '$array'">
+
+        </template>
+        <template v-else>
+          <div class="vsc-prop-primitive" :class="{ idle: !field._editing, updating: field._editing, }">
+            <template v-if="!field._editing">
+              <div class="vsc-prop-name">
+                <div class="vsc-prop-kv-wrapper vsc-prop-name-wrapper">
+                  <div class="vsc-prop-name-label">{{ field.name }}</div>
+                </div>
+                <div class="vsc-prop-colon">:</div>
+              </div>
+              <div class="vsc-prop-value">
+                <VSPrimitiveValue
+                  :value="field.value"
+                  :type="field.type"
+                />
+                <div class="vsc-prop-actions">
+                  <div class="vsc-prop-action edit" @click="onEditPropClick(field)">
+                    <b-icon-pencil-fill :scale="0.7" />
+                  </div>
+                  <div
+                    v-if="field._initialized"
+                    class="vsc-prop-action delete"
+                    @click="onDeletePropClick(field)"
+                  >
+                    <b-icon-trash-fill :scale="0.9" />
+                  </div>
+                  <div
+                    v-if="field._initialized"
+                    class="vsc-prop-action convert2object"
+                    @click="onConvertToObjectPropClick(field)"
+                  >
+                    <span>{}</span>
+                  </div>
+                  <div
+                    v-if="field._initialized"
+                    class="vsc-prop-action convert2array"
+                    @click="onConvertToArrayPropClick(field)"
+                  >
+                    <span>[]</span>
+                  </div>
+                </div>
+              </div>
+            </template>
+            <template v-else>
+              <div class="vsc-prop-name">
+                <div class="vsc-prop-kv-wrapper vsc-prop-name-wrapper">
                   <b-form-input
                     type="text"
                     v-model="field.name"
@@ -33,144 +139,63 @@
                     @keyup.esc.native="onCancelPropEditClick(field)"
                   />
                   <div class="vsc-prop-v-input v-input-name" ref="vInputKeyName">{{ field.name }}</div>
-                </template>
+                </div>
+                <div class="vsc-prop-colon">:</div>
               </div>
+              <div class="vsc-prop-value">
+                <div class="vsc-prop-kv-wrapper vsc-prop-value-wrapper">
+                  <b-form-input
+                    type="text"
+                    v-model="field.userValue"
+                    ref="inputKeyValue"
+                    size="sm"
+                    class="vsc-prop-input input-value xs"
+                    :class="{ 'errored': field._initialized && field._error }"
+                    :style="keyValueInputStyles"
+                    placeholder="value"
+                    autocomplete="none"
+                    @keyup.enter.native="onValidatePropEditClick(field)"
+                    @keyup.esc.native="onCancelPropEditClick(field)"
+                  />
+                  <div class="vsc-prop-v-input v-input-value" ref="vInputKeyValue">{{ field.userValue }}</div>
+                </div>
+                <div class="vsc-prop-actions">
+                  <div
+                    v-if="!field._error"
+                    class="vsc-prop-action validate-edit"
+                    @click="onValidatePropEditClick(field)"
+                  >
+                    <b-icon-check-circle :scale="0.9" />
+                  </div>
+                  <div
+                    class="vsc-prop-action cancel-edit"
+                    @click="onCancelPropEditClick(field)"
+                  >
+                    <b-icon-x-circle :scale="0.9" />
+                  </div>
+                  <div
+                    v-if="field._initialized"
+                    class="vsc-prop-action delete"
+                    @click="onDeletePropClick(field)"
+                  >
+                    <b-icon-trash-fill :scale="0.9" />
+                  </div>
+                </div>
+              </div>
+            </template>
           </div>
-          <div class="vsc-prop-object-actions">
-            <div
-              class="vsc-prop-action edit"
-              @click="onEditPropClick(field)"
-            >
-              <b-icon-pencil-fill :scale="0.7" />
-            </div>
-            <div
-              class="vsc-prop-action delete"
-              @click="onDeletePropClick(field)"
-            >
-              <b-icon-trash-fill :scale="0.9" />
-            </div>
-          </div>
-        </div>
-        <VSPropObjectField
-          v-show="field.open"
-          v-model="field.value"
-          :depth="depth + 1"
-          @delete-field="onDeletePropClick"
-          @reset-fields="resetPropFieldsStates"
-        />
+        </template>
       </div>
-      <template v-else-if="field.type === '$array'">
-
-      </template>
-      <template v-else>
-        <div class="vsc-prop-primitive" :class="{ idle: !field._editing, updating: field._editing, }">
-          <template v-if="!field._editing">
-            <div class="vsc-prop-name">
-              <div class="vsc-prop-kv-wrapper vsc-prop-name-wrapper">
-                <div class="vsc-prop-name-label">{{ field.name }}</div>
-              </div>
-              <div class="vsc-prop-colon">:</div>
-            </div>
-            <div class="vsc-prop-value">
-              <VSPrimitiveValue
-                :value="field.value"
-                :type="field.type"
-              />
-              <div class="vsc-prop-actions">
-                <div class="vsc-prop-action edit" @click="onEditPropClick(field)">
-                  <b-icon-pencil-fill :scale="0.7" />
-                </div>
-                <div
-                  v-if="field._initialized"
-                  class="vsc-prop-action delete"
-                  @click="onDeletePropClick(field)"
-                >
-                  <b-icon-trash-fill :scale="0.9" />
-                </div>
-                <div
-                  v-if="field._initialized"
-                  class="vsc-prop-action convert2object"
-                  @click="onConvertToObjectPropClick(field)"
-                >
-                  <span>{}</span>
-                </div>
-                <div
-                  v-if="field._initialized"
-                  class="vsc-prop-action convert2array"
-                  @click="onConvertToArrayPropClick(field)"
-                >
-                  <span>[]</span>
-                </div>
-              </div>
-            </div>
-          </template>
-          <template v-else>
-            <div class="vsc-prop-name">
-              <div class="vsc-prop-kv-wrapper vsc-prop-name-wrapper">
-                <b-form-input
-                  type="text"
-                  v-model="field.name"
-                  ref="inputKeyName"
-                  size="sm"
-                  class="vsc-prop-input input-name xs"
-                  :class="{ 'errored': field._initialized && field._error }"
-                  :style="keyNameInputStyles"
-                  placeholder="name"
-                  autocomplete="none"
-                  @keyup.enter.native="onValidatePropEditClick(field)"
-                  @keyup.esc.native="onCancelPropEditClick(field)"
-                />
-                <div class="vsc-prop-v-input v-input-name" ref="vInputKeyName">{{ field.name }}</div>
-              </div>
-              <div class="vsc-prop-colon">:</div>
-            </div>
-            <div class="vsc-prop-value">
-              <div class="vsc-prop-kv-wrapper vsc-prop-value-wrapper">
-                <b-form-input
-                  type="text"
-                  v-model="field.userValue"
-                  ref="inputKeyValue"
-                  size="sm"
-                  class="vsc-prop-input input-value xs"
-                  :class="{ 'errored': field._initialized && field._error }"
-                  :style="keyValueInputStyles"
-                  placeholder="value"
-                  autocomplete="none"
-                  @keyup.enter.native="onValidatePropEditClick(field)"
-                  @keyup.esc.native="onCancelPropEditClick(field)"
-                />
-                <div class="vsc-prop-v-input v-input-value" ref="vInputKeyValue">{{ field.userValue }}</div>
-              </div>
-              <div class="vsc-prop-actions">
-                <div
-                  v-if="!field._error"
-                  class="vsc-prop-action validate-edit"
-                  @click="onValidatePropEditClick(field)"
-                >
-                  <b-icon-check-circle :scale="0.9" />
-                </div>
-                <div
-                  class="vsc-prop-action cancel-edit"
-                  @click="onCancelPropEditClick(field)"
-                >
-                  <b-icon-x-circle :scale="0.9" />
-                </div>
-                <div
-                  v-if="field._initialized"
-                  class="vsc-prop-action delete"
-                  @click="onDeletePropClick(field)"
-                >
-                  <b-icon-trash-fill :scale="0.9" />
-                </div>
-              </div>
-            </div>
-          </template>
-        </div>
-      </template>
-    </div>
+    </template>
     <div class="vsc-prop-row-actions">
-      <span class="vsc-prop-object-add-btn">
-        <b-icon-plus-circle :scale="0.8" @click="onAddPropClick" />
+      <span class="vsc-prop-action add-primitive" @click="onAddPropClick()">
+        <b-icon-plus-circle :scale="1" />
+      </span>
+      <span class="vsc-prop-action convert2object add-object" @click="onAddPropClick('$object')">
+        +{}
+      </span>
+      <span class="vsc-prop-action convert2array add-array" @click="onAddPropClick('$array')">
+        +[]
       </span>
     </div>
   </div>
@@ -283,25 +308,47 @@ export default {
         field._validating = true
       }
     },
-    onAddPropClick () {
+    onAddPropClick (specialType = null) {
       this.resetPropFieldsStates()
-      const newField = {
-        _initialized: false,
-        _editing: true,
-        _cancelling: false,
-        _validating: false,
-        _deleting: false,
-        _converting: false,
-        _error: false,
-        type: null,
-        name: null,
-        value: null,
-        rawValue: null,
-        userValue: '',
-        initialName: null,
-        initialValue: null,
+      let newField = null
+      if (!specialType) {
+        newField = {
+          _initialized: false,
+          _editing: true,
+          _cancelling: false,
+          _validating: false,
+          _deleting: false,
+          _converting: false,
+          _error: false,
+          type: null,
+          name: null,
+          value: null,
+          rawValue: null,
+          userValue: '',
+          initialName: null,
+          initialValue: null,
+        }
+      } else {
+        if (specialType === '$object') {
+          newField = {
+            _initialized: false,
+            _editing: true,
+            _cancelling: false,
+            _validating: false,
+            _deleting: false,
+            _error: false,
+            open: false,
+            type: '$object',
+            name: '',
+            value: [],
+            rawValue: {},
+            initialName: '',
+          }
+        } else if (specialType === '$array') {
+
+        }
       }
-      this.modelValue.push(newField)
+      this.$set(this.modelValue, this.modelValue.length, newField)
       this.$nextTick(() => {
         this.autosetInputsElements()
         if (this.$inputKeyName) {
@@ -314,10 +361,14 @@ export default {
       field._deleting = true
     },
     onConvertToObjectPropClick (field) {
-      field._converting = '$object'
+      if (!field._error) {
+        field._converting = '$object'
+      }
     },
     onConvertToArrayPropClick (field) {
-      field._converting = '$array'
+      if (!field._error) {
+        field._converting = '$array'
+      }
     },
     resetPropFieldsStates (nestedValue) {
       let value = nestedValue ? nestedValue : this.modelValue
@@ -383,7 +434,7 @@ export default {
       pointer-events: none
       visibility: hidden
 
-  .vsc-prop-actions, .vsc-prop-object-actions
+  .vsc-prop-actions, .vsc-prop-object-actions, .vsc-prop-row-actions
     display: none
     padding-left: 10px
     align-items: center
@@ -401,7 +452,7 @@ export default {
 
       &:hover
         color: #333
-      
+
       &.convert2object,
       &.convert2array
         font-family: 'Source Code Pro', monospace
@@ -488,11 +539,25 @@ export default {
         width: auto
 
   .vsc-prop-row-actions
+    display: flex
     margin-left: 15px
+    padding-left: 0
+    padding-top: 4px
 
-    .vsc-prop-object-add-btn
+    &:hover .vsc-prop-action,
+    &:hover .vsc-prop-action:not(.add-primitive)
+      display: block
+
+    .vsc-prop-action
+      flex: 0 0 auto
       color: #777
       cursor: pointer
+      text-align: center
+
+      &:not(.add-primitive)
+        display: none
+        width: auto
+        padding: 0 4px
 
       &:hover
         color: #333

@@ -1,5 +1,5 @@
 export const isValidPropName = (name) => {
-  return name !== null ? name.toString().search(/^([a-zA-Z_\$])([a-zA-Z0-9_\$])*$/i) !== -1 : false
+  return ![null, undefined,].includes(name) ? name.toString().search(/^([a-zA-Z_\$])([a-zA-Z0-9_\$])*$/i) !== -1 : false
 }
 
 export const isValidCodePrimitiveValue = (value) => {
