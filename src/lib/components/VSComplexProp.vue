@@ -14,7 +14,6 @@
 
 <script>
 import { sortBy, } from 'lodash'
-import { isOfPrimitiveType } from '@app/helpers/Type.js'
 import {
   formatFromNativeStrType,
   formatPrimitiveValueToCode,
@@ -126,6 +125,10 @@ export default {
       for (let [i, field] of localFields.entries()) {
         // Object field updates
         if (field.type === '$object') {
+          // -- Initialize if validated
+          if (field._validating && !field._initialized) {
+            field._initialized = true
+          }
           if (field._cancelling) {
             if (!field._initialized) {
               this.$delete(localFields, i)
@@ -143,7 +146,7 @@ export default {
             } else {
               field._error = true
               if (!field._initialized && !field._editing) { // - Delete the field if not editing & not initialized
-                // this.$delete(localFields, i)
+                this.$delete(localFields, i)
               }
             }
           }
