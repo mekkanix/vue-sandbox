@@ -3,6 +3,7 @@
     <VSPropObjectField
       v-if="typeof modelValue === 'object' && !Array.isArray(modelValue)"
       v-model="localValue"
+      @reset-fields="resetPropFieldsStates"
     />
     <VSPropArrayField
       v-else-if="Array.isArray(modelValue)"
@@ -12,7 +13,8 @@
 </template>
 
 <script>
-import { sortBy, cloneDeep, } from 'lodash'
+import { sortBy, } from 'lodash'
+import { isOfPrimitiveType } from '@app/helpers/Type.js'
 import {
   formatFromNativeStrType,
   formatPrimitiveValueToCode,
@@ -140,8 +142,8 @@ export default {
               }
             } else {
               field._error = true
-              if (!field._editing) { // - Reset to field's previous values if editing done
-                field.name = field.initialName
+              if (!field._initialized && !field._editing) { // - Delete the field if not editing & not initialized
+                // this.$delete(localFields, i)
               }
             }
           }
@@ -153,7 +155,7 @@ export default {
           if (!field._editing && !field._deleting) {
             this.computeLocalFields(field.value)
           }
-        } else if (field.type === '$array') {
+        } else if (field.type === '$array') { // Array field updates
 
         } else { // Primitive Field updates
           // - Change type to object/array if requested
@@ -168,7 +170,7 @@ export default {
                 type: 'string',
                 name: 'attr',
                 value: field.value,
-                rawValue: field.rawValue,
+                rawValue: {},
                 userValue: field.userValue,
                 initialName: 'attr',
                 initialValue: field.initialValue,
@@ -181,10 +183,7 @@ export default {
                 _converting: false,
               }
               this.$set(field.value, 0, nestedField)
-              // this.$set(field, 'rawValue', {
-              //   [nestedField.name]: nestedField.rawValue,
-              // })
-              this.$set(field.rawValue, nestedField.name, nestedField.rawValue)
+              this.$set(nestedField.rawValue, nestedField.name, field.rawValue)
               // -- Remove no necessary other attrs
               this.$delete(field, 'initialValue')
               this.$delete(field, 'userValue')
@@ -279,12 +278,11 @@ export default {
     resetPropFieldsStates (nestedValue) {
       let value = nestedValue ? nestedValue : this.localValue
       for (let field of value) {
+        field._editing = false
         if (field.type === '$object') {
           this.resetPropFieldsStates(field.value)
         } else if (field.type === '$array') {
 
-        } else {
-          field._editing = false
         }
       }
     },

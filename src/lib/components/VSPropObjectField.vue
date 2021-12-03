@@ -348,7 +348,8 @@ export default {
 
         }
       }
-      this.$set(this.modelValue, this.modelValue.length, newField)
+      this.modelValue.push(newField)
+      // this.$set(this.modelValue, this.modelValue.length, newField)
       this.$nextTick(() => {
         this.autosetInputsElements()
         if (this.$inputKeyName) {
@@ -373,13 +374,12 @@ export default {
     resetPropFieldsStates (nestedValue) {
       let value = nestedValue ? nestedValue : this.modelValue
       for (let [i, field] of value.entries()) {
+        field._editing = false
         if (field.type === '$object') {
           this.resetPropFieldsStates(field.value)
         } else if (field.type === '$array') {
 
         } else {
-          field._editing = false
-
           if (!field._initialized && (!isValidPropName(field.name) || !isValidCodePrimitiveValue(field.userValue))) {
             value.splice(i, 1)
           } else {
