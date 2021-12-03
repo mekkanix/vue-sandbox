@@ -477,7 +477,7 @@ export default {
           top: -1px
 
   .vsc-prop-object-blank
-    padding-left: 15px
+    padding: 1px 0 1px 15px
     font-size: 14px
     font-style: italic
     color: #999
