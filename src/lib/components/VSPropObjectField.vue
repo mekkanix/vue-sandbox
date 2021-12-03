@@ -195,6 +195,9 @@
         </template>
       </div>
     </template>
+    <template v-else>
+      <div class="vsc-prop-object-blank">(empty)</div>
+    </template>
     <div class="vsc-prop-row-actions">
       <span class="vsc-prop-action add-primitive" @click="onAddPropClick()">
         <b-icon-plus-circle :scale="1" />
@@ -472,6 +475,12 @@ export default {
         span
           position: relative
           top: -1px
+
+  .vsc-prop-object-blank
+    padding-left: 15px
+    font-size: 14px
+    font-style: italic
+    color: #999
 
   // Nested objects-specific content (via CSS class)
   &.nested-field

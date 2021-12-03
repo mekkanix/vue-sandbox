@@ -142,6 +142,7 @@ export default {
               if (!field._editing) {
                 field.initialName = field.name
                 field._validating = false
+                field._initialized = true
               }
             } else {
               field._error = true
