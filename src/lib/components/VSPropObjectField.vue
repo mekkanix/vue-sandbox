@@ -501,7 +501,7 @@ export default {
       top: 0
       bottom: 0
       left: 16px
-      background: #ddd
+      background: #bbb
       width: 1px
 
   // Nested objects
@@ -540,7 +540,7 @@ export default {
           top: 1px
           padding-left: 5px
           font-size: 12px
-          color: #808080
+          color: #909090
           font-weight: 500
           letter-spacing: 0.5px
 

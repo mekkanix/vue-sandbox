@@ -172,7 +172,7 @@ export default {
             field4: 7,
           }
         case '$array':
-          return ['toto', 'tata', 'titi']
+          return ['toto', 'tata', 'titi', { testField: true, }]
       }
     },
     parsePropValue (value) {

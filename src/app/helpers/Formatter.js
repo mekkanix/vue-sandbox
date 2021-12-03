@@ -86,6 +86,7 @@ export const convertPropObjectToFields = (obj) => {
       })
     }
   }
+  console.log(fmtValue);
   return fmtValue
 }
 
@@ -95,7 +96,12 @@ export const convertPropArrayToFields = (arr) => {
     const isArray = Array.isArray(value)
     if (typeof value === 'object' && value !== null) { // "Complex" type (e.g. Object, Array)
       if (!isArray) { // - Object
-        // ...
+        fmtValue.push({
+          name: null,
+          type: '$object',
+          rawValue: value,
+          value: convertPropObjectToFields(value),
+        })
       } else { // - Array
         // ...
       }
