@@ -86,6 +86,7 @@ export default {
           type: field.type,
           rawValue: field.rawValue,
           initialName: field.name,
+          _initialized: true,
           _editing: field._editing ? field._editing : false,
           _error: field._error ? field._error : false,
           _cancelling: field._cancelling ? field._cancelling : false,
@@ -98,7 +99,6 @@ export default {
         } else if (field.type === '$array') {
 
         } else {
-          newField._initialized = true
           newField._converting = field._converting ? field._converting : false
           newField.userValue = formatPrimitiveValueToCode(field.rawValue, field.type)
           newField.value = field.rawValue !== null ? field.rawValue.toString() : null

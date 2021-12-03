@@ -15,28 +15,36 @@
           :class="{ open: field.open, }"
         >
           <div class="vsc-prop-kname-box">
-            <div class="vsc-prop-kname-wrapper" @click="onNestedGroupKeyNameClick(field)">
-              <b-icon-caret-right-fill :font-scale="0.6" color="#555" class="vsc-prop-object-kname-icn" />
-                <div class="vsc-prop-object-kname">
-                  <template v-if="!field._editing">{{ field.name }}</template>
-                  <template v-else>
-                    <b-form-input
-                      type="text"
-                      v-model="field.name"
-                      ref="inputKeyName"
-                      size="sm"
-                      class="vsc-prop-input input-name xs"
-                      :class="{ 'errored': field._initialized && field._error }"
-                      :style="keyNameInputStyles"
-                      placeholder="name"
-                      autocomplete="none"
-                      @keyup.enter.native="onValidatePropEditClick(field)"
-                      @keyup.esc.native="onCancelPropEditClick(field)"
-                      @click.stop
-                    />
-                    <div class="vsc-prop-v-input v-input-name" ref="vInputKeyName">{{ field.name }}</div>
-                  </template>
-                </div>
+            <div
+              class="vsc-prop-kname-wrapper"
+              :class="{ 'opening-disabled': !field._initialized }"
+              @click="onNestedGroupKeyNameClick(field)"
+            >
+              <b-icon-caret-right-fill
+                :font-scale="0.6"
+                color="#555"
+                class="vsc-prop-object-kname-icn"
+              />
+              <div class="vsc-prop-object-kname">
+                <template v-if="!field._editing">{{ field.name }}</template>
+                <template v-else>
+                  <b-form-input
+                    type="text"
+                    v-model="field.name"
+                    ref="inputKeyName"
+                    size="sm"
+                    class="vsc-prop-input input-name xs"
+                    :class="{ 'errored': field._initialized && field._error }"
+                    :style="keyNameInputStyles"
+                    placeholder="name"
+                    autocomplete="none"
+                    @keyup.enter.native="onValidatePropEditClick(field)"
+                    @keyup.esc.native="onCancelPropEditClick(field)"
+                    @click.stop
+                  />
+                  <div class="vsc-prop-v-input v-input-name" ref="vInputKeyName">{{ field.name }}</div>
+                </template>
+              </div>
             </div>
             <div class="vsc-prop-object-actions">
               <div
@@ -294,8 +302,10 @@ export default {
       })
     },
     onNestedGroupKeyNameClick (field) {
-      this.resetPropFieldsStates()
-      field.open = !field.open
+      if (field._initialized) {
+        this.resetPropFieldsStates()
+        field.open = !field.open
+      }
     },
     onCancelPropEditClick (field) {
       field._editing = false
@@ -496,6 +506,9 @@ export default {
         display: flex
 
       .vsc-prop-kname-wrapper
+        &.opening-disabled .vsc-prop-object-kname-icn
+          color: #aaa
+
         .vsc-prop-object-kname-icn
           position: absolute
           left: 4px
