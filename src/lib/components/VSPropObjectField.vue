@@ -44,6 +44,13 @@
                   />
                   <div class="vsc-prop-v-input v-input-name" ref="vInputKeyName">{{ field.name }}</div>
                 </template>
+                <div class="vsc-prop-colon">:</div>
+              </div>
+              <div
+                v-show="!field.open"
+                class="vsc-prop-object-icn"
+              >
+                {...}
               </div>
             </div>
             <div class="vsc-prop-object-actions">
@@ -515,6 +522,8 @@ export default {
         display: flex
 
       .vsc-prop-kname-wrapper
+        display: flex
+
         &.opening-disabled .vsc-prop-object-kname-icn
           color: #aaa
 
@@ -523,8 +532,17 @@ export default {
           left: 4px
           top: 6px
         .vsc-prop-object-kname
+          display: flex
           padding-left: 15px
           font-size: 14px
+        .vsc-prop-object-icn
+          position: relative
+          top: 1px
+          padding-left: 5px
+          font-size: 12px
+          color: #808080
+          font-weight: 500
+          letter-spacing: 0.5px
 
   // Primitive value
   .vsc-prop-primitive

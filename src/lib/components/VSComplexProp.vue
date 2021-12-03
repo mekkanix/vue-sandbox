@@ -17,7 +17,8 @@ import { sortBy, } from 'lodash'
 import {
   formatFromNativeStrType,
   formatPrimitiveValueToCode,
-  convertPropObjectToArray,
+  convertPropObjectToFields,
+  convertPropArrayToFields,
 } from '@app/helpers/Formatter.js'
 import { isValidPropName, isValidCodePrimitiveValue, } from '@app/helpers/Validator.js'
 import VSPropObjectField from '@lib/components/VSPropObjectField.vue'
@@ -68,17 +69,19 @@ export default {
   },
 
   methods: {
-    formatLocalValue (initValue) {
+    formatToLocalValue (initValue) {
       if (typeof initValue === 'object' && !Array.isArray(initValue)) { // Object
-        let formattedValue = convertPropObjectToArray(initValue)
-        formattedValue = this.formatLocalValueFields(formattedValue)
+        let formattedValue = convertPropObjectToFields(initValue)
+        formattedValue = this.formatToLocalValueFields(formattedValue)
         formattedValue = this.sortLocalFields(formattedValue)
         return formattedValue
       } else { // Array
+        let formattedValue = convertPropArrayToFields(initValue)
+        // console.log(formattedValue);
         return []
       }
     },
-    formatLocalValueFields (value) {
+    formatToLocalValueFields (value) {
       const fields = []
       for (let field of value) {
         let newField = {
@@ -95,7 +98,7 @@ export default {
         }
         if (field.type === '$object') {
           newField.open = true
-          newField.value = this.formatLocalValueFields(field.value)
+          newField.value = this.formatToLocalValueFields(field.value)
         } else if (field.type === '$array') {
 
         } else {
@@ -297,7 +300,7 @@ export default {
 
   created () {
     this.modelValue = this.value
-    this.localValue = this.formatLocalValue(this.value)
+    this.localValue = this.formatToLocalValue(this.value)
   },
 }
 </script>

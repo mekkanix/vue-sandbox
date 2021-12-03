@@ -62,20 +62,19 @@ export const formatPrimitiveValueToCode = (value, type) => {
   return value
 }
 
-export const convertPropObjectToArray = (obj) => {
+export const convertPropObjectToFields = (obj) => {
   let fmtValue = []
   for (const [name, value] of Object.entries(obj)) {
     const isArray = Array.isArray(value)
-    if (typeof value === 'object' && value !== null) {
-      if (!isArray) { // Object
-        const row = {
+    if (typeof value === 'object' && value !== null) { // "Complex" type (e.g. Object, Array)
+      if (!isArray) { // - Object
+        fmtValue.push({
           name,
           type: '$object',
           rawValue: value,
-          value: convertPropObjectToArray(value),
-        }
-        fmtValue.push(row)
-      } else { // Array
+          value: convertPropObjectToFields(value),
+        })
+      } else { // - Array
         // ...
       }
     } else { // Primitive
@@ -90,6 +89,25 @@ export const convertPropObjectToArray = (obj) => {
   return fmtValue
 }
 
-export const convertPropArrayToObject = (arr) => {
+export const convertPropArrayToFields = (arr) => {
+  let fmtValue = []
+  for (const value of arr) {
+    const isArray = Array.isArray(value)
+    if (typeof value === 'object' && value !== null) { // "Complex" type (e.g. Object, Array)
+      if (!isArray) { // - Object
+        // ...
+      } else { // - Array
+        // ...
+      }
+    } else { // Primitive
+      fmtValue.push({
+        name: null,
+        type: value !== null ? typeof value : 'null',
+        rawValue: value,
+        value: parsePrimitiveValue(value, typeof value),
+      })
+    }
+  }
+  console.log(fmtValue);
   return arr
 }
