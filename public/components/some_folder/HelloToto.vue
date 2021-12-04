@@ -16,10 +16,10 @@ export default {
       type: String,
       required: true,
     },
-    count: {
-      type: Number,
-      required: true,
-    },
+    // count: {
+    //   type: Number,
+    //   required: true,
+    // },
     user: {
       type: Object,
       required: true,
@@ -28,8 +28,10 @@ export default {
       type: Array,
       required: true,
     },
-    firstDate: Date,
-    offTestMsg: String,
+    // firstDate: Date,
+    // offTestMsg: String,
+    // test: Object,
+    // test2: Array,
   }
 }
 </script>

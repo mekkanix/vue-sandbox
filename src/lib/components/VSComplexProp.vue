@@ -1,12 +1,12 @@
 <template>
   <div class="vsc-complex-prop">
     <VSPropObjectField
-      v-if="typeof modelValue === 'object' && !Array.isArray(modelValue)"
+      v-if="type === '$object'"
       v-model="localValue"
       @reset-fields="resetPropFieldsStates"
     />
     <VSPropArrayField
-      v-else-if="Array.isArray(modelValue)"
+      v-else-if="type === '$array'"
       v-model="localValue"
     />
   </div>
@@ -39,6 +39,7 @@ export default {
   },
 
   data: () => ({
+    type: null,
     modelValue: null,
     localValue: null,
   }),
@@ -46,7 +47,8 @@ export default {
   watch: {
     value: {
       handler (value) {
-        this.modelValue = value
+        this.type = this.getFormattedType(value)
+        // this.modelValue = value
       },
       deep: true,
     },
@@ -59,6 +61,7 @@ export default {
     localValue: {
       handler (value) {
         let updatedValue = this.computeLocalFields(value)
+        // console.log(updatedValue);
         // Sorting localValue here causes an infinite loop of this watcher,
         // because sorting it changes its internal state and re-call the watcher.
         // TODO:  Maybe use a separate "sort button" feature to avoid this problem.
@@ -77,8 +80,8 @@ export default {
         return formattedValue
       } else { // Array
         let formattedValue = convertPropArrayToFields(initValue)
-        // console.log(formattedValue);
-        return []
+        formattedValue = this.formatToLocalValueFields(formattedValue)
+        return formattedValue
       }
     },
     formatToLocalValueFields (value) {
@@ -96,11 +99,9 @@ export default {
           _validating: field._validating ? field._validating : false,
           _deleting: field._deleting ? field._deleting : false,
         }
-        if (field.type === '$object') {
+        if (['$object', '$array'].includes(field.type)) {
           newField.open = true
           newField.value = this.formatToLocalValueFields(field.value)
-        } else if (field.type === '$array') {
-
         } else {
           newField._converting = field._converting ? field._converting : false
           newField.userValue = formatPrimitiveValueToCode(field.rawValue, field.type)
@@ -110,15 +111,30 @@ export default {
       }
       return fields
     },
-    formatLocalToModelValue (value) {
-      let propValue = {}
-      for (const field of value) {
-        if (field.type === '$object') {
-          propValue[field.name] = this.formatLocalToModelValue(field.value)
-        } else if (field.type === '$array') {
-
-        } else {
-          propValue[field.name] = field.rawValue
+    formatLocalToModelValue (value, type) {
+      let localType = type ? type : this.type
+      let propValue = null
+      if (localType === '$object') {
+        propValue = {}
+        for (const field of value) {
+          if (field.type === '$object') {
+            propValue[field.name] = this.formatLocalToModelValue(field.value, field.type)
+          } else if (field.type === '$array') {
+            propValue[field.name] = this.formatLocalToModelValue(field.value, field.type)
+          } else {
+            propValue[field.name] = field.rawValue
+          }
+        }
+      } else {
+        propValue = []
+        for (const field of value) {
+          if (field.type === '$object') {
+            propValue.push(this.formatLocalToModelValue(field.value, field.type))
+          } else if (field.type === '$array') {
+            propValue.push(this.formatLocalToModelValue(field.value, field.type))
+          } else {
+            propValue.push(field.rawValue)
+          }
         }
       }
       return propValue
@@ -299,6 +315,7 @@ export default {
   },
 
   created () {
+    this.type = this.getFormattedType(this.value)
     this.modelValue = this.value
     this.localValue = this.formatToLocalValue(this.value)
   },

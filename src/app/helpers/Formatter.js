@@ -12,6 +12,7 @@ export const formatComponentPath = (cPath, rev = false) => {
 }
 
 export const formatFromNativeType = (type) => {
+  // console.log(type);
   for (const [typeName, nativeType] of Object.entries(NATIVE2STR_TYPES_MAP)) {
     if (type === nativeType) {
       return typeName
@@ -75,7 +76,12 @@ export const convertPropObjectToFields = (obj) => {
           value: convertPropObjectToFields(value),
         })
       } else { // - Array
-        // ...
+        fmtValue.push({
+          name,
+          type: '$array',
+          rawValue: value,
+          value: convertPropArrayToFields(value),
+        })
       }
     } else { // Primitive
       fmtValue.push({
@@ -86,7 +92,6 @@ export const convertPropObjectToFields = (obj) => {
       })
     }
   }
-  console.log(fmtValue);
   return fmtValue
 }
 
@@ -103,7 +108,12 @@ export const convertPropArrayToFields = (arr) => {
           value: convertPropObjectToFields(value),
         })
       } else { // - Array
-        // ...
+        fmtValue.push({
+          name: null,
+          type: '$array',
+          rawValue: value,
+          value: convertPropArrayToFields(value),
+        })
       }
     } else { // Primitive
       fmtValue.push({
@@ -114,6 +124,6 @@ export const convertPropArrayToFields = (arr) => {
       })
     }
   }
-  console.log(fmtValue);
-  return arr
+  // console.log(fmtValue);
+  return fmtValue
 }
