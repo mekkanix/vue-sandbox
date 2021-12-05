@@ -1,6 +1,6 @@
 <template>
   <div
-    class="vsc-prop-field-object"
+    class="vsc-prop-field-array"
     :class="containerClasses"
   >
     <template v-if="modelValue.length">
@@ -25,39 +25,14 @@
                 color="#555"
                 class="vsc-prop-array-kname-icn"
               />
-              <div class="vsc-prop-array-kname">
-                [
-              </div>
-              <div
-                v-show="!field.open"
-                class="vsc-prop-array-icn"
-              >
-                [...]
+              <!-- <div class="vsc-prop-array-kname">
+              </div> -->
+              <div class="vsc-prop-array-icn">
+                <span v-show="!field.open">[...]</span>
+                <span v-show="field.open"><span class="prop-type">Array</span></span>
               </div>
             </div>
             <div class="vsc-prop-array-actions">
-              <div
-                v-if="!field._editing"
-                class="vsc-prop-action edit"
-                @click="onEditPropClick(field)"
-              >
-                <b-icon-pencil-fill :scale="0.7" />
-              </div>
-              <template v-if="field._editing">
-                <div
-                  v-if="!field._error"
-                  class="vsc-prop-action validate-edit"
-                  @click="onValidatePropEditClick(field)"
-                >
-                  <b-icon-check-circle :scale="0.9" />
-                </div>
-                <div
-                  class="vsc-prop-action cancel-edit"
-                  @click="onCancelPropEditClick(field)"
-                >
-                  <b-icon-x-circle :scale="0.9" />
-                </div>
-              </template>
               <div
                 class="vsc-prop-action delete"
                 @click="onDeletePropClick(field)"
@@ -76,7 +51,6 @@
         </div>
         <template v-else-if="field.type === '$object'">
           <VSPropObjectField
-            v-show="field.open"
             v-model="field.value"
             :depth="depth + 1"
             @delete-field="onDeletePropClick"
@@ -86,12 +60,8 @@
         <template v-else>
           <div class="vsc-prop-primitive" :class="{ idle: !field._editing, updating: field._editing, }">
             <template v-if="!field._editing">
-              <div class="vsc-prop-name">
-                <div class="vsc-prop-kv-wrapper vsc-prop-name-wrapper">
-                  <div class="vsc-prop-name-label">{{ field.name }}</div>
-                </div>
-                <div class="vsc-prop-colon">:</div>
-              </div>
+              <!-- <div class="vsc-prop-name">
+              </div> -->
               <div class="vsc-prop-value">
                 <VSPrimitiveValue
                   :value="field.value"
@@ -126,25 +96,6 @@
               </div>
             </template>
             <template v-else>
-              <div class="vsc-prop-name">
-                <div class="vsc-prop-kv-wrapper vsc-prop-name-wrapper">
-                  <b-form-input
-                    type="text"
-                    v-model="field.name"
-                    ref="inputKeyName"
-                    size="sm"
-                    class="vsc-prop-input input-name xs"
-                    :class="{ 'errored': field._initialized && field._error }"
-                    :style="keyNameInputStyles"
-                    placeholder="name"
-                    autocomplete="none"
-                    @keyup.enter.native="onValidatePropEditClick(field)"
-                    @keyup.esc.native="onCancelPropEditClick(field)"
-                  />
-                  <div class="vsc-prop-v-input v-input-name" ref="vInputKeyName">{{ field.name }}</div>
-                </div>
-                <div class="vsc-prop-colon">:</div>
-              </div>
               <div class="vsc-prop-value">
                 <div class="vsc-prop-kv-wrapper vsc-prop-value-wrapper">
                   <b-form-input
@@ -399,10 +350,9 @@ export default {
 </script>
 
 <style lang="sass" scoped>
-.vsc-prop-field-object
+.vsc-prop-field-array
   color: #444
 
-  // Generic
   .vsc-prop-kv-wrapper,
   .vsc-prop-kname-wrapper
     position: relative
@@ -519,11 +469,14 @@ export default {
         .vsc-prop-array-icn
           position: relative
           top: 1px
-          padding-left: 5px
+          padding-left: 16px
           font-size: 12px
           color: #909090
           font-weight: 500
           letter-spacing: 0.5px
+
+          .prop-type
+            font-size: 14px
 
   // Primitive value
   .vsc-prop-primitive

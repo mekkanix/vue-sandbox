@@ -47,10 +47,10 @@
                 <div class="vsc-prop-colon">:</div>
               </div>
               <div
-                v-show="!field.open"
                 class="vsc-prop-object-icn"
               >
-                {...}
+                <span v-show="!field.open">{...}</span>
+                <span v-show="field.open"><span class="prop-type">Object</span></span>
               </div>
             </div>
             <div class="vsc-prop-object-actions">
@@ -542,6 +542,9 @@ export default {
           color: #909090
           font-weight: 500
           letter-spacing: 0.5px
+
+          .prop-type
+            font-size: 14px
 
   // Primitive value
   .vsc-prop-primitive

@@ -175,12 +175,43 @@ export default {
           if (field._deleting) {
             this.$delete(localFields, i)
           }
-
           if (!field._editing && !field._deleting) {
             this.computeLocalFields(field.value, field.type)
           }
         } else if (field.type === '$array') { // Array field updates
-
+          // - Initialize if validated
+          if (field._validating && !field._initialized) {
+            field._initialized = true
+          }
+          if (field._cancelling) {
+            if (!field._initialized) {
+              this.$delete(localFields, i)
+            } else {
+              field._cancelling = false
+            }
+          } else {
+            if (isValidCodePrimitiveValue(field.userValue)) {
+              field._error = false
+              if (!field._editing) {
+                field.initialName = field.name
+                field._validating = false
+                field._initialized = true
+              }
+            } else {
+              field._error = true
+              if (!field._initialized && !field._editing) { // - Delete the field if not editing & not initialized
+                this.$delete(localFields, i)
+              }
+            }
+          }
+          console.log(field);
+          // - Deleting
+          if (field._deleting) {
+            this.$delete(localFields, i)
+          }
+          if (!field._editing && !field._deleting) {
+            this.computeLocalFields(field.value, field.type)
+          }
         } else { // Primitive Field updates
           // - Change type to object/array if requested
           if (field._converting && !field._error) {
