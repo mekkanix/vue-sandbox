@@ -369,7 +369,6 @@ export default {
         }
       }
       this.modelValue.push(newField)
-      // this.$set(this.modelValue, this.modelValue.length, newField)
       this.$nextTick(() => {
         this.autosetInputsElements()
         if (this.$inputKeyName) {

@@ -124,6 +124,5 @@ export const convertPropArrayToFields = (arr) => {
       })
     }
   }
-  // console.log(fmtValue);
   return fmtValue
 }

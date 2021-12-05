@@ -8,6 +8,7 @@
     <VSPropArrayField
       v-else-if="type === '$array'"
       v-model="localValue"
+      @reset-fields="resetPropFieldsStates"
     />
   </div>
 </template>
@@ -61,7 +62,6 @@ export default {
     localValue: {
       handler (value) {
         let updatedValue = this.computeLocalFields(value)
-        // console.log(updatedValue);
         // Sorting localValue here causes an infinite loop of this watcher,
         // because sorting it changes its internal state and re-call the watcher.
         // TODO:  Maybe use a separate "sort button" feature to avoid this problem.
@@ -139,12 +139,13 @@ export default {
       }
       return propValue
     },
-    computeLocalFields (localFields) {
+    computeLocalFields (localFields, parentPropType = null) {
+      const parentType = parentPropType ?? this.type
       const strNullValue = 'null'
       for (let [i, field] of localFields.entries()) {
         // Object field updates
         if (field.type === '$object') {
-          // -- Initialize if validated
+          // - Initialize if validated
           if (field._validating && !field._initialized) {
             field._initialized = true
           }
@@ -176,7 +177,7 @@ export default {
           }
 
           if (!field._editing && !field._deleting) {
-            this.computeLocalFields(field.value)
+            this.computeLocalFields(field.value, field.type)
           }
         } else if (field.type === '$array') { // Array field updates
 
@@ -218,10 +219,11 @@ export default {
           }
           // - Start primitive type processing
           if (!['$object', '$array',].includes(field.type)) {
-            // -- Initialize if validated
+            // // -- Initialize if validated
             if (field._validating && !field._initialized) {
               field._initialized = true
             }
+            
             // -- Cancelling (edit)
             if (field._cancelling) {
               if (!field._initialized) {
@@ -236,8 +238,8 @@ export default {
               }
             } else {
               // -- [continuing] Valid code provided (name & value)
-              const validPropName = isValidPropName(field.name)
-              const uniquePropName = this.isUniqueFieldPropName(field.name, localFields)
+              const validPropName = isValidPropName(field.name) || parentType === '$array'
+              const uniquePropName = this.isUniqueFieldPropName(field.name, localFields) || parentType === '$array'
               const validPropValue = isValidCodePrimitiveValue(field.userValue)
               if (validPropName && uniquePropName && validPropValue) {
                 field._error = false
@@ -260,7 +262,6 @@ export default {
                   field.value = field.rawValue !== null ? field.rawValue.toString() : null
                 }
               }
-
               // - Deleting
               if (field._deleting) {
                 localFields.splice(i, 1)
@@ -308,9 +309,6 @@ export default {
 
         }
       }
-    },
-    onEditArrayFieldValue (field) {
-      console.log(field);
     },
   },
 
