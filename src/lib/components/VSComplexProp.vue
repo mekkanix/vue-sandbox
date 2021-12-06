@@ -3,11 +3,13 @@
     <VSPropObjectField
       v-if="type === '$object'"
       v-model="localValue"
+      :parent-type="type"
       @reset-fields="resetPropFieldsStates"
     />
     <VSPropArrayField
       v-else-if="type === '$array'"
       v-model="localValue"
+      :parent-type="type"
       @reset-fields="resetPropFieldsStates"
     />
   </div>
@@ -143,8 +145,7 @@ export default {
       const parentType = parentPropType ?? this.type
       const strNullValue = 'null'
       for (let [i, field] of localFields.entries()) {
-        // Object field updates
-        if (field.type === '$object') {
+        if (field.type === '$object') { // Object field updates
           // - Initialize if validated
           if (field._validating && !field._initialized) {
             field._initialized = true

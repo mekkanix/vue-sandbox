@@ -47,10 +47,11 @@
                 <div class="vsc-prop-colon">:</div>
               </div>
               <div
+                v-if="parentType !== '$array'"
                 class="vsc-prop-object-icn"
               >
-                <span v-show="!field.open">{...}</span>
-                <span v-show="field.open"><span class="prop-type">Object</span></span>
+                <span class="prop-type">Object</span>
+                <span class="prop-type-icn" v-show="!field.open">{...}</span>
               </div>
             </div>
             <div class="vsc-prop-object-actions">
@@ -87,13 +88,21 @@
           <VSPropObjectField
             v-show="field.open"
             v-model="field.value"
+            :parent-type="parentType"
             :depth="depth + 1"
             @delete-field="onDeletePropClick"
             @reset-fields="resetPropFieldsStates"
           />
         </div>
         <template v-else-if="field.type === '$array'">
-
+          <VSPropArrayField
+            v-show="field.open"
+            v-model="field.value"
+            :depth="depth + 1"
+            :parent-type="parentType"
+            @delete-field="onDeletePropClick"
+            @reset-fields="resetPropFieldsStates"
+          />
         </template>
         <template v-else>
           <div class="vsc-prop-primitive" :class="{ idle: !field._editing, updating: field._editing, }">
@@ -205,6 +214,7 @@
     <template v-else>
       <div class="vsc-prop-object-blank">(empty)</div>
     </template>
+
     <div class="vsc-prop-row-actions">
       <span class="vsc-prop-action add-primitive" @click="onAddPropClick()">
         <b-icon-plus-circle :scale="1" />
@@ -238,6 +248,10 @@ export default {
       type: Number,
       default: 0,
     },
+    parentType: {
+      type: String,
+      default: null,
+    }
   },
 
   data: () => ({
@@ -255,6 +269,7 @@ export default {
       return {
         open: this.open,
         'nested-field': this.depth > 0,
+        'parent-object': this.parentType === '$object',
       }
     },
     keyNameInputStyles () {
@@ -504,6 +519,52 @@ export default {
       width: 1px
 
   // Nested objects
+  &.parent-object
+    .vsc-prop-kname-box
+      position: relative
+      display: flex
+      align-items: center
+      min-height: 22px
+      padding-bottom: 1px
+      color: #444
+      cursor: pointer
+
+      &:hover .vsc-prop-object-actions
+        display: flex
+
+      .vsc-prop-kname-wrapper
+        display: flex
+        align-items: center
+
+        &.opening-disabled .vsc-prop-object-kname-icn
+          color: #aaa
+
+        .vsc-prop-object-kname-icn
+          position: absolute
+          left: 4px
+          top: 6px
+        .vsc-prop-object-kname
+          display: flex
+          padding-left: 15px
+          font-size: 14px
+        .vsc-prop-object-icn
+          position: relative
+          top: 1px
+          padding-left: 5px
+          font-size: 12px
+          color: #909090
+          font-weight: 500
+          letter-spacing: 0.5px
+        .prop-type
+          position: relative
+          top: -1px
+          color: #909090
+          font-size: 14px
+          font-weight: 700
+        .prop-type-icn
+          position: relative
+          top: -2px
+
   .vsc-prop-subobject
     &.open > .vsc-prop-kname-box > .vsc-prop-kname-wrapper > .vsc-prop-object-kname-icn
       transform: rotate(90deg)
@@ -542,9 +603,11 @@ export default {
           color: #909090
           font-weight: 500
           letter-spacing: 0.5px
-
+          
           .prop-type
+            color: #909090
             font-size: 14px
+            font-weight: 700
 
   // Primitive value
   .vsc-prop-primitive

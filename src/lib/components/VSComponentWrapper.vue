@@ -172,7 +172,7 @@ export default {
             field4: 7,
           }
         case '$array':
-          return ['trucmuche', 'machin', ['toto1', 'toto2', ['titicaca',]]]
+          return ['trucmuche', 'machin',]
       }
     },
     parsePropValue (value) {

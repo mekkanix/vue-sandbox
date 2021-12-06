@@ -45,14 +45,38 @@
             v-show="field.open"
             v-model="field.value"
             :depth="depth + 1"
+            :parent-type="parentType"
             @delete-field="onDeletePropClick"
             @reset-fields="resetPropFieldsStates"
           />
         </div>
         <template v-else-if="field.type === '$object'">
+          <div
+            v-if="parentType === '$array'"
+            class="vsc-prop-kname-box"
+            :class="{ open: field.open, }"
+          >
+            <div
+              class="vsc-prop-kname-wrapper"
+              :class="{ 'opening-disabled': !field._initialized }"
+              @click="onNestedGroupKeyNameClick(field)"
+            >
+              <b-icon-caret-right-fill
+                :font-scale="0.6"
+                color="#555"
+                class="vsc-prop-array-kname-icn"
+              />
+              <div class="vsc-prop-object-kname">
+                <span class="prop-type">Object</span>
+                <span v-show="!field.open" class="prop-type-icn">{...}</span>
+              </div>
+            </div>
+          </div>
           <VSPropObjectField
             v-model="field.value"
+            v-show="field.open"
             :depth="depth + 1"
+            :parent-type="parentType"
             @delete-field="onDeletePropClick"
             @reset-fields="resetPropFieldsStates"
           />
@@ -179,6 +203,10 @@ export default {
       type: Number,
       default: 0,
     },
+    parentType: {
+      type: String,
+      default: null,
+    }
   },
 
   data: () => ({
@@ -193,6 +221,7 @@ export default {
       return {
         open: this.open,
         'nested-field': this.depth > 0,
+        'parent-array': this.parentType === '$array',
       }
     },
     keyNameInputStyles () {
@@ -284,8 +313,8 @@ export default {
       } else {
         if (specialType === '$object') {
           newField = {
-            _initialized: false,
-            _editing: true,
+            _initialized: true,
+            _editing: false,
             _cancelling: false,
             _validating: false,
             _deleting: false,
@@ -436,6 +465,51 @@ export default {
       width: 1px
 
   // Nested objects
+  &.parent-array
+    &.open > .vsc-prop-kname-box > .vsc-prop-kname-wrapper > .vsc-prop-array-kname-icn,
+    .vsc-prop-kname-box.open > .vsc-prop-kname-wrapper > .vsc-prop-array-kname-icn
+      transform: rotate(90deg)
+
+    .vsc-prop-kname-box
+      position: relative
+      display: flex
+      align-items: center
+      min-height: 22px
+      padding-bottom: 1px
+      color: #444
+      cursor: pointer
+
+      &:hover .vsc-prop-object-actions
+        display: flex
+
+      .vsc-prop-kname-wrapper
+        display: flex
+        align-items: center
+
+        &.opening-disabled .vsc-prop-array-kname-icn
+          color: #aaa
+
+        .vsc-prop-array-kname-icn
+          position: absolute
+          left: 4px
+          top: 6px
+        .vsc-prop-object-kname
+          display: flex
+          padding-left: 15px
+          font-size: 14px
+        .prop-type
+          color: #909090
+          font-size: 14px
+          font-weight: 700
+        .prop-type-icn
+          position: relative
+          top: 1px
+          padding-left: 4px
+          font-size: 12px
+          color: #909090
+          font-weight: 500
+          letter-spacing: 0.5px
+
   .vsc-prop-subarray
     &.open > .vsc-prop-kname-box > .vsc-prop-kname-wrapper > .vsc-prop-array-kname-icn
       transform: rotate(90deg)
@@ -475,8 +549,10 @@ export default {
           font-weight: 500
           letter-spacing: 0.5px
 
-          .prop-type
-            font-size: 14px
+        .prop-type
+          color: #909090
+          font-size: 14px
+          font-weight: 700
 
   // Primitive value
   .vsc-prop-primitive
