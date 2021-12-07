@@ -78,7 +78,10 @@
               </div>
             </div>
           </div>
-          <VSPropObjectField
+          <!-- VSPropObjectField -->
+          <component
+            v-if="objFieldComp"
+            :is="objFieldComp"
             v-model="field.value"
             v-show="field.open"
             :depth="depth + 1"
@@ -191,13 +194,11 @@
 <script>
 import { isValidPropName, isValidCodePrimitiveValue, } from '@app/helpers/Validator.js'
 import VSPrimitiveValue from '@lib/components/VSPrimitiveValue.vue'
-import VSPropObjectField from '@lib/components/VSPropObjectField.vue'
 
 export default {
   name: 'VSPropArrayField',
   components: {
     VSPrimitiveValue,
-    VSPropObjectField,
   },
 
   props: {
@@ -216,6 +217,7 @@ export default {
   },
 
   data: () => ({
+    objFieldComp: null,
     modelValue: [],
     $inputKeyValue: null,
     $vInputKeyValue: null,
@@ -240,6 +242,9 @@ export default {
         width: `${this.vKeyValueInputWidth}px`,
       }
     },
+    hasNestedObjectFields () {
+      return !!this.modelValue.filter(field => field.type === '$object').length
+    },
   },
 
   watch: {
@@ -252,6 +257,11 @@ export default {
         })
       },
       deep: true,
+    },
+    hasNestedObjectFields (value) {
+      if (value) {
+        this.objFieldComp = require('@lib/components/VSPropObjectField.vue').default
+      }
     },
   },
 

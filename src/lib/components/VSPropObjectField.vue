@@ -95,9 +95,12 @@
           />
         </div>
         <template v-else-if="field.type === '$array'">
-          <VSPropArrayField
-            v-show="field.open"
+          <!-- VSPropArrayField -->
+          <component
+            v-if="objFieldComp"
+            :is="objFieldComp"
             v-model="field.value"
+            v-show="field.open"
             :depth="depth + 1"
             :parent-type="field.type"
             @delete-field="onDeletePropClick"
@@ -232,11 +235,13 @@
 <script>
 import { isValidPropName, isValidCodePrimitiveValue, } from '@app/helpers/Validator.js'
 import VSPrimitiveValue from '@lib/components/VSPrimitiveValue.vue'
+// import VSPropArrayField from '@lib/components/VSPropArrayField.vue'
 
 export default {
   name: 'VSPropObjectField',
   components: {
     VSPrimitiveValue,
+    // VSPropArrayField,
   },
 
   props: {
@@ -255,6 +260,7 @@ export default {
   },
 
   data: () => ({
+    objFieldComp: null,
     modelValue: [],
     $inputKeyName: null,
     $inputKeyValue: null,
@@ -282,6 +288,9 @@ export default {
         width: `${this.vKeyValueInputWidth}px`,
       }
     },
+    hasNestedObjectFields () {
+      return !!this.modelValue.filter(field => field.type === '$array').length
+    },
   },
 
   watch: {
@@ -294,6 +303,11 @@ export default {
         })
       },
       deep: true,
+    },
+    hasNestedObjectFields (value) {
+      if (value) {
+        this.objFieldComp = require('@lib/components/VSPropArrayField.vue').default
+      }
     },
   },
 
