@@ -25,8 +25,6 @@
                 color="#555"
                 class="vsc-prop-array-kname-icn"
               />
-              <!-- <div class="vsc-prop-array-kname">
-              </div> -->
               <div class="vsc-prop-array-icn">
                 <span v-show="!field.open">[...]</span>
                 <span v-show="field.open"><span class="prop-type">Array</span></span>
@@ -45,7 +43,7 @@
             v-show="field.open"
             v-model="field.value"
             :depth="depth + 1"
-            :parent-type="parentType"
+            :parent-type="field.type"
             @delete-field="onDeletePropClick"
             @reset-fields="resetPropFieldsStates"
           />
@@ -71,12 +69,20 @@
                 <span v-show="!field.open" class="prop-type-icn">{...}</span>
               </div>
             </div>
+            <div class="vsc-prop-actions">
+              <div
+                class="vsc-prop-action delete"
+                @click="onDeletePropClick(field)"
+              >
+                <b-icon-trash-fill :scale="0.9" />
+              </div>
+            </div>
           </div>
           <VSPropObjectField
             v-model="field.value"
             v-show="field.open"
             :depth="depth + 1"
-            :parent-type="parentType"
+            :parent-type="field.type"
             @delete-field="onDeletePropClick"
             @reset-fields="resetPropFieldsStates"
           />
@@ -587,6 +593,10 @@ export default {
 
       .input-value
         width: auto
+
+  .vsc-prop-kname-box
+    &:hover > .vsc-prop-actions
+      display: flex
 
   .vsc-prop-row-actions
     display: flex

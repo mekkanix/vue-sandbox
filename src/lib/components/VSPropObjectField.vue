@@ -88,7 +88,7 @@
           <VSPropObjectField
             v-show="field.open"
             v-model="field.value"
-            :parent-type="parentType"
+            :parent-type="field.type"
             :depth="depth + 1"
             @delete-field="onDeletePropClick"
             @reset-fields="resetPropFieldsStates"
@@ -99,7 +99,7 @@
             v-show="field.open"
             v-model="field.value"
             :depth="depth + 1"
-            :parent-type="parentType"
+            :parent-type="field.type"
             @delete-field="onDeletePropClick"
             @reset-fields="resetPropFieldsStates"
           />
@@ -380,7 +380,20 @@ export default {
             initialName: '',
           }
         } else if (specialType === '$array') {
-
+          newField = {
+            _initialized: false,
+            _editing: true,
+            _cancelling: false,
+            _validating: false,
+            _deleting: false,
+            _error: false,
+            open: false,
+            type: '$array',
+            name: '',
+            value: [],
+            rawValue: {},
+            initialName: '',
+          }
         }
       }
       this.modelValue.push(newField)
