@@ -9,6 +9,8 @@
         :key="i"
         class="vsc-prop-field-wrapper"
       >
+
+        <!-- Prop: Object -->
         <div
           v-if="field.type === '$object'"
           class="vsc-prop-subobject"
@@ -78,6 +80,7 @@
                 </div>
               </template>
               <div
+                v-if="field._initialized"
                 class="vsc-prop-action delete"
                 @click="onDeletePropClick(field)"
               >
@@ -94,7 +97,76 @@
             @reset-fields="resetPropFieldsStates"
           />
         </div>
+
+        <!-- Prop: Array -->
         <template v-else-if="field.type === '$array'">
+          <div
+            v-if="parentType === '$object'"
+            class="vsc-prop-kname-box"
+            :class="{ open: field.open, }"
+          >
+            <div
+              class="vsc-prop-kname-wrapper"
+              :class="{ 'opening-disabled': !field._initialized }"
+              @click="onNestedGroupKeyNameClick(field)"
+            >
+              <b-icon-caret-right-fill
+                :font-scale="0.6"
+                color="#555"
+                class="vsc-prop-object-kname-icn"
+              />
+              <div class="vsc-prop-object-kname">
+                <template v-if="!field._editing">{{ field.name }}</template>
+                <template v-else>
+                  <b-form-input
+                    type="text"
+                    v-model="field.name"
+                    ref="inputKeyName"
+                    size="sm"
+                    class="vsc-prop-input input-name xs"
+                    :class="{ 'errored': field._initialized && field._error }"
+                    :style="keyNameInputStyles"
+                    placeholder="name"
+                    autocomplete="none"
+                    @keyup.enter.native="onValidatePropEditClick(field)"
+                    @keyup.esc.native="onCancelPropEditClick(field)"
+                    @click.stop
+                  />
+                  <div class="vsc-prop-v-input v-input-name" ref="vInputKeyName">{{ field.name }}</div>
+                </template>
+                <div class="vsc-prop-colon">:</div>
+              </div>
+              <div
+                v-if="parentType !== '$array'"
+                class="vsc-prop-object-icn"
+              >
+                <span class="prop-type">Array</span>
+                <span class="prop-type-icn" v-show="!field.open">[...]</span>
+              </div>
+            </div>
+            <div class="vsc-prop-actions">
+              <div
+                v-if="field._editing && !field._error"
+                class="vsc-prop-action validate-edit"
+                @click="onValidatePropEditClick(field)"
+              >
+                <b-icon-check-circle :scale="0.9" />
+              </div>
+              <div
+                v-if="field._editing"
+                class="vsc-prop-action cancel-edit"
+                @click="onCancelPropEditClick(field)"
+              >
+                <b-icon-x-circle :scale="0.9" />
+              </div>
+              <div
+                class="vsc-prop-action delete"
+                @click="onDeletePropClick(field)"
+              >
+                <b-icon-trash-fill :scale="0.9" />
+              </div>
+            </div>
+          </div>
           <!-- VSPropArrayField -->
           <component
             v-if="objFieldComp"
@@ -107,6 +179,8 @@
             @reset-fields="resetPropFieldsStates"
           />
         </template>
+
+        <!-- Prop: Primitive -->
         <template v-else>
           <div class="vsc-prop-primitive" :class="{ idle: !field._editing, updating: field._editing, }">
             <template v-if="!field._editing">
@@ -630,7 +704,7 @@ export default {
           color: #909090
           font-weight: 500
           letter-spacing: 0.5px
-          
+
           .prop-type
             color: #909090
             font-size: 14px
@@ -669,6 +743,10 @@ export default {
 
       .input-value
         width: auto
+
+  .vsc-prop-kname-box
+    &:hover > .vsc-prop-actions
+      display: flex
 
   .vsc-prop-row-actions
     display: flex

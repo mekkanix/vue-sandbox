@@ -145,7 +145,8 @@ export default {
       const parentType = parentPropType ?? this.type
       const strNullValue = 'null'
       for (let [i, field] of localFields.entries()) {
-        if (field.type === '$object') { // Object field updates
+        // Object Field updates
+        if (field.type === '$object') {
           // - Initialize if validated
           if (field._validating && !field._initialized) {
             field._initialized = true
@@ -158,18 +159,22 @@ export default {
               field._cancelling = false
             }
           } else {
-            if (isValidPropName(field.name) && this.isUniqueFieldPropName(field.name, localFields)) {
-              field._error = false
-              if (!field._editing) {
-                field.initialName = field.name
-                field._validating = false
-                field._initialized = true
+            if (parentType === '$object') {
+              if (isValidPropName(field.name) && this.isUniqueFieldPropName(field.name, localFields)) {
+                field._error = false
+                if (!field._editing) {
+                  field.initialName = field.name
+                  field._validating = false
+                  field._initialized = true
+                }
+              } else {
+                field._error = true
+                if (!field._initialized && !field._editing) { // - Delete the field if not editing & not initialized
+                  this.$delete(localFields, i)
+                }
               }
-            } else {
-              field._error = true
-              if (!field._initialized && !field._editing) { // - Delete the field if not editing & not initialized
-                this.$delete(localFields, i)
-              }
+            } else if (parentType === '$array') {
+              console.log(field);
             }
           }
           // - Deleting
@@ -179,7 +184,9 @@ export default {
           if (!field._editing && !field._deleting) {
             this.computeLocalFields(field.value, field.type)
           }
-        } else if (field.type === '$array') { // Array field updates
+
+        // Array Field updates
+        } else if (field.type === '$array') {
           // - Initialize if validated
           if (field._validating && !field._initialized) {
             field._initialized = true
@@ -191,21 +198,26 @@ export default {
               field._cancelling = false
             }
           } else {
-            if (isValidCodePrimitiveValue(field.userValue)) {
-              field._error = false
-              if (!field._editing) {
-                field.initialName = field.name
-                field._validating = false
-                field._initialized = true
+            if (parentType === '$object') {
+              const isValidObjectPropName = isValidPropName(field.name) && this.isUniqueFieldPropName(field.name, localFields)
+              const isValidObjectPropValue = isValidCodePrimitiveValue(field.userValue) || field.type === '$array'
+              if (isValidObjectPropName && isValidObjectPropValue) {
+                field._error = false
+                if (!field._editing) {
+                  field.initialName = field.name
+                  field._validating = false
+                  field._initialized = true
+                }
+              } else {
+                field._error = true
+                if (!field._initialized && !field._editing) { // - Delete the field if not editing & not initialized
+                  this.$delete(localFields, i)
+                }
               }
-            } else {
-              field._error = true
-              if (!field._initialized && !field._editing) { // - Delete the field if not editing & not initialized
-                this.$delete(localFields, i)
-              }
+            } else if (parentType === '$array') {
+              console.log(field);
             }
           }
-          console.log(field);
           // - Deleting
           if (field._deleting) {
             this.$delete(localFields, i)
@@ -213,7 +225,9 @@ export default {
           if (!field._editing && !field._deleting) {
             this.computeLocalFields(field.value, field.type)
           }
-        } else { // Primitive Field updates
+
+        // Primitive Field updates
+        } else {
           // - Change type to object/array if requested
           if (field._converting && !field._error) {
             this.resetPropFieldsStates()
@@ -255,7 +269,6 @@ export default {
             if (field._validating && !field._initialized) {
               field._initialized = true
             }
-            
             // -- Cancelling (edit)
             if (field._cancelling) {
               if (!field._initialized) {

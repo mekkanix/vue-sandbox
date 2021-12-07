@@ -9,6 +9,8 @@
         :key="i"
         class="vsc-prop-field-wrapper"
       >
+
+        <!-- Prop: Array -->
         <div
           v-if="field.type === '$array'"
           class="vsc-prop-subarray"
@@ -26,8 +28,8 @@
                 class="vsc-prop-array-kname-icn"
               />
               <div class="vsc-prop-array-icn">
-                <span v-show="!field.open">[...]</span>
-                <span v-show="field.open"><span class="prop-type">Array</span></span>
+                <span class="prop-type">Array</span>
+                <span class="prop-type-icn" v-show="!field.open">[...]</span>
               </div>
             </div>
             <div class="vsc-prop-array-actions">
@@ -48,6 +50,8 @@
             @reset-fields="resetPropFieldsStates"
           />
         </div>
+
+        <!-- Prop: Object -->
         <template v-else-if="field.type === '$object'">
           <div
             v-if="parentType === '$array'"
@@ -90,11 +94,11 @@
             @reset-fields="resetPropFieldsStates"
           />
         </template>
+
+        <!-- Prop: Primitive -->
         <template v-else>
           <div class="vsc-prop-primitive" :class="{ idle: !field._editing, updating: field._editing, }">
             <template v-if="!field._editing">
-              <!-- <div class="vsc-prop-name">
-              </div> -->
               <div class="vsc-prop-value">
                 <VSPrimitiveValue
                   :value="field.value"
@@ -343,7 +347,20 @@ export default {
             initialName: '',
           }
         } else if (specialType === '$array') {
-
+          newField = {
+            _initialized: true,
+            _editing: false,
+            _cancelling: false,
+            _validating: false,
+            _deleting: false,
+            _error: false,
+            open: false,
+            type: '$array',
+            name: null,
+            value: [],
+            rawValue: [],
+            initialName: null,
+          }
         }
       }
       this.modelValue.push(newField)
