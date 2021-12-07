@@ -160,7 +160,7 @@
                 <b-icon-x-circle :scale="0.9" />
               </div>
               <div
-                v-if="field._initialized"
+                v-if="field._initialized && !field._editing"
                 class="vsc-prop-action edit"
                 @click="onEditPropClick(field)"
               >

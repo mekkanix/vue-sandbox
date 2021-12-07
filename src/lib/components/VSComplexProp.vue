@@ -195,6 +195,7 @@ export default {
             if (!field._initialized) {
               this.$delete(localFields, i)
             } else {
+              field.name = field.initialName
               field._cancelling = false
             }
           } else {
