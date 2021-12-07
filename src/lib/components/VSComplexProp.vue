@@ -229,18 +229,19 @@ export default {
           // - Change type to object/array if requested
           if (field._converting && !field._error) {
             this.resetPropFieldsStates()
+            const oldType = field.type
             this.$set(field, 'type', field._converting)
             this.$set(field, 'open', true)
+            this.$set(field, 'value', [])
             if (field.type === '$object') {
               // -- Add object field's attrs
-              this.$set(field, 'value', [])
               const nestedField = {
-                type: 'string',
+                type: oldType,
                 name: 'attr',
-                value: field.value,
-                rawValue: {},
-                userValue: field.userValue,
                 initialName: 'attr',
+                value: field.value,
+                rawValue: field.rawValue,
+                userValue: field.userValue,
                 initialValue: field.initialValue,
                 _initialized: true,
                 _deleting: false,
@@ -250,15 +251,38 @@ export default {
                 _validating: false,
                 _converting: false,
               }
+              this.$set(field, 'rawValue', {})
+              this.$set(field.rawValue, nestedField.name, nestedField.rawValue)
               this.$set(field.value, 0, nestedField)
-              this.$set(nestedField.rawValue, nestedField.name, field.rawValue)
-              // -- Remove no necessary other attrs
+              // -- Remove unnecessary attrs
               this.$delete(field, 'initialValue')
               this.$delete(field, 'userValue')
-              this.$delete(field, '_initialized')
               this.$delete(field, '_converting')
             } else if (field.type === '$array') {
-
+              // -- Add array field's attrs
+              const nestedField = {
+                type: oldType,
+                name: null,
+                initialName: null,
+                value: field.value,
+                rawValue: field.rawValue,
+                userValue: field.userValue,
+                initialValue: field.initialValue,
+                _initialized: true,
+                _deleting: false,
+                _editing: false,
+                _cancelling: false,
+                _error: false,
+                _validating: false,
+                _converting: false,
+              }
+              this.$set(field, 'rawValue', [])
+              this.$set(field.rawValue, 0, nestedField.rawValue)
+              this.$set(field.value, 0, nestedField)
+              // -- Remove unnecessary attrs
+              this.$delete(field, 'initialValue')
+              this.$delete(field, 'userValue')
+              this.$delete(field, '_converting')
             }
           }
           // - Start primitive type processing
