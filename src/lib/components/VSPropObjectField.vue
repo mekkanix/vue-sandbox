@@ -160,6 +160,14 @@
                 <b-icon-x-circle :scale="0.9" />
               </div>
               <div
+                v-if="field._initialized"
+                class="vsc-prop-action edit"
+                @click="onEditPropClick(field)"
+              >
+                <b-icon-pencil-fill :scale="0.7" />
+              </div>
+              <div
+                v-if="field._initialized"
                 class="vsc-prop-action delete"
                 @click="onDeletePropClick(field)"
               >
@@ -607,7 +615,7 @@ export default {
   // Nested objects-specific content (via CSS class)
   &.nested-field
     position: relative
-    padding-left: 16px
+    padding-left: 22px
 
     &::before
       content: ''
@@ -632,6 +640,9 @@ export default {
 
       &:hover .vsc-prop-object-actions
         display: flex
+
+      &.open > .vsc-prop-kname-wrapper > .vsc-prop-object-kname-icn
+        transform: rotate(90deg)
 
       .vsc-prop-kname-wrapper
         display: flex

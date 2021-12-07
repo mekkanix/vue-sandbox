@@ -174,7 +174,7 @@ export default {
                 }
               }
             } else if (parentType === '$array') {
-              console.log(field);
+              // Nothing to do with the new "array-in-array" field... 
             }
           }
           // - Deleting
@@ -214,8 +214,6 @@ export default {
                   this.$delete(localFields, i)
                 }
               }
-            } else if (parentType === '$array') {
-              console.log(field);
             }
           }
           // - Deleting

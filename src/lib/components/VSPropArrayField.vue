@@ -17,6 +17,9 @@
           :class="{ open: field.open, }"
         >
           <div class="vsc-prop-kname-box">
+            <div class="vsc-prop-array-index">
+              {{ i }}<span class="vsc-prop-arr-index-colon">:</span>
+            </div>
             <div
               class="vsc-prop-kname-wrapper"
               :class="{ 'opening-disabled': !field._initialized }"
@@ -58,6 +61,9 @@
             class="vsc-prop-kname-box"
             :class="{ open: field.open, }"
           >
+            <div class="vsc-prop-array-index">
+              {{ i }}<span class="vsc-prop-arr-index-colon">:</span>
+            </div>
             <div
               class="vsc-prop-kname-wrapper"
               :class="{ 'opening-disabled': !field._initialized }"
@@ -98,6 +104,9 @@
         <!-- Prop: Primitive -->
         <template v-else>
           <div class="vsc-prop-primitive" :class="{ idle: !field._editing, updating: field._editing, }">
+            <div class="vsc-prop-array-index">
+              {{ i }}<span class="vsc-prop-arr-index-colon">:</span>
+            </div>
             <template v-if="!field._editing">
               <div class="vsc-prop-value">
                 <VSPrimitiveValue
@@ -415,6 +424,10 @@ export default {
 .vsc-prop-field-array
   color: #444
 
+  .vsc-prop-field-wrapper
+    // display: flex
+    // padding-left: 10px
+
   .vsc-prop-kv-wrapper,
   .vsc-prop-kname-wrapper
     position: relative
@@ -481,11 +494,18 @@ export default {
     font-size: 14px
     font-style: italic
     color: #999
+  .vsc-prop-array-index
+    font-size: 14px
+    color: #1b1bff
+    margin-right: 5px
+
+    .vsc-prop-arr-index-colon
+      color: #909090
 
   // Nested objects-specific content (via CSS class)
   &.nested-field
     position: relative
-    padding-left: 16px
+    padding-left: 22px
 
     &::before
       content: ''
@@ -524,11 +544,11 @@ export default {
 
         .vsc-prop-array-kname-icn
           position: absolute
-          left: 4px
+          left: -2px
           top: 6px
         .vsc-prop-object-kname
           display: flex
-          padding-left: 15px
+          padding-left: 9px
           font-size: 14px
         .prop-type
           color: #909090
@@ -543,6 +563,7 @@ export default {
           font-weight: 500
           letter-spacing: 0.5px
 
+  // Nested arrays
   .vsc-prop-subarray
     &.open > .vsc-prop-kname-box > .vsc-prop-kname-wrapper > .vsc-prop-array-kname-icn
       transform: rotate(90deg)
@@ -567,7 +588,7 @@ export default {
 
         .vsc-prop-array-kname-icn
           position: absolute
-          left: 4px
+          left: -2px
           top: 6px
         .vsc-prop-array-kname
           display: flex
@@ -576,7 +597,7 @@ export default {
         .vsc-prop-array-icn
           position: relative
           top: 1px
-          padding-left: 16px
+          padding-left: 9px
           font-size: 12px
           color: #909090
           font-weight: 500
@@ -592,7 +613,6 @@ export default {
     position: relative
     display: flex
     align-items: center
-    padding: 0 0 0 15px
 
     &.idle .vsc-prop-name
       border: 1px solid transparent
@@ -627,7 +647,7 @@ export default {
 
   .vsc-prop-row-actions
     display: flex
-    margin-left: 15px
+    margin-left: 7px
     padding-left: 0
     padding-top: 4px
 
