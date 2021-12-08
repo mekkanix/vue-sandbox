@@ -6,5 +6,5 @@
 
 ## lib - VSComplexProp
 
-- Use a better objects'/nested objects' management by directly parsing complex JSON-entered values
-  (check the 'VueDevtools' pkg for the wanted behavior)
+- Clean & optimize code by using more functions/shared statements
+- Extract this feature ("complex props. representations") to a separate dedicated pkg
