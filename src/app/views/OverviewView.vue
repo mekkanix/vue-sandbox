@@ -8,8 +8,14 @@
           :key="i"
           :to="component.targetRoute"
         >
-          <span v-html="component.filepath" />
-          <span class="component-int-name">({{ component.name }})</span>
+          <div class="component-infos">
+            <div class="component-filepath">
+              <span v-html="component.filepath" />
+            </div>
+            <div class="component-name">
+              <span class="component-int-name">({{ component.name }})</span>
+            </div>
+          </div>
         </b-list-group-item>
       </b-list-group>
     </div>
@@ -61,7 +67,15 @@ export default {
     border-bottom: 1px solid #777
     font-size: 24px
 
-  .component-int-name
-    font-style: italic
-    color: #909090
+  .component-infos
+    display: flex
+
+    .component-filepath
+      flex: 0 0 75%
+    .component-name
+      flex: 0 0 25%
+      text-align: right
+      .component-int-name
+        font-style: italic
+        color: #909090
 </style>
