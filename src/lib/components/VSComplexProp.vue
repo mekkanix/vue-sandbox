@@ -119,23 +119,26 @@ export default {
       if (localType === '$object') {
         propValue = {}
         for (const field of value) {
-          if (field.type === '$object') {
-            propValue[field.name] = this.formatLocalToModelValue(field.value, field.type)
-          } else if (field.type === '$array') {
-            propValue[field.name] = this.formatLocalToModelValue(field.value, field.type)
-          } else {
-            propValue[field.name] = field.rawValue
+          if (field._initialized) {
+            if (['$object', '$array',].includes(field.type)) {
+              propValue[field.name] = this.formatLocalToModelValue(field.value, field.type)
+            } else {
+              const fieldName = !field._error && !field._editing ? field.name : field.initialName
+              const fieldValue = !field._error && !field._editing ? field.rawValue : field.initialValue
+              propValue[fieldName] = fieldValue
+            }
           }
         }
       } else {
         propValue = []
         for (const field of value) {
-          if (field.type === '$object') {
-            propValue.push(this.formatLocalToModelValue(field.value, field.type))
-          } else if (field.type === '$array') {
-            propValue.push(this.formatLocalToModelValue(field.value, field.type))
-          } else {
-            propValue.push(field.rawValue)
+          if (field._initialized) {
+            if (['$object', '$array',].includes(field.type)) {
+              propValue.push(this.formatLocalToModelValue(field.value, field.type))
+            } else {
+              const fieldValue = !field._error && !field._editing ? field.rawValue : field.initialValue
+              propValue.push(fieldValue)
+            }
           }
         }
       }
@@ -176,7 +179,7 @@ export default {
                 }
               }
             } else if (parentType === '$array') {
-              // Nothing to do with the new "array-in-array" field... 
+              // Nothing to do with the new "array-in-array" field...
             }
           }
           // - Deleting

@@ -54,5 +54,5 @@ export default {
   border-bottom: 1px solid #bbb
 
 .vs-component-wrapper-root
-  height: calc(100vh - 108px)
+  height: calc(100vh - 112px)
 </style>
