@@ -168,7 +168,9 @@ export default {
                   field._initialized = true
                 }
               } else {
-                field._error = true
+                if (field._editing) {
+                  field._error = true
+                }
                 if (!field._initialized && !field._editing) { // - Delete the field if not editing & not initialized
                   this.$delete(localFields, i)
                 }
@@ -210,7 +212,9 @@ export default {
                   field._initialized = true
                 }
               } else {
-                field._error = true
+                if (field._editing) {
+                  field._error = true
+                }
                 if (!field._initialized && !field._editing) { // - Delete the field if not editing & not initialized
                   this.$delete(localFields, i)
                 }
@@ -322,7 +326,9 @@ export default {
                   field._validating = false
                 }
               } else { // --- Invalid code-value or prop name provided (error)
-                field._error = true
+                if (field._editing) {
+                  field._error = true
+                }
                 if (!field._editing) { // ---- Reset to field's previous values if editing done
                   field.name = field.initialName
                   field.userValue = formatPrimitiveValueToCode(field.initialValue, field.type)
