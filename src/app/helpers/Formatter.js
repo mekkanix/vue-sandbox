@@ -7,11 +7,11 @@ import {
 
 export const formatComponentPath = (cPath, rev = false) => {
   if (!rev) {
-    cPath = cPath.replace('/', '-')
+    cPath = cPath.replace(/\//gi, '-')
     cPath = cPath.substr(0, cPath.indexOf('.vue'))
     return cPath
   } else {
-    return `${cPath.replace('-', '/')}.vue`
+    return `${cPath.replace(/-/gi, '/')}.vue`
   }
 }
 
