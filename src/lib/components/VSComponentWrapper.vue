@@ -105,7 +105,7 @@ export default {
     instanceFormattedProps () {
       return this.localFieldsProps.reduce((props, currentProp) => ({
         ...props,
-        [currentProp.name]: this.formatPropValueFromStrType(currentProp.type, currentProp.value),
+        [currentProp.name]: currentProp.value,
       }), {})
     },
     componentMetaInfos () {
@@ -138,20 +138,6 @@ export default {
         }
       }
       return fmtProps
-    },
-    formatPropValueFromStrType (type, value) {
-      switch (type) {
-        case 'text':
-          return value
-        case 'number':
-          return parseFloat(value)
-        case 'date':
-          return new Date() // Parse real prop value
-        case '$object':
-          return {} // Parse real prop value
-        case '$array':
-          return [] // Parse real prop value
-      }
     },
     getDefaultPropValue (type) {
       switch (formatFromNativeType(type)) {
