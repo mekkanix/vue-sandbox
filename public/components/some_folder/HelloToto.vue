@@ -2,8 +2,14 @@
   <div class="hello">
     Hey, {{ name }}!
 
+    <h3>[user]</h3>
     <pre>
       {{ user }}
+    </pre>
+
+    <h3>[permissions]</h3>
+    <pre>
+      {{ permissions }}
     </pre>
   </div>
 </template>
@@ -16,10 +22,10 @@ export default {
       type: String,
       required: true,
     },
-    // count: {
-    //   type: Number,
-    //   required: true,
-    // },
+    count: {
+      type: Number,
+      required: true,
+    },
     user: {
       type: Object,
       required: true,

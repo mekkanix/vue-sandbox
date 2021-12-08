@@ -32,7 +32,12 @@
             :key="i"
             class="vsc-prop-field"
           >
-            <div class="vsc-prop-name">{{ prop.name }}</div>
+            <div class="vsc-prop-name-wrapper">
+              <div class="vsc-prop-name">
+                {{ prop.name }}
+                <span class="vsc-prop-type">({{ prop.nativeType }})</span>
+              </div>
+            </div>
             <div class="vsc-prop-input">
               <VSComplexProp
                 v-if="['$object', '$array'].includes(prop.type)"
@@ -67,7 +72,7 @@
 <script>
 import Vue from 'vue'
 import { DateTime } from 'luxon'
-import { formatFromNativeType, } from '@app/helpers/Formatter.js'
+import { formatFromNativeType, formatFromNativeToNativeStrType, } from '@app/helpers/Formatter.js'
 import { isOfPrimitiveType, } from '@app/helpers/Type.js'
 import VSComplexProp from '@lib/components/VSComplexProp.vue'
 import VSPropObjectField from '@lib/components/VSPropObjectField.vue'
@@ -111,8 +116,8 @@ export default {
     componentMetaInfos () {
       const c = this.vsComponent
       return [
-        { label: 'Component name', value: c.component.name, },
-        { label: 'Filepath', value: c.filepath, },
+        { label: 'Component name', value: c.component.name || '-', },
+        { label: 'Relative filepath', value: c.filepath, },
       ]
     },
     componentHTMLOutput () {
@@ -130,9 +135,11 @@ export default {
       let fmtProps = []
       if (this.vsComponent.component.props) {
         for (const [key, value] of Object.entries(this.vsComponent.component.props)) {
+          const fieldNativeType = value.type || value
           fmtProps.push({
             name: key,
-            type: value.type ? this.parseFieldTypeFromPropType(value.type) : this.parseFieldTypeFromPropType(value),
+            type: formatFromNativeType(fieldNativeType),
+            nativeType: formatFromNativeToNativeStrType(fieldNativeType),
             value: this.parsePropValue(value),
           })
         }
@@ -148,19 +155,9 @@ export default {
         case 'date':
           return DateTime.now().toString()
         case '$object':
-          return {
-            field1: 1,
-            field2: 'This is a sentence.',
-            field3: true,
-            group1: {
-              nestedField1: 4,
-              nestedField2: 5,
-              nestedGroup1: {}
-            },
-            field4: 7,
-          }
+          return {}
         case '$array':
-          return ['trucmuche', 'machin',]
+          return []
       }
     },
     parsePropValue (value) {
@@ -173,15 +170,6 @@ export default {
           return this.getDefaultPropValue(value.type)
         }
       }
-    },
-    parseFieldTypeFromPropType (type) {
-      return formatFromNativeType(type)
-    },
-    onPropObjectValueUpdate (value) {
-      // console.log(value);
-    },
-    onPropArrayValueUpdate (value) {
-      // console.log(value);
     },
   },
 
@@ -254,15 +242,25 @@ export default {
           background: white
           border-bottom: 1px solid #bbb
 
-          .vsc-prop-name
+          .vsc-prop-name-wrapper
             flex: 1 0 25%
-            display: flex
-            align-items: center
-            justify-content: right
-            padding: 0 8px
-            text-align: right
-            font-weight: 700
             border-right: 1px solid #ddd
+
+            .vsc-prop-name
+              display: flex
+              align-items: center
+              justify-content: right
+              height: 50px
+              padding: 0 8px
+              text-align: right
+              font-size: 16px
+              font-weight: 700
+
+              .vsc-prop-type
+                padding-left: 5px
+                color: #b0b0b0
+                font-style: italic
+                font-weight: 400
 
           .vsc-prop-input
             flex: 0 1 75%

@@ -1,5 +1,9 @@
 import { DateTime } from 'luxon'
-import { NATIVE2STR_TYPES_MAP, NATIVESTR2STR_TYPES_MAP, } from '@app/constants/Types.js'
+import {
+  NATIVE2STR_TYPES_MAP,
+  NATIVESTR2STR_TYPES_MAP,
+  NATIVE2NATIVESTR_TYPES_MAP,
+} from '@app/constants/Types.js'
 
 export const formatComponentPath = (cPath, rev = false) => {
   if (!rev) {
@@ -12,8 +16,16 @@ export const formatComponentPath = (cPath, rev = false) => {
 }
 
 export const formatFromNativeType = (type) => {
-  // console.log(type);
   for (const [typeName, nativeType] of Object.entries(NATIVE2STR_TYPES_MAP)) {
+    if (type === nativeType) {
+      return typeName
+    }
+  }
+  return undefined
+}
+
+export const formatFromNativeToNativeStrType = (type) => {
+  for (const [typeName, nativeType] of Object.entries(NATIVE2NATIVESTR_TYPES_MAP)) {
     if (type === nativeType) {
       return typeName
     }
