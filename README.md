@@ -40,7 +40,7 @@ You can find all of these language-specific formats & preprocessors below.
 **HTML** - vanilla
 
 **CSS** - SASS (SASS, SCSS)  
-*:info: Support to LESS and Stylus will be added soon.*
+*ℹ️ Support to LESS and Stylus will be added soon.*
 
 **JS** - vanilla
 
