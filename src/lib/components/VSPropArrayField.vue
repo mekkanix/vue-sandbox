@@ -647,7 +647,7 @@ export default {
 
   .vsc-prop-row-actions
     display: flex
-    margin-left: 7px
+    margin-left: 16px
     padding-left: 0
     padding-top: 4px
 

@@ -57,7 +57,9 @@
     </div>
 
     <div class="vs-component-viewport-container">
-      <div class="vs-component-viewport" v-html="componentHTMLOutput" />
+      <div class="vs-component-viewport">
+        <div class="vs-component-viewport-render" v-html="componentHTMLOutput" />
+      </div>
     </div>
   </div>
 </template>
@@ -232,6 +234,7 @@ export default {
     padding: 10px
     background: #eee
     border-right: 1px solid #bbb
+    overflow: auto
 
     .vsc-section-title
       margin: 0 0 4px
@@ -306,12 +309,16 @@ export default {
             font-weight: 700
 
   .vs-component-viewport-container
-    padding: 10px
     width: 100%
-    background: #eee
 
     .vs-component-viewport
       min-height: 30px
-      background: white
-      border: 1px solid #bbb
+      height: 100%
+      padding: 10px
+      background: #eee
+      overflow: auto
+
+      .vs-component-viewport-render
+        background: white
+        border: 1px solid #bbb
 </style>

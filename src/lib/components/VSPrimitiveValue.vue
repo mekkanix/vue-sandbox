@@ -45,7 +45,7 @@ export default {
   &.t-null
     color: #ba4b00
   &.t-boolean
-    color: #ba4b00
+    color: #aa3aff
   &.t-string
     color: #148e15
   &.t-number
