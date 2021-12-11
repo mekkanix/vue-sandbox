@@ -13,7 +13,7 @@
     <div class="vs-content">
       <VSComponentWrapper
         v-if="currentComponent"
-        :vs-component="currentComponent"
+        :component="currentComponent"
         class="vs-component-wrapper-root"
       />
     </div>
@@ -22,8 +22,8 @@
 
 <script>
 import { mapGetters } from 'vuex'
-import { formatComponentPath } from '@app/helpers/Formatter.js'
-import VSComponentWrapper from '@lib/components/VSComponentWrapper.vue'
+import { VSComponentWrapper } from 'vue-sandbox-wrapper'
+import { formatComponentPath } from '@/helpers/Formatter.js'
 
 export default {
   name: 'ComponentView',
@@ -39,7 +39,7 @@ export default {
       for (const c of this.userComponents) {
         const formattedRouteFilepath = formatComponentPath(this.$route.params.name, true)
         if (c.filepath === formattedRouteFilepath) {
-          return c
+          return c.component
         }
       }
       return null
@@ -49,6 +49,8 @@ export default {
 </script>
 
 <style lang="sass" scoped>
+@import 'vue-sandbox-wrapper/dist/vue-sandbox-wrapper.css'
+
 .vs-content-head
   padding: 10px 20px
   border-bottom: 1px solid #bbb

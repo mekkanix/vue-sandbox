@@ -22,25 +22,14 @@ module.exports = {
   },
   // Build configuration (local + lib)
   mode: 'development',
-  entry: {
-    app: './src/app/main.js',
-    lib: './src/lib/main.js',
-  },
-  resolve: {
-    alias: {
-      '@': path.resolve(__dirname, 'src/'),
-      '@app': path.resolve(__dirname, 'src/app/'),
-      '@lib': path.resolve(__dirname, 'src/lib/'),
-      '@public': path.resolve(__dirname, 'public/'),
-    }
-  },
+  entry: './src/main.js',
   output: {
     library: 'VStool',
     libraryTarget: 'umd',
     libraryExport: 'default',
     path: path.resolve(__dirname, './dist/'),
     publicPath: '/',
-    filename: 'vue-sandbox.[name].js',
+    filename: 'vue-sandbox.js',
   },
   module: {
     rules: [
@@ -112,6 +101,12 @@ module.exports = {
       }
     ]
   },
+  resolve: {
+    alias: {
+      '@': path.resolve(__dirname, 'src/'),
+      '@public': path.resolve(__dirname, 'public/'),
+    }
+  },
   optimization: {
     minimizer: [
       new TerserPlugin(),
@@ -121,7 +116,7 @@ module.exports = {
   plugins: [
     new VueLoaderPlugin(),
     new MiniCssExtractPlugin({
-      filename: 'vue-sandbox.[name].css',
+      filename: 'vue-sandbox.css',
     }),
     new RemoveEmptyScriptsPlugin(),
     autoprefixer,

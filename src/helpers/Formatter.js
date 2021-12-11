@@ -3,7 +3,7 @@ import {
   NATIVE2STR_TYPES_MAP,
   NATIVESTR2STR_TYPES_MAP,
   NATIVE2NATIVESTR_TYPES_MAP,
-} from '@app/constants/Types.js'
+} from '@/constants/Types.js'
 
 export const formatComponentPath = (cPath, rev = false) => {
   if (!rev) {
