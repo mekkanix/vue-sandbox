@@ -17,6 +17,7 @@
     "luxon": "^2.1.1",
     "vue": "^2.6.14",
     "vue-router": "^3.5.3",
+    "vue-sandbox-wrapper": "^1.0.0-beta.2",
     "vuex": "^3.6.2"
   },
   "devDependencies": {

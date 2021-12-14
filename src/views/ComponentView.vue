@@ -13,6 +13,7 @@
     <div class="vs-content">
       <VSComponentWrapper
         v-if="currentComponent"
+        :vue="vue"
         :component="currentComponent"
         class="vs-component-wrapper-root"
       />
@@ -21,8 +22,10 @@
 </template>
 
 <script>
+import Vue from 'vue'
 import { mapGetters } from 'vuex'
-import { VSComponentWrapper } from 'vue-sandbox-wrapper'
+// import { VSComponentWrapper } from 'vue-sandbox-wrapper'
+import { VSComponentWrapper } from '../../../vue-sandbox-wrapper'
 import { formatComponentPath } from '@/helpers/Formatter.js'
 
 export default {
@@ -30,6 +33,9 @@ export default {
   components: {
     VSComponentWrapper,
   },
+  data: () => ({
+    vue: Vue,
+  }),
 
   computed: {
     ...mapGetters({
@@ -49,7 +55,7 @@ export default {
 </script>
 
 <style lang="sass" scoped>
-@import 'vue-sandbox-wrapper/dist/vue-sandbox-wrapper.css'
+@import '../../../vue-sandbox-wrapper/dist/vue-sandbox-wrapper.css'
 
 .vs-content-head
   padding: 10px 20px
