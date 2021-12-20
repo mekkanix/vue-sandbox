@@ -5,6 +5,7 @@ const VueLoaderPlugin = require('vue-loader/lib/plugin')
 const MiniCssExtractPlugin = require('mini-css-extract-plugin')
 const RemoveEmptyScriptsPlugin = require("webpack-remove-empty-scripts")
 const CSSMinimizerPlugin = require('css-minimizer-webpack-plugin')
+const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin
 
 module.exports = {
   // DevServer (local)
@@ -120,5 +121,11 @@ module.exports = {
     }),
     new RemoveEmptyScriptsPlugin(),
     autoprefixer,
+    new BundleAnalyzerPlugin({
+      analyzerMode: 'server',
+      analyzerPort: 8888,
+      generateStatsFile: true,
+      openAnalyzer: false,
+    }),
   ],
 }
