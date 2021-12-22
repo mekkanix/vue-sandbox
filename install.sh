@@ -6,7 +6,6 @@ pkg_version="1.0.0-beta.4"
 echo "[VueSandbox - v$pkg_version]"
 echo "---"
 
-echo "> Starting installation..."
 # Check for required commands (git, node, yarn)
 command -v git >/dev/null 2>&1 || {
   echo >&2 "> 'git' is missing: installing...";
@@ -25,4 +24,3 @@ command -v yarn >/dev/null 2>&1 || {
 }
 
 yarn install
-yarn build
