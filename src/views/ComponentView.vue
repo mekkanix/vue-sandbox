@@ -54,7 +54,7 @@ export default {
 </script>
 
 <style lang="sass" scoped>
-@import '../../../vue-sandbox-wrapper/dist/vue-sandbox-wrapper.css'
+@import 'vue-sandbox-wrapper/dist/vue-sandbox-wrapper.css'
 
 .vs-content-head
   padding: 10px 20px
