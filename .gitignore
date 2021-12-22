@@ -1,4 +1,5 @@
 node_modules/
+dist/
 specs.txt
 todo.txt
 yarn-error.log

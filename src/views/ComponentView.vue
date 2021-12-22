@@ -25,7 +25,6 @@
 import Vue from 'vue'
 import { mapGetters } from 'vuex'
 import { VSComponentWrapper } from 'vue-sandbox-wrapper'
-// import { VSComponentWrapper } from '../../../vue-sandbox-wrapper'
 import { formatComponentPath } from '@/helpers/Formatter.js'
 
 export default {
