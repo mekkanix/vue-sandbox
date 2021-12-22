@@ -6,7 +6,7 @@
   "scripts": {
     "serve": "webpack serve",
     "build": "webpack build",
-    "vuesandbox": "webpack serve --config webpack-dist.config.js"
+    "vstool": "webpack serve --config webpack-dist.config.js"
   },
   "repository": "git@github.com:mekkanix/vue-sandbox.git",
   "author": "polo <paulguzdariviere@gmail.com>",

@@ -3,8 +3,7 @@
 # Vars
 pkg_version="1.0.0-beta.4"
 
-echo "[VueSandbox - v$pkg_version]"
-echo "----------------------------"
+echo "> Installing VueSandbox v$pkg_version..."
 
 # Check for required commands (git, node, yarn)
 command -v git >/dev/null 2>&1 || {
