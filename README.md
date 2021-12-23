@@ -1,6 +1,6 @@
-# <center>VueSandbox</center>
+# <div align="center">VueSandbox</div>
 
-A tool for live-testing Vue.js components in a sandbox environment.
+<p align="center">Live-test your Vue.js components in a sandbox environment.</p>
 
 ## Introduction
 
