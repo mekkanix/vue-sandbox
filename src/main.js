@@ -1,3 +1,9 @@
+/*!
+ * VueSandbox v1.0.0-beta.2
+ * (c) 2021-2021 Mekkanix
+ * Released under the MIT License.
+ */
+
 import Vue from 'vue'
 import router from '@/plugins/router.js'
 import store from '@/plugins/vuex.js'
