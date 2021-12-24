@@ -17,18 +17,12 @@ It is designed to generate live-testing forms by parsing components' props direc
 
 ### Browser
 
-This tool works with main modern web browsers. You can find below the minimum required version
-for each browser.
-
-**Desktop**
+This tool works with all modern web browsers. You can find below the minimum required version
+for each one.
 
 | Chrome | Firefox | Safari | IE         | Edge | Opera |
 |:------:|:-------:|:------:|:----------:|:----:|:-----:|
 | 18     | 14      | 6.1    | No support | 12   | 15    |
-
-**Smartphone/Tablet**
-
-Not usable on mobile devices for the moment.
 
 ### Components
 
