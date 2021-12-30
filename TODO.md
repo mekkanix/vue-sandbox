@@ -12,8 +12,3 @@
 [Priority: 3]
 
 - Build an online live-testing tool via GH pages (from direct .vue files uploads, if possible)
-
-## lib - VSComplexProp
-
-- Clean & optimize code by using more functions/shared statements
-- Extract this feature ("complex props. representations") into a separate dedicated pkg
