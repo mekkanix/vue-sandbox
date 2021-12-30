@@ -4111,10 +4111,10 @@ vue-router@^3.5.3:
   resolved "https://registry.yarnpkg.com/vue-router/-/vue-router-3.5.3.tgz#041048053e336829d05dafacf6a8fb669a2e7999"
   integrity sha512-FUlILrW3DGitS2h+Xaw8aRNvGTwtuaxrRkNSHWTizOfLUie7wuYwezeZ50iflRn8YPV5kxmU2LQuu3nM/b3Zsg==
 
-vue-sandbox-wrapper@^1.0.0-beta.4:
-  version "1.0.0-beta.4"
-  resolved "https://registry.yarnpkg.com/vue-sandbox-wrapper/-/vue-sandbox-wrapper-1.0.0-beta.4.tgz#4d38af9f109f0bb2b2b1bb591db7957cd6d2372e"
-  integrity sha512-3IH04qxgST8pov8cU13LXIzABZQ21BxpUgfrdk/4qStylYlBiUZd0a6TQfKCAJVJHUOAeRAWfyHNHx3hornazg==
+vue-sandbox-wrapper@^1.0.0-beta.5:
+  version "1.0.0-beta.5"
+  resolved "https://registry.yarnpkg.com/vue-sandbox-wrapper/-/vue-sandbox-wrapper-1.0.0-beta.5.tgz#cde37a5a4af9c3fa4567c898813c501bc30a768a"
+  integrity sha512-NsveTEsoSZAi+zYZp1t2xwgyQbnhi9KbS38MtnsFQVpaFc0ZAfKoMeox1fPhHf88MpjruNGh1vmiYr/D8RipdQ==
   dependencies:
     "@fortawesome/fontawesome-svg-core" "^1.2.36"
     "@fortawesome/free-solid-svg-icons" "^5.15.4"

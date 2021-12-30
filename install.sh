@@ -1,7 +1,7 @@
 #!/bin/sh
 
 # Vars
-pkg_version="1.0.0-beta.4"
+pkg_version="1.0.0-beta.5"
 
 echo "> Installing VueSandbox v$pkg_version..."
 
