@@ -1,6 +1,6 @@
 {
-  "name": "vue-sandbox",
-  "version": "0.0.1",
+  "name": "vue-sandbox-tool",
+  "version": "1.0.0-beta.2",
   "description": "Sandbox env. for live-testing Vue.js components.",
   "main": "./dist/vue-sandbox.js",
   "scripts": {
@@ -9,7 +9,7 @@
     "vstool": "webpack serve --config webpack-dist.config.js"
   },
   "repository": "git@github.com:mekkanix/vue-sandbox.git",
-  "author": "polo <paulguzdariviere@gmail.com>",
+  "author": "Mekkanix <paulguzdariviere@gmail.com>",
   "license": "MIT",
   "dependencies": {
     "bootstrap": "^5.1.3",
