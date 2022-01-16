@@ -7,8 +7,8 @@
     "serve": "webpack serve",
     "build": "webpack build",
     "vs": "node ./app/server.js",
-    "vs:dev": "webpack build --watch",
-    "vs:build": "webpack build ./app/server.js"
+    "vs:build": "webpack build --config webpack-dist.config.js",
+    "vs:dev": "webpack build --watch"
   },
   "repository": "git@github.com:mekkanix/vue-sandbox.git",
   "author": "Mekkanix <paulguzdariviere@gmail.com>",

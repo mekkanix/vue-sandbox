@@ -9,11 +9,11 @@ const NodemonPlugin = require('nodemon-webpack-plugin')
 const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin
 
 module.exports = {
-  // Build configuration (local + lib)
+  // Build configuration (local)
   mode: 'development',
   entry: './app/main.js',
   output: {
-    library: 'VStool',
+    library: 'VS',
     libraryTarget: 'umd',
     libraryExport: 'default',
     path: path.resolve(__dirname, './dist/'),
@@ -96,19 +96,13 @@ module.exports = {
       '@public': path.resolve(__dirname, 'public/'),
     }
   },
-  optimization: {
-    minimizer: [
-      new TerserPlugin(),
-      new CSSMinimizerPlugin(),
-    ]
-  },
+  optimization: {},
   plugins: [
     new VueLoaderPlugin(),
     new MiniCssExtractPlugin({
       filename: 'vue-sandbox.css',
     }),
     new RemoveEmptyScriptsPlugin(),
-    autoprefixer,
     new BundleAnalyzerPlugin({
       analyzerMode: 'server',
       analyzerPort: 8888,
@@ -118,6 +112,9 @@ module.exports = {
     new NodemonPlugin({
       script: './app/server.js',
       watch: path.resolve('./app/server.js'),
+      env: {
+        NODE_ENV: 'development',
+      }
     }),
   ],
 }

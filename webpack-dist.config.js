@@ -5,20 +5,18 @@ const VueLoaderPlugin = require('vue-loader/lib/plugin')
 const MiniCssExtractPlugin = require('mini-css-extract-plugin')
 const RemoveEmptyScriptsPlugin = require("webpack-remove-empty-scripts")
 const CSSMinimizerPlugin = require('css-minimizer-webpack-plugin')
-const NodemonPlugin = require('nodemon-webpack-plugin')
-// const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin
 
 module.exports = {
-  // Build configuration (local + lib)
+  // Build configuration (lib)
   mode: 'production',
   entry: './app/main.js',
   output: {
-    library: 'VStool',
+    library: 'VS',
     libraryTarget: 'umd',
     libraryExport: 'default',
     path: path.resolve(__dirname, './dist/'),
     publicPath: '/',
-    filename: 'vue-sandbox.js',
+    filename: 'vue-sandbox.min.js',
   },
   module: {
     rules: [
@@ -58,7 +56,7 @@ module.exports = {
                 indentedSyntax: true,
                 includePaths: [
                   path.resolve(__dirname, 'node_modules'),
-                  path.join(__dirname, 'src/assets/sass'),
+                  path.join(__dirname, 'app/assets/sass'),
                 ]
               },
             },
@@ -69,7 +67,7 @@ module.exports = {
       {
         test: /\.s[ac]ss$/i,
         exclude: [
-          path.join(__dirname, 'src/')
+          path.join(__dirname, 'app/')
         ],
         use: [
           'style-loader',
@@ -81,7 +79,7 @@ module.exports = {
                 indentedSyntax: true,
                 includePaths: [
                   path.resolve(__dirname, 'node_modules'),
-                  path.join(__dirname, 'src/assets/sass'),
+                  path.join(__dirname, 'app/assets/sass'),
                 ]
               },
             },
@@ -92,7 +90,7 @@ module.exports = {
   },
   resolve: {
     alias: {
-      '@': path.resolve(__dirname, 'src/'),
+      '@': path.resolve(__dirname, 'app/'),
       '@public': path.resolve(__dirname, 'public/'),
     }
   },
@@ -105,13 +103,9 @@ module.exports = {
   plugins: [
     new VueLoaderPlugin(),
     new MiniCssExtractPlugin({
-      filename: 'vue-sandbox.css',
+      filename: 'vue-sandbox.min.css',
     }),
     new RemoveEmptyScriptsPlugin(),
     autoprefixer,
-    new NodemonPlugin({
-      script: './app/server.js',
-      watch: path.resolve('./app/server.js'),
-    }),
   ],
 }
