@@ -1,82 +1,20 @@
 # <div align="center">VueSandbox</div>
 
-<p align="center">Live-test your Vue.js components in a sandbox environment.</p>
+<p align="center">Play with your Vue components and see them in action!</p>
 
 ## Introduction
 
-VueSandbox is a node-based utility that allows you to live-test and play with your Vue.js components.  
-It is designed to generate live-testing forms by parsing components' props directly from your source files.
+VueSandbox is a [node.js](https://nodejs.org/en/)-based utility that allows you to edit Vue components' props in live, and see render updates in a dedicated viewport.
 
-## Compatibility
+This way it provides a good way to quickly test your components under development, or use them to efficently present features to other people.
 
-### Operating System
+## Demo
 
-- **Debian/Ubuntu**
+Soon...
 
-*Windows & Mac supports will be added in a next release.*
+## Getting Started & Documentation
 
-### Browser
-
-This tool works with all modern web browsers. You can find below the minimum required version
-for each one.
-
-| Chrome | Firefox | Safari | IE         | Edge | Opera |
-|:------:|:-------:|:------:|:----------:|:----:|:-----:|
-| 18     | 14      | 6.1    | No support | 12   | 15    |
-
-### Components
-
-Your components can only use supported formats & languages (described below) in order to be correctly parsed.
-
-:warning: Nested child components are not supported for the moment.
-
-#### Format
-
-This tool only works with [Single-File Components](https://vuejs.org/v2/guide/single-file-components.html) for the moment.  
-
-*A support to other definition formats will be added in a next release.*
-
-#### Languages
-
-Only a few code languages are supported for the moment.  
-You can find all of these language-specific formats & preprocessors below.
-
-| HTML      | CSS          | JavaScript |
-|:---------:|:------------:|:----------:|
-| - vanilla | - vanilla    | - vanilla  |
-|           | - SASS, SCSS |            |
-
-## Installation
-
-Download and run the remote installation script from the VueSandbox's website:
-
-```sh
-curl -sS https://mekkanix.github.io/vue-sandbox/install.sh | sh
-```
-
-*You'll be asked for your password during installation because some commands need root privileges to install packages through APT.*
-
-This script will check for & install required engines on your system (git, nodejs, npm).
-
-## Usage
-
-1. Once installed, you'll just need to run the following command in the VueSandbox's root directory to.
-
-```sh
-cd /path/to/vue-sandbox/
-yarn vstool
-```
-
-2. Place the `.vue` component files you want to test in the `public/` directory, that is constantly watched by VueSandbox when running.
-   Any update to it (e.g. files addition, code updated...) will automatically trigger a new parsing operation.  
-  *Note: You can use nested directories to organize your components.*
-
-3. Open your favorite browser and go to [`http://localhost:9000`](http://localhost:9000) to access to the tool GUI.  
-   You see and navigate through all of your components in the homepage.
-
-## Configuration
-
-N/A
+The complete step-by-step guide and documentation for using VueSandbox is available at the [Official Website](https://mekkanix.github.io/vue-sandbox/docs/).
 
 ## Licensing
 
