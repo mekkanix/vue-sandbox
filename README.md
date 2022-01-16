@@ -1,15 +1,20 @@
 # <div align="center">VueSandbox</div>
 
-<p align="center">Live-test your Vue.js components in a sandbox environment.</p>
+<p align="center">Play with your Vue components' data and see render updates in real-time.</p>
 
 ## Introduction
 
-VueSandbox is a node-based utility that allows you to live-test and play with your Vue.js components.  
-It is designed to generate live-testing forms by parsing components' props directly from your source files.
+VueSandbox is a [node.js](https://nodejs.org/en/)-based utility that allows you to edit Vue components' props in live, and see render updates in a dedicated viewport.
 
-## Documentation
+This way it provides a good way to test your components under development, or use them to efficently present features.
 
-The complete documentation for using VueSandbox is available at the [Official Website](https://mekkanix.github.io/vue-sandbox/docs/).
+## Demo
+
+Soon...
+
+## Getting Started & Documentation
+
+The complete step-by-step guide and documentation for using VueSandbox is available at the [Official Website](https://mekkanix.github.io/vue-sandbox/docs/).
 
 ## Licensing
 
