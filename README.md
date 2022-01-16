@@ -1,6 +1,6 @@
 # <div align="center">VueSandbox</div>
 
-<p align="center">Play with your Vue components' data and see them in action!</p>
+<p align="center">Play with your Vue components and see them in action!</p>
 
 ## Introduction
 
