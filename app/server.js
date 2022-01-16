@@ -9,13 +9,19 @@ const ejs = require('ejs')
 
 // Configuration
 const port = 9000
+const env = {
+  VS_ENV: process.env.VS_ENV,
+}
+const assets = {
+  script: env.VS_ENV === 'production' ? '/vue-sandbox.min.js' : '/vue-sandbox.js',
+  style: env.VS_ENV === 'production' ? '/vue-sandbox.min.css' : '/vue-sandbox.css',
+}
 
 // Initialization
-console.log(process.env)
 const app = express()
 app.engine('html', ejs.renderFile)
 app.set('view engine', 'html')
-app.set('views', process.cwd() + '/app/templates/')
+app.set('views', process.cwd() + '/app/')
 app.use(
   express.static(process.cwd() + '/dist/')
 )
@@ -25,5 +31,7 @@ app.listen(port, () => {
 
 // Wildcard for index template file
 app.get('/*', (req, res) => {
-  res.render('index')
+  res.render('index', {
+    assets: assets,
+  })
 })

@@ -113,7 +113,7 @@ module.exports = {
       script: './app/server.js',
       watch: path.resolve('./app/server.js'),
       env: {
-        NODE_ENV: 'development',
+        VS_ENV: 'development',
       }
     }),
   ],
