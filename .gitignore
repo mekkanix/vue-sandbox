@@ -1,5 +1,5 @@
 node_modules/
-dist/stats.json
+app/assets/dist/stats.json
 specs.txt
 todo.txt
 yarn-error.log

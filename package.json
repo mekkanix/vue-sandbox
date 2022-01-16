@@ -7,7 +7,7 @@
     "serve": "webpack serve",
     "build": "webpack build",
     "vs": "VS_ENV=production node ./app/server.js",
-    "vs:build": "webpack build --config webpack-dist.config.js",
+    "vs:build": "webpack build --mode production",
     "vs:dev": "webpack build --watch"
   },
   "repository": "git@github.com:mekkanix/vue-sandbox.git",
