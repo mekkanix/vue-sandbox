@@ -6,7 +6,9 @@
   "scripts": {
     "serve": "webpack serve",
     "build": "webpack build",
-    "vstool": "webpack serve --config webpack-dist.config.js"
+    "vs": "node ./app/server.js",
+    "vs:dev": "webpack build --watch",
+    "vs:build": "webpack build ./app/server.js"
   },
   "repository": "git@github.com:mekkanix/vue-sandbox.git",
   "author": "Mekkanix <paulguzdariviere@gmail.com>",
@@ -14,8 +16,11 @@
   "dependencies": {
     "bootstrap": "^5.1.3",
     "bootstrap-vue": "^2.21.2",
+    "ejs": "^3.1.6",
+    "express": "^4.17.2",
     "lodash": "^4.17.21",
     "luxon": "^2.1.1",
+    "node": "^17.3.1",
     "vue": "^2.6.14",
     "vue-router": "^3.5.3",
     "vue-sandbox-wrapper": "^1.0.0-beta.5",
@@ -30,6 +35,8 @@
     "css-loader": "^6.4.0",
     "css-minimizer-webpack-plugin": "^3.1.1",
     "mini-css-extract-plugin": "^2.4.3",
+    "nodemon": "^2.0.15",
+    "nodemon-webpack-plugin": "^4.7.0",
     "sass": "^1.43.3",
     "sass-loader": "^12.2.0",
     "style-loader": "^3.3.1",

@@ -5,25 +5,13 @@ const VueLoaderPlugin = require('vue-loader/lib/plugin')
 const MiniCssExtractPlugin = require('mini-css-extract-plugin')
 const RemoveEmptyScriptsPlugin = require("webpack-remove-empty-scripts")
 const CSSMinimizerPlugin = require('css-minimizer-webpack-plugin')
+const NodemonPlugin = require('nodemon-webpack-plugin')
 const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin
 
 module.exports = {
-  // DevServer (local)
-  devServer: {
-    port: 9000,
-    historyApiFallback: {
-      index: 'index.html',
-    },
-    static: [
-      {
-        directory: path.join(__dirname, 'public'),
-        serveIndex: true,
-      },
-    ],
-  },
   // Build configuration (local + lib)
   mode: 'development',
-  entry: './src/main.js',
+  entry: './app/main.js',
   output: {
     library: 'VStool',
     libraryTarget: 'umd',
@@ -70,7 +58,7 @@ module.exports = {
                 indentedSyntax: true,
                 includePaths: [
                   path.resolve(__dirname, 'node_modules'),
-                  path.join(__dirname, 'src/assets/sass'),
+                  path.join(__dirname, 'app/assets/sass'),
                 ]
               },
             },
@@ -81,7 +69,7 @@ module.exports = {
       {
         test: /\.s[ac]ss$/i,
         exclude: [
-          path.join(__dirname, 'src/')
+          path.join(__dirname, 'app/')
         ],
         use: [
           'style-loader',
@@ -93,7 +81,7 @@ module.exports = {
                 indentedSyntax: true,
                 includePaths: [
                   path.resolve(__dirname, 'node_modules'),
-                  path.join(__dirname, 'src/assets/sass'),
+                  path.join(__dirname, 'app/assets/sass'),
                 ]
               },
             },
@@ -104,7 +92,7 @@ module.exports = {
   },
   resolve: {
     alias: {
-      '@': path.resolve(__dirname, 'src/'),
+      '@': path.resolve(__dirname, 'app/'),
       '@public': path.resolve(__dirname, 'public/'),
     }
   },
@@ -126,6 +114,10 @@ module.exports = {
       analyzerPort: 8888,
       generateStatsFile: true,
       openAnalyzer: false,
+    }),
+    new NodemonPlugin({
+      script: './app/server.js',
+      watch: path.resolve('./app/server.js'),
     }),
   ],
 }

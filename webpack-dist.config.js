@@ -5,25 +5,13 @@ const VueLoaderPlugin = require('vue-loader/lib/plugin')
 const MiniCssExtractPlugin = require('mini-css-extract-plugin')
 const RemoveEmptyScriptsPlugin = require("webpack-remove-empty-scripts")
 const CSSMinimizerPlugin = require('css-minimizer-webpack-plugin')
-const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin
+const NodemonPlugin = require('nodemon-webpack-plugin')
+// const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin
 
 module.exports = {
-  // DevServer (local)
-  devServer: {
-    port: 9000,
-    historyApiFallback: {
-      index: 'index.html',
-    },
-    static: [
-      {
-        directory: path.join(__dirname, 'public'),
-        serveIndex: true,
-      },
-    ],
-  },
   // Build configuration (local + lib)
-  mode: 'development',
-  entry: './src/main.js',
+  mode: 'production',
+  entry: './app/main.js',
   output: {
     library: 'VStool',
     libraryTarget: 'umd',
@@ -121,5 +109,9 @@ module.exports = {
     }),
     new RemoveEmptyScriptsPlugin(),
     autoprefixer,
+    new NodemonPlugin({
+      script: './app/server.js',
+      watch: path.resolve('./app/server.js'),
+    }),
   ],
 }
