@@ -13,8 +13,8 @@ const env = {
   VS_ENV: process.env.VS_ENV,
 }
 const assets = {
-  script: env.VS_ENV === 'production' ? '/vue-sandbox.min.js' : '/vue-sandbox.js',
-  style: env.VS_ENV === 'production' ? '/vue-sandbox.min.css' : '/vue-sandbox.css',
+  script: env.VS_ENV === 'production' ? 'vue-sandbox.min.js' : 'vue-sandbox.js',
+  style: env.VS_ENV === 'production' ? 'vue-sandbox.min.css' : 'vue-sandbox.css',
 }
 
 // Initialization
@@ -23,13 +23,14 @@ app.engine('html', ejs.renderFile)
 app.set('view engine', 'html')
 app.set('views', process.cwd() + '/app/')
 app.use(
-  express.static(process.cwd() + '/dist/')
+  '/assets/',
+  express.static(process.cwd() + '/app/assets/dist/')
 )
 app.listen(port, () => {
   console.log(`VueSandbox is running at: http://localhost:${port}`)
 })
 
-// Wildcard for index template file
+// Wildcard router for index template file
 app.get('/*', (req, res) => {
   res.render('index', {
     assets: assets,

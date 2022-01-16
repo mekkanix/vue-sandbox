@@ -16,7 +16,7 @@ module.exports = {
     library: 'VS',
     libraryTarget: 'umd',
     libraryExport: 'default',
-    path: path.resolve(__dirname, './dist/'),
+    path: path.resolve(__dirname, './app/assets/dist/'),
     publicPath: '/',
     filename: 'vue-sandbox.js',
   },
