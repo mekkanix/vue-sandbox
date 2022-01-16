@@ -1,7 +1,7 @@
 {
   "name": "vue-sandbox-tool",
-  "version": "1.0.0-beta.2",
-  "description": "Sandbox env. for live-testing Vue.js components.",
+  "version": "1.0.0-beta.3",
+  "description": "Play with your Vue components and see them in action!",
   "main": "./dist/vue-sandbox.js",
   "scripts": {
     "serve": "webpack serve",
