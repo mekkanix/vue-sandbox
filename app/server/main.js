@@ -7,6 +7,7 @@
 const yargsParser = require('yargs-parser')
 const express = require('express')
 const ejs = require('ejs')
+const apiRouter = require('./router.js')
 
 // Configuration
 // TODO: Remove this CLI args parsing from server entrypoint, by using
@@ -37,7 +38,9 @@ app.listen(port, () => {
   console.log(`[VueSandbox] Host: http://localhost:${port}`)
 })
 
-// Wildcard router for index template file
+app.use('/api', apiRouter)
+
+// Wildcard route for index template file (GET)
 app.get('/*', (req, res) => {
   res.render('index', {
     assets: assets,

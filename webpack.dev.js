@@ -107,7 +107,7 @@ module.exports = {
     }),
     new NodemonPlugin({
       script: './app/server/main.js',
-      watch: path.resolve('./app/server/main.js'),
+      watch: path.resolve('./app/server/'),
       env: {
         VS_ENV: 'development',
       }
