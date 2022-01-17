@@ -11,20 +11,22 @@ const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPl
 module.exports = (env, argv) => {
 
   const mode = argv.mode && argv.mode === 'production' ? argv.mode : 'development'
-  const scriptFilename = mode === 'production' ? 'vue-sandbox.min.js' : 'vue-sandbox.js'
   const styleFilename = mode === 'production' ? 'vue-sandbox.min.css' : 'vue-sandbox.css'
 
   const config = {
     // Build configuration (local)
     mode: mode,
-    entry: './app/main.js',
+    entry: {
+      'vue-sandbox': './app/main.js',
+      'vue-sandbox.min': './app/main.js',
+    },
     output: {
       library: 'VS',
       libraryTarget: 'umd',
       libraryExport: 'default',
       path: path.resolve(__dirname, './app/assets/dist/'),
       publicPath: '/',
-      filename: scriptFilename,
+      filename: '[name].js',
     },
     module: {
       rules: [
