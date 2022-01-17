@@ -9,7 +9,8 @@ const express = require('express')
 const ejs = require('ejs')
 
 // Configuration
-// TODO: Use a dedicated binary script to manage internal VS commands.
+// TODO: Remove this CLI args parsing from server entrypoint, by using
+// a dedicated binary script to manage on-the-fly VS setup.
 const argv = yargsParser(process.argv.slice(2))
 const port = 9000
 const env = {
@@ -32,7 +33,8 @@ app.use(
   express.static(process.cwd() + '/app/assets/dist/')
 )
 app.listen(port, () => {
-  console.log(`VueSandbox is running at: http://localhost:${port}`)
+  console.log(`\r\n[VueSandbox] Program started.`)
+  console.log(`[VueSandbox] Host: http://localhost:${port}`)
 })
 
 // Wildcard router for index template file
