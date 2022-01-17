@@ -1,5 +1,7 @@
 node_modules/
 app/assets/dist/stats.json
+app/assets/dist/*.dev.js
+app/assets/dist/*.dev.css
 specs.txt
 todo.txt
 yarn-error.log

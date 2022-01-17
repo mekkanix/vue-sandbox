@@ -14,7 +14,7 @@ module.exports = {
     libraryExport: 'default',
     path: path.resolve(__dirname, './app/assets/dist/'),
     publicPath: '/',
-    filename: 'vue-sandbox.js',
+    filename: 'vue-sandbox.dev.js',
   },
   module: {
     rules: [
@@ -95,7 +95,7 @@ module.exports = {
   plugins: [
     new VueLoaderPlugin(),
     new MiniCssExtractPlugin({
-      filename: 'vue-sandbox.css',
+      filename: 'vue-sandbox.dev.css',
     }),
     new RemoveEmptyScriptsPlugin(),
     new BundleAnalyzerPlugin({

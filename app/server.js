@@ -13,8 +13,8 @@ const env = {
   VS_ENV: process.env.VS_ENV,
 }
 const assets = {
-  script: env.VS_ENV === 'production' ? 'vue-sandbox.min.js' : 'vue-sandbox.js',
-  style: env.VS_ENV === 'production' ? 'vue-sandbox.min.css' : 'vue-sandbox.css',
+  script: env.VS_ENV === 'production' ? 'vue-sandbox.min.js' : 'vue-sandbox.dev.js',
+  style: env.VS_ENV === 'production' ? 'vue-sandbox.min.css' : 'vue-sandbox.dev.css',
 }
 
 // Initialization
