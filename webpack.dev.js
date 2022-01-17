@@ -7,12 +7,12 @@ const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPl
 
 module.exports = {
   mode: 'development',
-  entry: './app/main.js',
+  entry: './app/ui/main.js',
   output: {
     library: 'VS',
     libraryTarget: 'umd',
     libraryExport: 'default',
-    path: path.resolve(__dirname, './app/assets/dist/'),
+    path: path.resolve(__dirname, './app/ui/assets/dist/'),
     publicPath: '/',
     filename: 'vue-sandbox.dev.js',
   },
@@ -88,7 +88,8 @@ module.exports = {
   },
   resolve: {
     alias: {
-      '@': path.resolve(__dirname, 'app/'),
+      '@ui': path.resolve(__dirname, 'app/ui/'),
+      '@server': path.resolve(__dirname, 'app/server/'),
       '@public': path.resolve(__dirname, 'public/'),
     }
   },
@@ -105,8 +106,8 @@ module.exports = {
       openAnalyzer: false,
     }),
     new NodemonPlugin({
-      script: './app/server.js',
-      watch: path.resolve('./app/server.js'),
+      script: './app/server/main.js',
+      watch: path.resolve('./app/server/main.js'),
       env: {
         VS_ENV: 'development',
       }

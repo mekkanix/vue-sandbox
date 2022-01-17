@@ -9,7 +9,7 @@
 
 <script>
 import { mapMutations } from 'vuex'
-import MainToolbar from '@/components/layout/MainToolbar.vue'
+import MainToolbar from '@ui/components/layout/MainToolbar.vue'
 
 export default {
   name: 'VSApp',

@@ -1,5 +1,5 @@
-import OverviewView from '@/views/OverviewView.vue'
-import ComponentView from '@/views/ComponentView.vue'
+import OverviewView from '@ui/views/OverviewView.vue'
+import ComponentView from '@ui/views/ComponentView.vue'
 
 export default [
   {

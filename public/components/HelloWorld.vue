@@ -12,7 +12,7 @@ export default {
   props: {
     msg: {
       type: String,
-      default: 'By editing this you can see this component in action!',
+      default: 'By editing this you can see the component in action!',
     }
   }
 }

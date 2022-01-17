@@ -1,6 +1,6 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
-import user_components from '@/store/user_components/index.js'
+import user_components from '@ui/store/user_components/index.js'
 
 Vue.use(Vuex)
 

@@ -5,10 +5,10 @@
  */
 
 import Vue from 'vue'
-import router from '@/plugins/router.js'
-import store from '@/plugins/vuex.js'
-import '@/plugins/bootstrap-vue.js'
-import VSApp from '@/components/VSApp.vue'
+import router from '@ui/plugins/router.js'
+import store from '@ui/plugins/vuex.js'
+import '@ui/plugins/bootstrap-vue.js'
+import VSApp from '@ui/components/VSApp.vue'
 
 const init = () => {
   // Generate list of user-provided components

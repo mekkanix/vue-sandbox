@@ -27,10 +27,10 @@ console.log(assetsPrefix);
 const app = express()
 app.engine('html', ejs.renderFile)
 app.set('view engine', 'html')
-app.set('views', process.cwd() + '/app/')
+app.set('views', process.cwd() + '/app/ui')
 app.use(
   '/assets/',
-  express.static(process.cwd() + '/app/assets/dist/')
+  express.static(process.cwd() + '/app/ui/assets/dist/')
 )
 app.listen(port, () => {
   console.log(`\r\n[VueSandbox] Program started.`)

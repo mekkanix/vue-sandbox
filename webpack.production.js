@@ -8,12 +8,12 @@ const CSSMinimizerPlugin = require('css-minimizer-webpack-plugin')
 
 module.exports = {
   mode: 'production',
-  entry: './app/main.js',
+  entry: './app/ui/main.js',
   output: {
     library: 'VS',
     libraryTarget: 'umd',
     libraryExport: 'default',
-    path: path.resolve(__dirname, './app/assets/dist/'),
+    path: path.resolve(__dirname, './app/ui/assets/dist/'),
     publicPath: '/',
     filename: 'vue-sandbox.min.js',
   },
@@ -89,7 +89,8 @@ module.exports = {
   },
   resolve: {
     alias: {
-      '@': path.resolve(__dirname, 'app/'),
+      '@ui': path.resolve(__dirname, 'app/ui/'),
+      '@server': path.resolve(__dirname, 'app/server/'),
       '@public': path.resolve(__dirname, 'public/'),
     }
   },
