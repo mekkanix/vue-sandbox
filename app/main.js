@@ -13,7 +13,7 @@ import VSApp from '@/components/VSApp.vue'
 const init = () => {
   // Generate list of user-provided components
   let components = []
-  const ctxs = require.context('@public/', true, /\.vue$/i)
+  const ctxs = require.context('@public/components/', true, /\.vue$/i)
   ctxs
     .keys()
     .forEach(filepath => {

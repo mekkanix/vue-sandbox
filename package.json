@@ -6,7 +6,7 @@
   "scripts": {
     "serve": "webpack serve",
     "build": "webpack build",
-    "vs": "VS_ENV=production node ./app/server.js",
+    "vuesandbox": "VS_ENV=production node ./app/server.js",
     "vs:build": "webpack build --mode production",
     "vs:dev": "webpack build --watch"
   },
@@ -24,7 +24,8 @@
     "vue": "^2.6.14",
     "vue-router": "^3.5.3",
     "vue-sandbox-wrapper": "^1.0.0-beta.5",
-    "vuex": "^3.6.2"
+    "vuex": "^3.6.2",
+    "yargs-parser": "^21.0.0"
   },
   "devDependencies": {
     "@babel/core": "^7.15.8",

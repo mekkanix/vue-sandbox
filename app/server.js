@@ -4,18 +4,23 @@
  * is to serve the main `app` index.html for all routes (except for assets files).
  */
 
+const yargsParser = require('yargs-parser')
 const express = require('express')
 const ejs = require('ejs')
 
 // Configuration
+// TODO: Use a dedicated binary script to manage internal VS commands.
+const argv = yargsParser(process.argv.slice(2))
 const port = 9000
 const env = {
   VS_ENV: process.env.VS_ENV,
 }
+const assetsPrefix = argv.assetsPrefix || null
 const assets = {
   script: env.VS_ENV === 'production' ? 'vue-sandbox.min.js' : 'vue-sandbox.dev.js',
   style: env.VS_ENV === 'production' ? 'vue-sandbox.min.css' : 'vue-sandbox.dev.css',
 }
+console.log(assetsPrefix);
 
 // Initialization
 const app = express()
