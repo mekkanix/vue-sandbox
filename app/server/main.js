@@ -4,6 +4,7 @@
  * is to serve the main `app` index.html for all routes (except for assets files).
  */
 
+require('module-alias/register')
 const App = require('./core/App')
 
 // Configuration
