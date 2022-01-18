@@ -8,13 +8,23 @@ const App = require('./core/App')
 
 // Configuration
 const ENV = process.env.VS_ENV
+const root = process.cwd()
+
 const conf = {
+  env: ENV,
   port: 9000,
+  rootDir: root,
   static: {
     scriptFilename: ENV === 'production' ? 'vue-sandbox.min.js' : 'vue-sandbox.dev.js',
     styleFilename: ENV === 'production' ? 'vue-sandbox.min.css' : 'vue-sandbox.dev.css',
-  }
+  },
+  public: {
+    componentsDir: `${root}/public/components`,
+    // assetsDir: `${root}/public/assets`,
+  },
 }
+
 // Bootstrapping
+console.log(`\r\n[VueSandbox] Starting program...`)
 const app = new App(conf)
 app.start()
