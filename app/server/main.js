@@ -4,40 +4,17 @@
  * is to serve the main `app` index.html for all routes (except for assets files).
  */
 
-const express = require('express')
-const ejs = require('ejs')
-const apiRouter = require('./router.js')
+const App = require('./core/App')
 
 // Configuration
-const port = 9000
-const env = {
-  VS_ENV: process.env.VS_ENV,
+const ENV = process.env.VS_ENV
+const conf = {
+  port: 9000,
+  static: {
+    scriptFilename: ENV === 'production' ? 'vue-sandbox.min.js' : 'vue-sandbox.dev.js',
+    styleFilename: ENV === 'production' ? 'vue-sandbox.min.css' : 'vue-sandbox.dev.css',
+  }
 }
-// const assetsPrefix = argv.assetsPrefix || null
-const assets = {
-  script: env.VS_ENV === 'production' ? 'vue-sandbox.min.js' : 'vue-sandbox.dev.js',
-  style: env.VS_ENV === 'production' ? 'vue-sandbox.min.css' : 'vue-sandbox.dev.css',
-}
-
-// Initialization
-const app = express()
-app.engine('html', ejs.renderFile)
-app.set('view engine', 'html')
-app.set('views', process.cwd() + '/app/ui')
-app.use(
-  '/assets/',
-  express.static(process.cwd() + '/app/ui/assets/dist/')
-)
-app.listen(port, () => {
-  console.log(`\r\n[VueSandbox] Program started.`)
-  console.log(`[VueSandbox] Host: http://localhost:${port}`)
-})
-
-app.use('/api', apiRouter)
-
-// Wildcard route for index template file (GET)
-app.get('/*', (req, res) => {
-  res.render('index', {
-    assets: assets,
-  })
-})
+// Bootstrapping
+const app = new App(conf)
+app.start()

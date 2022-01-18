@@ -7,6 +7,7 @@
     "serve": "webpack serve",
     "build": "webpack build",
     "vuesandbox": "VS_ENV=production node ./app/server/main.js",
+    "vuesandbox:dev": "VS_ENV=development node ./app/server/main.js",
     "vs:build": "webpack build --mode production",
     "vs:dev": "webpack build --watch"
   },
