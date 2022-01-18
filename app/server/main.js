@@ -9,9 +9,6 @@ const ejs = require('ejs')
 const apiRouter = require('./router.js')
 
 // Configuration
-// TODO: Remove this CLI args parsing from server entrypoint, by using
-// a dedicated binary script to manage on-the-fly VS setup.
-// const argv = yargsParser(process.argv.slice(2))
 const port = 9000
 const env = {
   VS_ENV: process.env.VS_ENV,
