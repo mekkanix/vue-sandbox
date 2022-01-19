@@ -26,7 +26,7 @@ module.exports = {
     libraryExport: 'default',
     path: `${process.cwd()}/public/_build/`,
     publicPath: '/',
-    filename: '[name].js',
+    filename: '[name].dev.js',
   },
   module: {
     rules: [
