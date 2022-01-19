@@ -15,10 +15,10 @@
     "vs:dev": "webpack build --watch"
   },
   "_moduleAliases": {
-    "@config": "./config",
-    "@server": "./app/server",
-    "@ui": "./app/ui",
-    "@public": "./public"
+    "@config": "config",
+    "@server": "app/server",
+    "@ui": "app/ui",
+    "@public": "public"
   },
   "dependencies": {
     "bootstrap": "^5.1.3",
