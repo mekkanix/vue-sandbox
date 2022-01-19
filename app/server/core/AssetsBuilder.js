@@ -7,8 +7,8 @@ module.exports = class AssetsBuilder {
 
   constructor (conf) {
     this._initWebpackConfig(conf)
-    // this._initWebpackCompiler()
-    // this._initWebpackBuild()
+    this._initWebpackCompiler()
+    this._initWebpackBuild()
   }
 
   _initWebpackConfig(conf) {
@@ -27,11 +27,12 @@ module.exports = class AssetsBuilder {
 
   _initWebpackBuild() {
     if (this.wpConfig && this.wpCompiler) {
+      // console.log(this.wpConfig);
       const watcher = this.wpCompiler.watch({}, (err, stats) => {
-        console.log('------------------------------ err ------------------------------');
-        console.log(err);
-        console.log('------------------------------ stats ------------------------------');
-        console.log(stats);
+        // console.log('------------------------------ err ------------------------------');
+        // console.log(err);
+        // console.log('------------------------------ stats ------------------------------');
+        // console.log(stats);
       })
     }
   }

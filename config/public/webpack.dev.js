@@ -3,14 +3,15 @@ const glob = require('glob')
 const VueLoaderPlugin = require('vue-loader/lib/plugin')
 const MiniCssExtractPlugin = require('mini-css-extract-plugin')
 const RemoveEmptyScriptsPlugin = require("webpack-remove-empty-scripts")
-const NodemonPlugin = require('nodemon-webpack-plugin')
-const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin
+// const NodemonPlugin = require('nodemon-webpack-plugin')
+// const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin
 
 const componentsPattern = `${process.cwd()}/public/components/**/*.vue`
-const assetsPattern = '@public/assets'
-
+// const assetsPattern = '@public/assets'
+const checkPath = 'public/components/'
+const checkPathLen = checkPath.length
 const componentsEntries = glob.sync(componentsPattern).reduce((entries, path) => {
-  const filename = path.substring(path.lastIndexOf('/') + 1, path.indexOf('.vue'))
+  const filename = path.substring(path.indexOf('public/components/') + checkPathLen, path.indexOf('.vue'))
   entries[filename] = path
   return entries
 }, {})
@@ -19,10 +20,11 @@ module.exports = {
   mode: 'development',
   entry: componentsEntries,
   output: {
-//     library: 'VS',
+    hashFunction: 'xxhash64',
+    // library: 'VS',
     libraryTarget: 'umd',
     libraryExport: 'default',
-    path: `${process.cwd()}./app/ui/assets/dist/`,
+    path: `${process.cwd()}/public/_build/`,
     publicPath: '/',
     filename: '[name].js',
   },
@@ -41,10 +43,7 @@ module.exports = {
       //     },
       //   ]
       // },
-      {
-        test: /\.vue$/i,
-        loader: 'vue-loader',
-      },
+      
       // {
       //   test: /\.css$/i,
       //   use: ["style-loader", "css-loader"],
@@ -72,6 +71,10 @@ module.exports = {
       //   ]
       // },
       // User-provided components-related rules
+      {
+        test: /\.vue$/i,
+        loader: 'vue-loader',
+      },
       {
         test: /\.s[ac]ss$/i,
         exclude: [
@@ -105,10 +108,10 @@ module.exports = {
   // },
   plugins: [
     new VueLoaderPlugin(),
-    new MiniCssExtractPlugin({
-      filename: '[name].dev.css',
-    }),
-    new RemoveEmptyScriptsPlugin(),
+    // new MiniCssExtractPlugin({
+    //   filename: '[name].dev.css',
+    // }),
+    // new RemoveEmptyScriptsPlugin(),
     // new BundleAnalyzerPlugin({
     //   analyzerMode: 'server',
     //   analyzerPort: 9001,

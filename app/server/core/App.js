@@ -30,6 +30,10 @@ module.exports = class App {
       '/assets/',
       express.static(this.conf.rootDir + '/app/ui/assets/dist/')
     )
+    app.use(
+      '/public/assets/',
+      express.static(this.conf.rootDir + '/public/_build/')
+    )
     app.listen(this.conf.port, () => {
       console.log(`[VueSandbox] Server: OK`)
     })

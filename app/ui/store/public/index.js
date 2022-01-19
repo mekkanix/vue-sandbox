@@ -1,8 +1,9 @@
 import getters from './getters.js'
 import mutations from './mutations.js'
+import actions from './actions.js'
 
 const state = () => ({
-  userComponents: [],
+  components: [],
 })
 
 export default {
@@ -10,4 +11,5 @@ export default {
   state,
   getters,
   mutations,
+  actions,
 }

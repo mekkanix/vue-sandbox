@@ -38,10 +38,10 @@ export default {
 
   computed: {
     ...mapGetters({
-      userComponents: 'user_components/userComponents',
+      publicComponents: 'public_components/publicComponents',
     }),
     currentComponent () {
-      for (const c of this.userComponents) {
+      for (const c of this.publicComponents) {
         const formattedRouteFilepath = formatComponentPath(this.$route.params.name, true)
         if (c.filepath === formattedRouteFilepath) {
           return c.component

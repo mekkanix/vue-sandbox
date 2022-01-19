@@ -1,12 +1,12 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
-import user_components from '@ui/store/user_components/index.js'
+import public_ from '@ui/store/public/index.js'
 
 Vue.use(Vuex)
 
 const store = new Vuex.Store({
   modules: {
-    user_components,
+    public: public_,
   },
 })
 

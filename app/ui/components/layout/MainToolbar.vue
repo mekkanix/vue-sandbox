@@ -35,12 +35,12 @@ export default {
   }),
 
   computed: {
-    fmtComponentSelectOpts () {
-      return this.components.map(component => ({
-        value: component.name,
-        text: component.name,
-      }))
-    },
+    // fmtComponentSelectOpts () {
+    //   return this.components.map(component => ({
+    //     value: component.name,
+    //     text: component.name,
+    //   }))
+    // },
   },
 }
 </script>

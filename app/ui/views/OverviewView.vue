@@ -31,16 +31,16 @@ export default {
 
   computed: {
     ...mapGetters({
-      userComponents: 'user_components/userComponents',
+      publicComponents: 'public/components',
     }),
     formattedComponents () {
-      return this.userComponents.map(c => ({
-        filepath: this.stylizeComponentFilepath(c.filepath),
-        name: c.component.name,
-        targetRoute: {
-          name: 'component',
-          params: { name: formatComponentPath(c.filepath) },
-        }
+      return this.publicComponents.map(c => ({
+        // filepath: this.stylizeComponentFilepath(c.filepath),
+        // name: c.component.name,
+        // targetRoute: {
+        //   name: 'component',
+        //   params: { name: formatComponentPath(c.filepath) },
+        // }
       }))
     },
   },

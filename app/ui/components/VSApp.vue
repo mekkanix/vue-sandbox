@@ -8,7 +8,7 @@
 </template>
 
 <script>
-import { mapMutations } from 'vuex'
+import { mapActions, mapMutations } from 'vuex'
 import MainToolbar from '@ui/components/layout/MainToolbar.vue'
 
 export default {
@@ -20,18 +20,23 @@ export default {
   props: {
     components: {
       type: Array,
-      required: true,
+      // required: true,
+      default: () => [],
     },
   },
 
-  methods: {
-    ...mapMutations({
-      setUserComponents: 'user_components/setUserComponents',
-    })
+  created() {
+    this.fetchPublicComponents()
+    // this.setUserComponents(this.components)
   },
 
-  created () {
-    this.setUserComponents(this.components)
+  methods: {
+    ...mapActions({
+      fetchPublicComponents: 'public/fetchPublicComponents',
+    }),
+    // ...mapMutations({
+    //   setUserComponents: 'user_components/setUserComponents',
+    // })
   },
 }
 </script>
