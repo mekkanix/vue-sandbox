@@ -1,6 +1,6 @@
 <template>
   <div class="vs-app-root">
-    <MainToolbar :components="components" />
+    <MainToolbar :components="publicComponents" />
     <div class="vs-app-content">
       <router-view></router-view>
     </div>
@@ -8,7 +8,7 @@
 </template>
 
 <script>
-import { mapActions, mapMutations } from 'vuex'
+import { mapActions, mapGetters } from 'vuex'
 import MainToolbar from '@ui/components/layout/MainToolbar.vue'
 
 export default {
@@ -17,26 +17,20 @@ export default {
     MainToolbar,
   },
 
-  props: {
-    components: {
-      type: Array,
-      // required: true,
-      default: () => [],
-    },
-  },
-
   created() {
     this.fetchPublicComponents()
-    // this.setUserComponents(this.components)
+  },
+
+  computed: {
+    ...mapGetters({
+      publicComponents: 'public/components',
+    }),
   },
 
   methods: {
     ...mapActions({
       fetchPublicComponents: 'public/fetchPublicComponents',
     }),
-    // ...mapMutations({
-    //   setUserComponents: 'user_components/setUserComponents',
-    // })
   },
 }
 </script>

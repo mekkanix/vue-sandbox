@@ -21,7 +21,7 @@ module.exports = {
   entry: componentsEntries,
   output: {
     hashFunction: 'xxhash64',
-    // library: 'VS',
+    library: 'VSPC', // -> stands for "VueSandbox Public Component"
     libraryTarget: 'umd',
     libraryExport: 'default',
     path: `${process.cwd()}/public/_build/`,

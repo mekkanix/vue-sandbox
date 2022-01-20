@@ -1,8 +1,9 @@
 export default class PublicComponent {
   scriptName = null
   scriptUrl = null
-  compiledComponent = null
+  _compiledObject = null
   _$script = null
+  name = null
 
   constructor (scriptName, scriptUrl) {
     this.scriptName = scriptName
@@ -16,7 +17,13 @@ export default class PublicComponent {
       this._$script.setAttribute('type', 'text/javascript')
       this._$script.setAttribute('id', this.scriptName.replace('/', '-'))
       this._$script.setAttribute('src', this.scriptUrl)
-      console.log(this._$script);
+      this._$script.onload = () => {
+        // TODO: VSPC -> webpack-generated library name; use constant to store this value
+        if (VSPC) {
+          this._compiledObject = VSPC
+          this.name = VSPC.name
+        }
+      }
       document.head.append(this._$script)
     }
   }

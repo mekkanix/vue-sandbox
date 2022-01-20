@@ -105,12 +105,12 @@ module.exports = {
       generateStatsFile: true,
       openAnalyzer: false,
     }),
-    new NodemonPlugin({
-      script: './app/server/main.js',
-      watch: path.resolve('./app/server/'),
-      env: {
-        VS_ENV: 'development',
-      }
-    }),
+    // new NodemonPlugin({
+    //   script: './app/server/main.js',
+    //   watch: path.resolve('./app/server/'),
+    //   env: {
+    //     VS_ENV: 'development',
+    //   }
+    // }),
   ],
 }
