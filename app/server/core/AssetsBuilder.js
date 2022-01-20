@@ -1,4 +1,5 @@
 const glob = require('glob')
+const crypto = require('crypto')
 const webpack = require('webpack')
 
 module.exports = class AssetsBuilder {
@@ -16,6 +17,8 @@ module.exports = class AssetsBuilder {
     const config = require(`@config/public/${filename}`)
     if (config) {
       this.wpConfig = config
+      // const hash = crypto.randomBytes(20).toString('hex')
+      // this.wpConfig.output.library = `VSPC${hash}`
     }
   }
 
@@ -45,6 +48,8 @@ module.exports = class AssetsBuilder {
           console.error('[Webpack: Compilation Warning]')
           console.error(info.warnings)
         }
+
+        console.log(Object.keys(stats.compilation));
       })
     }
   }
