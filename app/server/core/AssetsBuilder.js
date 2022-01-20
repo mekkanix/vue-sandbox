@@ -27,12 +27,24 @@ module.exports = class AssetsBuilder {
 
   _initWebpackBuild() {
     if (this.wpConfig && this.wpCompiler) {
-      // console.log(this.wpConfig);
       const watcher = this.wpCompiler.watch({}, (err, stats) => {
-        // console.log('------------------------------ err ------------------------------');
-        // console.log(err);
-        // console.log('------------------------------ stats ------------------------------');
-        // console.log(stats);
+        if (err) {
+          console.error('[Fatal Webpack Error]')
+          console.error(err.stack || err)
+          if (err.details) {
+            console.error(err.details)
+          }
+        }
+
+        const info = stats.toJson()
+        if (stats.hasErrors()) {
+          console.error('[Webpack: Compilation Error]')
+          console.error(info.errors)
+        }
+        if (stats.hasWarnings()) {
+          console.error('[Webpack: Compilation Warning]')
+          console.error(info.warnings)
+        }
       })
     }
   }

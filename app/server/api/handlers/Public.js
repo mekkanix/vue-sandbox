@@ -15,7 +15,7 @@ module.exports = class Public {
       )
       const suffix = ENV === 'development' ? '.dev' : ''
       return {
-        scriptFilename: filename,
+        scriptName: filename,
         scriptUrl: `http://localhost:9000/public/assets/${filename}${suffix}.js`
       }
     })

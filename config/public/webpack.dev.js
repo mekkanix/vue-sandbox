@@ -30,73 +30,47 @@ module.exports = {
   },
   module: {
     rules: [
-      // Pkg-related rules (internal)
-      // {
-      //   test: /\.js$/i,
-      //   use: [
-      //     {
-      //       loader: 'babel-loader',
-      //       options: {
-      //         presets: ['@babel/preset-env'],
-      //         plugins: ['@babel/plugin-proposal-class-properties'],
-      //       }
-      //     },
-      //   ]
-      // },
-      
-      // {
-      //   test: /\.css$/i,
-      //   use: ["style-loader", "css-loader"],
-      // },
+      // SFC files
+      {
+        test: /\.vue$/i,
+        loader: 'vue-loader',
+      },
+      // JS scripts
+      {
+        test: /\.js$/i,
+        loader: 'babel-loader',
+      },
+      // Native CSS
+      {
+        test: /\.css$/i,
+        use: [
+          'vue-style-loader',
+          'css-loader',
+        ]
+      },
+      // // SASS/SCSS
       // {
       //   test: /\.s[ac]ss$/i,
       //   exclude: [
-      //     path.join(__dirname, 'public/components/')
+      //     path.join(__dirname, 'app/')
       //   ],
       //   use: [
-      //     MiniCssExtractPlugin.loader,
+      //     'style-loader',
       //     'css-loader',
       //     {
       //       loader: 'sass-loader',
       //       options: {
       //         sassOptions: {
       //           indentedSyntax: true,
-      //           // includePaths: [
-      //           //   path.resolve(__dirname, 'node_modules'),
-      //           //   path.join(__dirname, 'app/assets/sass'),
-      //           // ]
+      //           includePaths: [
+      //             path.resolve(__dirname, 'node_modules'),
+      //             path.join(__dirname, 'app/assets/sass'),
+      //           ]
       //         },
       //       },
       //     },
       //   ]
-      // },
-      // User-provided components-related rules
-      {
-        test: /\.vue$/i,
-        loader: 'vue-loader',
-      },
-      {
-        test: /\.s[ac]ss$/i,
-        exclude: [
-          path.join(__dirname, 'app/')
-        ],
-        use: [
-          'style-loader',
-          'css-loader',
-          {
-            loader: 'sass-loader',
-            options: {
-              sassOptions: {
-                indentedSyntax: true,
-                includePaths: [
-                  path.resolve(__dirname, 'node_modules'),
-                  path.join(__dirname, 'app/assets/sass'),
-                ]
-              },
-            },
-          },
-        ]
-      }
+      // }
     ]
   },
   // resolve: {
