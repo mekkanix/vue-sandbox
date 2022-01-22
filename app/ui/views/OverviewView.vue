@@ -39,7 +39,7 @@ export default {
         name: c.vCompName,
         targetRoute: {
           name: 'component',
-          params: { name: formatComponentPath(c.relPath) },
+          params: { name: c.scriptName, },
         }
       }))
     },

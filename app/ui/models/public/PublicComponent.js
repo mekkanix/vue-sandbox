@@ -2,9 +2,9 @@ export default class PublicComponent {
   relPath = null
   scriptName = null
   scriptUrl = null
-  _compiledObject = null
-  _$script = null
   vCompName = null
+  compiledObject = null
+  _elScript = null
 
   constructor (relPath, scriptName, scriptUrl) {
     this.relPath = relPath
@@ -15,11 +15,11 @@ export default class PublicComponent {
 
   _initInstanciation() {
     if (this.scriptUrl) {
-      this._$script = document.createElement('script')
-      this._$script.setAttribute('type', 'text/javascript')
-      this._$script.setAttribute('id', this.scriptName)
-      this._$script.setAttribute('src', this.scriptUrl)
-      this._$script.onload = () => {
+      this._elScript = document.createElement('script')
+      this._elScript.setAttribute('type', 'text/javascript')
+      this._elScript.setAttribute('id', this.scriptName)
+      this._elScript.setAttribute('src', this.scriptUrl)
+      this._elScript.onload = () => {
         let vspcLib = null
         try {
           vspcLib = eval(`VSPC__${this.scriptName}`) // needed to retrieve VComp object from dynamic value
@@ -27,11 +27,11 @@ export default class PublicComponent {
           console.error(e)
         }
         if (vspcLib) {
-          this._compiledObject = vspcLib
+          this.compiledObject = vspcLib
           this.vCompName = vspcLib.name
         }
       }
-      document.head.append(this._$script)
+      document.head.append(this._elScript)
     }
   }
 }

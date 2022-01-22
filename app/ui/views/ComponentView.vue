@@ -25,7 +25,6 @@
 import Vue from 'vue'
 import { mapGetters } from 'vuex'
 import { VSComponentWrapper } from 'vue-sandbox-wrapper'
-import { formatComponentPath } from '@ui/helpers/Formatter.js'
 
 export default {
   name: 'ComponentView',
@@ -38,13 +37,16 @@ export default {
 
   computed: {
     ...mapGetters({
-      publicComponents: 'public_components/publicComponents',
+      publicComponents: 'public/components',
     }),
     currentComponent () {
-      for (const c of this.publicComponents) {
-        const formattedRouteFilepath = formatComponentPath(this.$route.params.name, true)
-        if (c.filepath === formattedRouteFilepath) {
-          return c.component
+      const routeParamCompName = this.$route.params.name
+      for (const publicComp of this.publicComponents) {
+        if (publicComp.scriptName === routeParamCompName) {
+          return {
+            name: publicComp.vCompName,
+            compiledObject: publicComp.compiledObject,
+          }
         }
       }
       return null

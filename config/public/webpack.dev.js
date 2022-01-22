@@ -6,15 +6,6 @@ const RemoveEmptyScriptsPlugin = require("webpack-remove-empty-scripts")
 // const NodemonPlugin = require('nodemon-webpack-plugin')
 // const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin
 
-// const componentsPattern = `${process.cwd()}/public/components/**/*.vue`
-// const assetsPattern = '@public/assets'
-// const checkPath = 'public/components/'
-// const checkPathLen = checkPath.length
-// const componentsEntries = glob.sync(componentsPattern).reduce((entries, path) => {
-//   const filename = path.substring(path.indexOf('public/components/') + checkPathLen, path.indexOf('.vue'))
-//   entries[filename] = path
-//   return entries
-// }, {})
 
 module.exports = {
   mode: 'development',
