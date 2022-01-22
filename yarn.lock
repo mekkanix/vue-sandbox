@@ -1613,6 +1613,11 @@ cli-boxes@^2.2.1:
   resolved "https://registry.yarnpkg.com/cli-boxes/-/cli-boxes-2.2.1.tgz#ddd5035d25094fce220e9cab40a45840a440318f"
   integrity sha512-y4coMcylgSCdVinjiDBuR8PCC2bLjyGTwEmPb9NHR/QaNU6EUOXcTY/s6VjGMD6ENSEaeQYHCY0GNGS5jfMwPw==
 
+cliclopts@^1.1.0:
+  version "1.1.1"
+  resolved "https://registry.yarnpkg.com/cliclopts/-/cliclopts-1.1.1.tgz#69431c7cb5af723774b0d3911b4c37512431910f"
+  integrity sha1-aUMcfLWvcjd0sNORG0w3USQxkQ8=
+
 clone-deep@^4.0.1:
   version "4.0.1"
   resolved "https://registry.yarnpkg.com/clone-deep/-/clone-deep-4.0.1.tgz#c19fd9bdbbf85942b4fd979c84dcf7d5f07c2387"
@@ -4533,6 +4538,15 @@ stylehacks@^5.0.1:
   dependencies:
     browserslist "^4.16.0"
     postcss-selector-parser "^6.0.4"
+
+subcommand@^2.1.1:
+  version "2.1.1"
+  resolved "https://registry.yarnpkg.com/subcommand/-/subcommand-2.1.1.tgz#66ba790cc72564049eface644c4a24291a4829c7"
+  integrity sha512-cm7TQq9I8dA5LKUr+r8W7RzQlLsmTdCr6wXmjYueOoh/bQu55ODEw7GFhT42pUyoaLtO2rgmx1+8cSIjY9lR9g==
+  dependencies:
+    cliclopts "^1.1.0"
+    debug "^4.1.1"
+    minimist "^1.2.0"
 
 supports-color@^5.3.0, supports-color@^5.5.0:
   version "5.5.0"

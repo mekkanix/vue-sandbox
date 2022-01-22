@@ -18,7 +18,7 @@ module.exports = class Public {
       return {
         relPath: `${filename}.vue`,
         scriptName,
-        scriptUrl: `http://localhost:9000/public/assets/${scriptName}${suffix}.js`
+        scriptUrl: `http://localhost:9000/public/assets/${scriptName}${suffix}.js`,
       }
     })
     response.json(components)
