@@ -6,7 +6,7 @@
 
 VueSandbox is a [node.js](https://nodejs.org/en/)-based utility that allows you to edit Vue components' props in live, and see render updates in a dedicated viewport.
 
-This way it provides a good way to quickly test your components under development, or use them to efficently present features to other people.
+It provides a good way to quickly test your components under development, or use them to efficiently showcase features or projects.
 
 ## Demo
 
