@@ -63,29 +63,6 @@ module.exports = {
           },
         ]
       },
-      // User-provided components-related rules
-      // {
-      //   test: /\.s[ac]ss$/i,
-      //   exclude: [
-      //     path.join(rootDir, 'app/')
-      //   ],
-      //   use: [
-      //     'style-loader',
-      //     'css-loader',
-      //     {
-      //       loader: 'sass-loader',
-      //       options: {
-      //         sassOptions: {
-      //           indentedSyntax: true,
-      //           includePaths: [
-      //             path.resolve(rootDir, 'node_modules'),
-      //             path.join(rootDir, 'app/assets/sass'),
-      //           ]
-      //         },
-      //       },
-      //     },
-      //   ]
-      // }
     ]
   },
   resolve: {
