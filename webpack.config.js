@@ -9,7 +9,4 @@ const configs = {
   production: require('./webpack.production.js'),
 }
 
-module.exports = (_, argv) => {
-  const mode = argv.mode && argv.mode === 'production' ? argv.mode : 'development'
-  return mode === 'production' ? configs.production : configs.dev
-}
+module.exports = configs.production

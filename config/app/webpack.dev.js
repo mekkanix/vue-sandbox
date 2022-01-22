@@ -5,6 +5,8 @@ const RemoveEmptyScriptsPlugin = require("webpack-remove-empty-scripts")
 const NodemonPlugin = require('nodemon-webpack-plugin')
 const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin
 
+const rootDir = process.cwd()
+
 module.exports = {
   mode: 'development',
   entry: './app/ui/main.js',
@@ -12,7 +14,7 @@ module.exports = {
     library: 'VS',
     libraryTarget: 'umd',
     libraryExport: 'default',
-    path: path.resolve(__dirname, './app/ui/assets/dist/'),
+    path: path.resolve(rootDir, './app/ui/assets/dist/'),
     publicPath: '/',
     filename: 'vue-sandbox.dev.js',
   },
@@ -42,7 +44,7 @@ module.exports = {
       {
         test: /\.s[ac]ss$/i,
         exclude: [
-          path.join(__dirname, 'public/components/')
+          path.join(rootDir, 'public/components/')
         ],
         use: [
           MiniCssExtractPlugin.loader,
@@ -53,8 +55,8 @@ module.exports = {
               sassOptions: {
                 indentedSyntax: true,
                 includePaths: [
-                  path.resolve(__dirname, 'node_modules'),
-                  path.join(__dirname, 'app/assets/sass'),
+                  path.resolve(rootDir, 'node_modules'),
+                  path.join(rootDir, 'app/assets/sass'),
                 ]
               },
             },
@@ -62,35 +64,35 @@ module.exports = {
         ]
       },
       // User-provided components-related rules
-      {
-        test: /\.s[ac]ss$/i,
-        exclude: [
-          path.join(__dirname, 'app/')
-        ],
-        use: [
-          'style-loader',
-          'css-loader',
-          {
-            loader: 'sass-loader',
-            options: {
-              sassOptions: {
-                indentedSyntax: true,
-                includePaths: [
-                  path.resolve(__dirname, 'node_modules'),
-                  path.join(__dirname, 'app/assets/sass'),
-                ]
-              },
-            },
-          },
-        ]
-      }
+      // {
+      //   test: /\.s[ac]ss$/i,
+      //   exclude: [
+      //     path.join(rootDir, 'app/')
+      //   ],
+      //   use: [
+      //     'style-loader',
+      //     'css-loader',
+      //     {
+      //       loader: 'sass-loader',
+      //       options: {
+      //         sassOptions: {
+      //           indentedSyntax: true,
+      //           includePaths: [
+      //             path.resolve(rootDir, 'node_modules'),
+      //             path.join(rootDir, 'app/assets/sass'),
+      //           ]
+      //         },
+      //       },
+      //     },
+      //   ]
+      // }
     ]
   },
   resolve: {
     alias: {
-      '@ui': path.resolve(__dirname, 'app/ui/'),
-      '@server': path.resolve(__dirname, 'app/server/'),
-      '@public': path.resolve(__dirname, 'public/'),
+      '@ui': path.resolve(rootDir, 'app/ui/'),
+      '@server': path.resolve(rootDir, 'app/server/'),
+      '@public': path.resolve(rootDir, 'public/'),
     }
   },
   plugins: [
@@ -105,12 +107,12 @@ module.exports = {
       generateStatsFile: true,
       openAnalyzer: false,
     }),
-    // new NodemonPlugin({
-    //   script: './app/server/main.js',
-    //   watch: path.resolve('./app/server/'),
-    //   env: {
-    //     VS_ENV: 'development',
-    //   }
-    // }),
+    new NodemonPlugin({
+      script: './app/server/main.js',
+      watch: path.resolve('./app/server/'),
+      env: {
+        VS_ENV: 'development',
+      }
+    }),
   ],
 }
