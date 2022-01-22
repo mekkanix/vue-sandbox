@@ -14,9 +14,11 @@ module.exports = class Public {
         script.indexOf('.vue')
       )
       const suffix = ENV === 'development' ? '.dev' : ''
+      const scriptName = filename.replace('/', '__')
       return {
-        scriptName: filename,
-        scriptUrl: `http://localhost:9000/public/assets/${filename}${suffix}.js`
+        relPath: `${filename}.vue`,
+        scriptName,
+        scriptUrl: `http://localhost:9000/public/assets/${scriptName}${suffix}.js`
       }
     })
     response.json(components)

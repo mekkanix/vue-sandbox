@@ -4,6 +4,7 @@ const webpack = require('webpack')
 module.exports = class AssetsBuilder {
   wpConfig = null
   wpCompiler = null
+  _compsEntries = []
 
   constructor (conf) {
     this._initWebpackConfig(conf)
@@ -16,13 +17,23 @@ module.exports = class AssetsBuilder {
     const config = require(`@config/public/${filename}`)
     if (config) {
       this.wpConfig = config
-      const componentsEntries = glob.sync(componentsPattern).reduce((entries, path) => {
-        const filename = path.substring(path.indexOf('public/components/') + checkPathLen, path.indexOf('.vue'))
-        entries[filename] = path
+      const checkPath = 'public/components/'
+      const checkPathLen = checkPath.length
+      const componentsPattern = `${conf.rootDir}/public/components/**/*.vue`
+      this._compsEntries = glob.sync(componentsPattern).reduce((entries, absPath) => {
+        const filename = absPath.substring(absPath.indexOf('public/components/') + checkPathLen, absPath.indexOf('.vue'))
+        entries.push({
+          scriptName: filename.replace('/', '__'),
+          relPath: `${filename}.vue`,
+          absPath,
+        })
+        return entries
+      }, [])
+      this.wpConfig.entry = this._compsEntries.reduce((entries, entry) => {
+        entries[entry.scriptName] = entry.absPath
         return entries
       }, {})
-      this.wpConfig.entry = componentsEntries
-      // this.wpConfig.output.library = 
+      // console.log(this.wpConfig);
     }
   }
 

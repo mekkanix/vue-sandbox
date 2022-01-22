@@ -10,7 +10,7 @@
         >
           <div class="component-infos">
             <div class="component-filepath">
-              <span v-html="component.scriptName" />
+              <span v-html="component.relPath" />
             </div>
             <div class="component-name">
               <span class="component-int-name">({{ component.name }})</span>
@@ -35,21 +35,21 @@ export default {
     }),
     formattedComponents () {
       return this.publicComponents.map(c => ({
-        scriptName: this.stylizeComponentScriptName(c.scriptName),
-        name: c.name,
+        relPath: this.stylizeComponentRelPath(c.relPath),
+        name: c.vCompName,
         targetRoute: {
           name: 'component',
-          params: { name: formatComponentPath(c.scriptName) },
+          params: { name: formatComponentPath(c.relPath) },
         }
       }))
     },
   },
 
   methods: {
-    stylizeComponentScriptName (scriptName) {
-      const path = scriptName.substr(0, scriptName.lastIndexOf('/') + 1)
-      const fmtScriptName = scriptName.substr(scriptName.lastIndexOf('/') + 1)
-      return `${path}<span class="fw-bold">${fmtScriptName}</span>`
+    stylizeComponentRelPath (relPath) {
+      const path = relPath.substr(0, relPath.lastIndexOf('/') + 1)
+      const fmtRelPath = relPath.substr(relPath.lastIndexOf('/') + 1)
+      return `${path}<span class="fw-bold">${fmtRelPath}</span>`
     },
   },
 }
