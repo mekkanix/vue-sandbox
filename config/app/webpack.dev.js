@@ -14,7 +14,7 @@ module.exports = {
     library: 'VS',
     libraryTarget: 'umd',
     libraryExport: 'default',
-    path: path.resolve(rootDir, './app/ui/assets/dist/'),
+    path: path.join(rootDir, '/app/ui/assets/dist/'),
     publicPath: '/',
     filename: 'vue-sandbox.dev.js',
   },
@@ -44,7 +44,7 @@ module.exports = {
       {
         test: /\.s[ac]ss$/i,
         exclude: [
-          path.join(rootDir, 'public/components/')
+          path.join(rootDir, '/public/components/')
         ],
         use: [
           MiniCssExtractPlugin.loader,
@@ -55,7 +55,7 @@ module.exports = {
               sassOptions: {
                 indentedSyntax: true,
                 includePaths: [
-                  path.resolve(rootDir, 'node_modules'),
+                  path.join(rootDir, 'node_modules'),
                   path.join(rootDir, 'app/assets/sass'),
                 ]
               },
@@ -90,9 +90,9 @@ module.exports = {
   },
   resolve: {
     alias: {
-      '@ui': path.resolve(rootDir, 'app/ui/'),
-      '@server': path.resolve(rootDir, 'app/server/'),
-      '@public': path.resolve(rootDir, 'public/'),
+      '@ui': path.join(rootDir, '/app/ui/'),
+      '@server': path.join(rootDir, '/app/server/'),
+      '@public': path.join(rootDir, '/public/'),
     }
   },
   plugins: [
