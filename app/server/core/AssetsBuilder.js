@@ -1,5 +1,4 @@
 const glob = require('glob')
-const crypto = require('crypto')
 const webpack = require('webpack')
 
 module.exports = class AssetsBuilder {
@@ -17,8 +16,13 @@ module.exports = class AssetsBuilder {
     const config = require(`@config/public/${filename}`)
     if (config) {
       this.wpConfig = config
-      // const hash = crypto.randomBytes(20).toString('hex')
-      // this.wpConfig.output.library = `VSPC${hash}`
+      const componentsEntries = glob.sync(componentsPattern).reduce((entries, path) => {
+        const filename = path.substring(path.indexOf('public/components/') + checkPathLen, path.indexOf('.vue'))
+        entries[filename] = path
+        return entries
+      }, {})
+      this.wpConfig.entry = componentsEntries
+      // this.wpConfig.output.library = 
     }
   }
 
@@ -37,19 +41,21 @@ module.exports = class AssetsBuilder {
           if (err.details) {
             console.error(err.details)
           }
+          return
         }
 
         const info = stats.toJson()
         if (stats.hasErrors()) {
           console.error('[Webpack: Compilation Error]')
           console.error(info.errors)
+          return
         }
         if (stats.hasWarnings()) {
           console.error('[Webpack: Compilation Warning]')
           console.error(info.warnings)
         }
-
-        console.log(Object.keys(stats.compilation));
+        const buildHash = stats.compilation.hash
+        // console.log(Object.keys(stats.compilation));
       })
     }
   }

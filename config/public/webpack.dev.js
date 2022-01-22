@@ -18,16 +18,16 @@ const componentsEntries = glob.sync(componentsPattern).reduce((entries, path) =>
 
 module.exports = {
   mode: 'development',
-  entry: componentsEntries,
+  // entry: componentsEntries,
   output: {
     hashFunction: 'xxhash64',
-    library: 'VSPC[fullhash]', // -> stands for "VueSandbox Public Component"
+  //   library: 'VSPC', // -> stands for "VueSandbox Public Component"
     libraryTarget: 'umd',
     libraryExport: 'default',
     path: `${process.cwd()}/public/_build/`,
     publicPath: '/',
     filename: '[name].dev.js',
-  },
+  // },
   module: {
     rules: [
       // SFC files
