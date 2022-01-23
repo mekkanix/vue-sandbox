@@ -16,6 +16,7 @@
     "vs:dev": "webpack build --watch"
   },
   "_moduleAliases": {
+    "@root": "./",
     "@config": "config",
     "@server": "app/server",
     "@ui": "app/ui",
