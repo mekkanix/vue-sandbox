@@ -1,27 +1,14 @@
 #!/usr/bin/env node
 
-const subcommand = require('subcommand')
-const yargsParser = require('yargs-parser')
+const { Command } = require('commander')
+const program = new Command()
 
-const commands = [
-  {
-    name: 'start',
-    options: [
-      {
-        name: 'assets-prefix',
-        abbr: 'p',
-        boolean: false,
-        default: null,
-        help: '',
-      },
-    ],
-    command: (args) => {
-      console.log(args);
-    },
-  }
-]
+program
+  .command('start')
+  .command('description', 'test command')
+  .option('-p, --assetsprefix [prefix]', 'test command option', '')
+  .action((args) => {
+    console.log(args);
+  })
 
-const match = subcommand(commands, process.argv)
-
-const matched = match(['start'])
-// console.log(matched);
+program.parse()
