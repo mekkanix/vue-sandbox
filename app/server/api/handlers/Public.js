@@ -21,7 +21,7 @@ module.exports = class Public {
         scriptUrl: `http://localhost:9000/public/assets/${scriptName}${suffix}.js`,
       }
     })
-    response.json(components)
+    return components
   }
 
 }

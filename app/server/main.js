@@ -5,9 +5,10 @@
  */
 
 require('module-alias/register')
-const App = require('./core/App')
+const VSProcess = require('./core/VSProcess.js')
+const App = require('./core/App.js')
 
-console.log(process.argv);
+const vsProcess = new VSProcess(process)
 
 // Configuration
 const ENV = process.env.VS_ENV
@@ -28,5 +29,5 @@ const conf = {
 }
 
 // Bootstrapping
-const app = new App(conf)
-// app.start()
+const app = new App(vsProcess, conf)
+app.start()

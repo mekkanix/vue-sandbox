@@ -2,10 +2,11 @@ const conf = require('../../config.js')
 
 module.exports = class App {
 
-  static getMeta (_, response) {
-    response.json({
-      assetsPrefix: conf.user.assetsPrefix,
-    })
+  static getInfos (ctx) {
+    const assetsPrefix = ctx.vsProcess.args.assetsprefix || null
+    return {
+      assetsPrefix,
+    }
   }
 
 }

@@ -24,9 +24,9 @@ class ScriptManager {
       console.log(stdout)
     })
 
-    // process.stdout.on('data', function (data) {
-    //   console.log(data)
-    // })
+    process.stdout.on('data', function (data) {
+      console.log(data)
+    })
 
     process.on('error', function (err) {
       console.error(`\r\n[VueSandbox: Command Error]`)

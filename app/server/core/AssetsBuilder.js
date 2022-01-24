@@ -33,7 +33,6 @@ module.exports = class AssetsBuilder {
         entries[entry.scriptName] = entry.absPath
         return entries
       }, {})
-      // console.log(this.wpConfig);
     }
   }
 
