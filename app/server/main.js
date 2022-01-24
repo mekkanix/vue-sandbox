@@ -7,6 +7,8 @@
 require('module-alias/register')
 const App = require('./core/App')
 
+console.log(process.argv);
+
 // Configuration
 const ENV = process.env.VS_ENV
 const root = process.cwd()
@@ -26,6 +28,5 @@ const conf = {
 }
 
 // Bootstrapping
-console.log(`\r\n[VueSandbox] Starting program...`)
 const app = new App(conf)
-app.start()
+// app.start()
