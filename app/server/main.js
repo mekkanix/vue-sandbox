@@ -24,7 +24,8 @@ const conf = {
   },
   public: {
     componentsDir: `${root}/public/components`,
-    // assetsDir: `${root}/public/assets`,
+    assetsDir: `${root}/public/_build/assets`,
+    assetsPublicPath: `/public/assets`,
   },
 }
 

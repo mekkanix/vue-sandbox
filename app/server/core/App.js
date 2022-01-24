@@ -59,13 +59,17 @@ module.exports = class App {
       '/public/components': Public.getComponents,
     }
     const ctx = {
-      vsProcess: this.vsProcess,
+      conf: this.conf,
+      process: {
+        args: this.vsProcess.args,
+      },
     }
     for (const [path, fn] of Object.entries(routes)) {
       router.get(
         path,
         (_, res) => {
           const data = fn(ctx)
+          // console.log(data);
           return res.json(data)
         }
       )
