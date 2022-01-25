@@ -35,9 +35,19 @@ program
     console.log(`[VueSandbox] Starting server...`)
     const optAssetsPrefix = formatArgValue(args.assetsprefix, 'path') || null
     const opts = { assetsprefix: optAssetsPrefix, }
-    runCmd(`node ${rootDir}/app/server/main.js`, opts, (data) => {
-      console.error(data)
-    })
+
+    if (VS_ENV === 'production') {  
+      runCmd(`node ${rootDir}/app/server/main.js`, opts, (data) => {
+        console.error(data)
+      })
+    } else if (VS_ENV === 'development') {
+      runCmd(`webpack build --config ${rootDir}/config/app/webpack.dev.js --watch`, {}, (data) => {
+        console.error(data)
+      })
+      runCmd(`nodemon ${rootDir}/app/server/main.js`, opts, (data) => {
+        console.error(data)
+      })
+    }
   })
 
 program.parse()
