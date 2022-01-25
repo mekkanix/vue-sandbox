@@ -1,7 +1,5 @@
 <template>
   <div class="hello">
-    <!-- <img src="/sitecontents/assets/toto.jpeg" />
-    <img src="/sitecontents/assets/path/to/toto.jpeg" /> -->
     <p>{{ msg }}</p>
   </div>
 </template>

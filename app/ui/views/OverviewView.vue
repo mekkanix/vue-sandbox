@@ -24,7 +24,6 @@
 
 <script>
 import { mapGetters } from 'vuex'
-import { formatComponentPath, } from '@ui/helpers/Formatter.js'
 
 export default {
   name: 'OverviewView',

@@ -12,7 +12,7 @@
     </div>
     <div class="vs-content">
       <VSComponentWrapper
-        v-if="currentComponent"
+        v-if="isLoaded && currentComponent"
         :vue="vue"
         :component="currentComponent"
         class="vs-component-wrapper-root"
@@ -39,13 +39,17 @@ export default {
     ...mapGetters({
       publicComponents: 'public/components',
     }),
+    isLoaded() {
+      return !!this.publicComponents.length
+    },
     currentComponent () {
       const routeParamCompName = this.$route.params.name
       for (const publicComp of this.publicComponents) {
-        if (publicComp.scriptName === routeParamCompName) {
+        const compiledObject = publicComp.compiledObject
+        if (compiledObject && publicComp.scriptName === routeParamCompName) {
           return {
             name: publicComp.vCompName,
-            compiledObject: publicComp.compiledObject,
+            compiledObject,
           }
         }
       }

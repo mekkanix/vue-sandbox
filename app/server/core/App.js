@@ -69,7 +69,6 @@ module.exports = class App {
         path,
         (_, res) => {
           const data = fn(ctx)
-          // console.log(data);
           return res.json(data)
         }
       )
