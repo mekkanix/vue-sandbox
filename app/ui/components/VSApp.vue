@@ -8,7 +8,7 @@
 </template>
 
 <script>
-import { mapActions, mapGetters } from 'vuex'
+import { mapActions, mapGetters, } from 'vuex'
 import MainToolbar from '@ui/components/layout/MainToolbar.vue'
 
 export default {
@@ -17,14 +17,14 @@ export default {
     MainToolbar,
   },
 
-  created() {
-    this.fetchPublicComponents()
-  },
-
   computed: {
     ...mapGetters({
       publicComponents: 'public/components',
     }),
+  },
+
+  created() {
+    this.fetchPublicComponents()
   },
 
   methods: {

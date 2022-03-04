@@ -85,11 +85,14 @@ module.exports = {
       openAnalyzer: false,
     }),
     new NodemonPlugin({
-      script: './app/server/main.js',
-      watch: path.resolve('./app/server/'),
+      script: path.join(rootDir, '/app/server/main.js'),
+      watch: path.resolve('./app/'),
+      ignore: [
+        path.join(rootDir, '/app/ui/assets/'),
+      ],
       env: {
         VS_ENV: 'development',
-      }
+      },
     }),
   ],
 }

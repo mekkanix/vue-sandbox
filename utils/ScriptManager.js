@@ -32,10 +32,12 @@ class ScriptManager {
       console.error(`\r\n[VueSandbox: Command Error]`)
       console.error(`> CMD: ${cmd}`)
       console.error(err)
+      callback(err)
     })
 
     process.on('close', function (code) {
       console.log(`Exit code: ${code}`)
+      callback(code)
     })
   }
 

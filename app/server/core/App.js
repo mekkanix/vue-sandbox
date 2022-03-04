@@ -55,7 +55,7 @@ module.exports = class App {
     const Public = require('@server/api/handlers/Public.js')
     const router = express.Router()
     const routes = {
-      '/app/infos': App.getInfos,
+      '/app/configuration': App.getConfiguration,
       '/public/components': Public.getComponents,
     }
     const ctx = {

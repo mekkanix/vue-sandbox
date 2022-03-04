@@ -14,7 +14,7 @@ module.exports = class Public {
         script.indexOf('.vue')
       )
       const suffix = ENV === 'development' ? '.dev' : ''
-      const scriptName = filename.replace('/', '__')
+      const scriptName = filename.replace(/\//g, '__')
       return {
         relPath: `${filename}.vue`,
         scriptName,

@@ -36,17 +36,19 @@ program
     const optAssetsPrefix = formatArgValue(args.assetsprefix, 'path') || null
     const opts = { assetsprefix: optAssetsPrefix, }
 
-    if (VS_ENV === 'production') {  
+    if (VS_ENV === 'production') {
       runCmd(`node ${rootDir}/app/server/main.js`, opts, (data) => {
         console.error(data)
       })
     } else if (VS_ENV === 'development') {
-      runCmd(`webpack build --config ${rootDir}/config/app/webpack.dev.js --watch`, {}, (data) => {
+      const cmdBuild = `${rootDir}/node_modules/.bin/webpack-cli build --config ${rootDir}/config/app/webpack.dev.js --watch`
+      // const cmdServer = `nodemon ${rootDir}/app/server/main.js`
+      runCmd(cmdBuild, {}, (data) => {
         console.error(data)
       })
-      runCmd(`nodemon ${rootDir}/app/server/main.js`, opts, (data) => {
-        console.error(data)
-      })
+      // runCmd(cmdServer, opts, (data) => {
+      //   console.error(data)
+      // })
     }
   })
 
