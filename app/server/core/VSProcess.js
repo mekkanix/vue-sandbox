@@ -12,6 +12,7 @@ module.exports = class VSProcess {
 
   _initProcess(_process) {
     let argv = _process.argv
+    console.log(argv);
     this._nodeExecPath = argv[0] || null
     this._entryScriptFile = argv[1] || null
     this._rawArgs = argv.slice(2)

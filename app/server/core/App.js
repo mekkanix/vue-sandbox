@@ -64,6 +64,7 @@ module.exports = class App {
         args: this.vsProcess.args,
       },
     }
+    // console.log(ctx);
     for (const [path, fn] of Object.entries(routes)) {
       router.get(
         path,
