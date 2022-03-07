@@ -5,7 +5,22 @@ const RemoveEmptyScriptsPlugin = require("webpack-remove-empty-scripts")
 const NodemonPlugin = require('nodemon-webpack-plugin')
 const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin
 
+// Utils
+
 const rootDir = process.cwd()
+
+function formatArgsToNode(options) {
+  return Object.entries(options)
+    .map((opt) => {
+      if (opt[0] && opt[1]) {
+        return `--${opt[0]}=${JSON.stringify(opt[1])}`
+      }
+      return null
+    })
+    .filter(opt => !!opt)
+}
+
+// Config
 
 module.exports = (env, opts) => {
   console.log('-------------');
@@ -13,6 +28,9 @@ module.exports = (env, opts) => {
   console.log('-------------');
   console.log('WP OPTS', opts);
   console.log('-------------');
+
+  delete env.WEBPACK_WATCH
+
   return {
     mode: 'development',
     entry: './app/ui/main.js',
@@ -50,7 +68,7 @@ module.exports = (env, opts) => {
         {
           test: /\.s[ac]ss$/i,
           exclude: [
-            path.join(rootDir, '/public/components/')
+            path.join(rootDir, '/public/components/'),
           ],
           use: [
             MiniCssExtractPlugin.loader,
@@ -92,13 +110,15 @@ module.exports = (env, opts) => {
       }),
       new NodemonPlugin({
         script: path.join(rootDir, '/app/server/main.js'),
-        watch: path.resolve('./app/'),
+        watch: path.join(rootDir, '/app/'),
         ignore: [
           path.join(rootDir, '/app/ui/assets/'),
         ],
         env: {
           VS_ENV: 'development',
         },
+        nodeArgs: formatArgsToNode(env),
+        verbose: true,
       }),
     ],
   }
