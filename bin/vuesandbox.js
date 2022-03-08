@@ -64,7 +64,9 @@ program
       assetsprefix: optAssetsPrefix,
     }
 
-    const cmdDevBuild = `${rootDir}/node_modules/.bin/webpack-cli build --config ${rootDir}/config/app/webpack.dev.js --watch --env ${formatArgsToWebpackCmd(opts)}`
+    const fmtArgs = formatArgsToWebpackCmd(opts)
+    const cmdArgs = fmtArgs ? `--env ${fmtArgs}` : ''
+    const cmdDevBuild = `${rootDir}/node_modules/.bin/webpack-cli build --config ${rootDir}/config/app/webpack.dev.js --watch ${cmdArgs}`
     console.log(`[VueSandbox] Command: ${cmdDevBuild}`)
     const process = cp.exec(cmdDevBuild, {}, (error, stdout, stderr) => {
       if (error) {

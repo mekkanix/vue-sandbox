@@ -20,17 +20,20 @@ function formatArgsToNode(options) {
     .filter(opt => !!opt)
 }
 
+function formatEnvParams(params) {
+  let formattedParams = {}
+  for (const [key, name] of Object.entries(params)) {
+    if (key !== 'WEBPACK_WATCH') {
+      formattedParams[key] = name
+    }
+  }
+  return formattedParams
+}
+
 // Config
 
 module.exports = (env, opts) => {
-  console.log('-------------');
-  console.log('WP ENV', env);
-  console.log('-------------');
-  console.log('WP OPTS', opts);
-  console.log('-------------');
-
-  delete env.WEBPACK_WATCH
-
+  const fmtEnvArgs = formatEnvParams(env)
   return {
     mode: 'development',
     entry: './app/ui/main.js',
@@ -117,7 +120,7 @@ module.exports = (env, opts) => {
         env: {
           VS_ENV: 'development',
         },
-        nodeArgs: formatArgsToNode(env),
+        args: formatArgsToNode(fmtEnvArgs),
         verbose: true,
       }),
     ],
