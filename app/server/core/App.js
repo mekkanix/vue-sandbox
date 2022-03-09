@@ -13,7 +13,7 @@ module.exports = class App {
 
   start() {
     if (this.conf) {
-      this._initAssetsBuilder()
+      // this._initAssetsBuilder()
       this._initServer()
     }
   }

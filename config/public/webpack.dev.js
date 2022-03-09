@@ -15,7 +15,7 @@ module.exports = {
     library: 'VSPC__[name]', // -> VSPC = VueSandbox Public Component
     libraryTarget: 'umd',
     libraryExport: 'default',
-    path: `${process.cwd()}/public/_build/`,
+    path: `${process.cwd()}/public/user/_build/`,
     publicPath: '/',
     filename: '[name].dev.js',
   },

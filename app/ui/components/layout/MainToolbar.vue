@@ -7,6 +7,14 @@
       >
         Vue<strong>S</strong>andbox
       </b-navbar-brand>
+      <b-navbar-nav class="ms-auto">
+        <b-button
+          size="sm"
+          :to="{ name: 'import' }"
+        >
+          Import...
+        </b-button>
+      </b-navbar-nav>
       <!-- <b-navbar-nav class="ms-auto">
         <b-form-select
           v-model="selectedComponent"
