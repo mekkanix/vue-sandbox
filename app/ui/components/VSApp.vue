@@ -1,6 +1,6 @@
 <template>
   <div class="vs-app-root">
-    <MainToolbar :components="publicComponents" />
+    <VSMainToolbar :components="publicComponents" />
     <div class="vs-app-content">
       <router-view></router-view>
     </div>
@@ -9,12 +9,12 @@
 
 <script>
 import { mapActions, mapGetters, } from 'vuex'
-import MainToolbar from '@ui/components/layout/MainToolbar.vue'
+import VSMainToolbar from '@ui/components/layout/VSMainToolbar.vue'
 
 export default {
   name: 'VSApp',
   components: {
-    MainToolbar,
+    VSMainToolbar,
   },
 
   computed: {

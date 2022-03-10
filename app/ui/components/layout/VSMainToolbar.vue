@@ -29,7 +29,7 @@
 
 <script>
 export default {
-  name: 'MainToolbar',
+  name: 'VSMainToolbar',
 
   props: {
     components: {

@@ -14,13 +14,20 @@
       TODO:<br>
       - Multi-import panel (components, assets, keep folder structure if possible)<br>
       - Managed components' quick overview
+
+      <VSFileImporter />
     </div>
   </div>
 </template>
 
 <script>
+import VSFileImporter from '@ui/components/layout/VSFileImporter.vue'
+
 export default {
   name: 'OverviewView',
+  components: {
+    VSFileImporter,
+  },
 }
 </script>
 
