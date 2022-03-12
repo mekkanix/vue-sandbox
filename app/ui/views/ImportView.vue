@@ -11,11 +11,16 @@
       </b-button>
     </div>
     <div class="vs-content">
-      TODO:<br>
-      - Multi-import panel (components, assets, keep folder structure if possible)<br>
-      - Managed components' quick overview
-
+      <p class="vs-notice">
+        Select the components you want to test with VueSandbox to import them for processing.<br>
+        Note that folder structure must be preserved when importing files to ensure correct processing of your components and assets.
+      </p>
       <VSFileImporter />
+
+
+      <div style="margin-top: 100px">TODO:<br>
+      - Multi-import panel (components, assets, keep folder structure if possible)<br>
+      - Managed components' quick overview</div>
     </div>
   </div>
 </template>
@@ -33,9 +38,9 @@ export default {
 
 <style lang="sass" scoped>
 .vs-content-head
-  padding: 10px 20px
+  padding: 10px 10px
   border-bottom: 1px solid #bbb
 
-.vs-component-wrapper-root
-  height: calc(100vh - 112px)
+.vs-content
+  padding: 10px 10px
 </style>
