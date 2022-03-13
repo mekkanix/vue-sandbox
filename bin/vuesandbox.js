@@ -11,7 +11,7 @@ const program = new Command()
 const VS_ENV = process.env.VS_ENV
 const rootDir = process.cwd()
 console.log(`\r\n[VueSandbox - v${pkg.version}]`)
-console.log(`> Mode: ${VS_ENV}\r\n`)
+console.log(`> Mode: ${VS_ENV}`)
 
 /**
  * Helpers
@@ -58,16 +58,16 @@ program
   .option('-p, --assetsprefix [prefix]', '<assetsprefix test>', '')
   .description('Starts the VueSandbox server daemon.')
   .action((args) => {
-    console.log(`[VueSandbox] Starting server...`)
     const optAssetsPrefix = formatArgValue(args.assetsprefix, 'path') || null
     const opts = {
       assetsprefix: optAssetsPrefix,
     }
-
     const fmtArgs = formatArgsToWebpackCmd(opts)
     const cmdArgs = fmtArgs ? `--env ${fmtArgs}` : ''
     const cmdDevBuild = `${rootDir}/node_modules/.bin/webpack-cli build --config ${rootDir}/config/app/webpack.dev.js --watch ${cmdArgs}`
-    console.log(`[VueSandbox] Command: ${cmdDevBuild}`)
+    console.log(`> Command: ${cmdDevBuild}`)
+  
+    console.log(`\r\n[VueSandbox] Starting server...`)
     const process = cp.exec(cmdDevBuild, {}, (error, stdout, stderr) => {
       if (error) {
         console.error(`\r\n[VueSandbox] Child process exec. error:`)
