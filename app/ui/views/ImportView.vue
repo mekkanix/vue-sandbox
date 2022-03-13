@@ -11,10 +11,10 @@
       </b-button>
     </div>
     <div class="vs-content">
-      <p class="vs-notice">
+      <!-- <p class="vs-notice">
         Select the components you want to test with VueSandbox to import them for processing.<br>
         Note that folder structure must be preserved when importing files to ensure correct processing of your components and assets.
-      </p>
+      </p> -->
       <VSFileImporter />
 
 
