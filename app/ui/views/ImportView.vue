@@ -40,7 +40,4 @@ export default {
 .vs-content-head
   padding: 10px 10px
   border-bottom: 1px solid #bbb
-
-.vs-content
-  padding: 10px 10px
 </style>

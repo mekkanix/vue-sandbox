@@ -7,12 +7,20 @@
       >
         Vue<strong>S</strong>andbox
       </b-navbar-brand>
-      <b-navbar-nav class="ms-auto">
+      <!-- <b-navbar-nav class="ms-auto">
         <b-button
           size="sm"
           :to="{ name: 'import' }"
         >
           Import...
+        </b-button>
+      </b-navbar-nav> -->
+      <b-navbar-nav class="ms-auto">
+        <b-button
+          size="sm"
+          :to="{ name: 'settings' }"
+        >
+          <b-icon icon="gear" />
         </b-button>
       </b-navbar-nav>
       <!-- <b-navbar-nav class="ms-auto">
@@ -54,5 +62,13 @@ export default {
 </script>
 
 <style lang="sass" scoped>
-// .vs-main-toolbar
+.vs-main-toolbar
+</style>
+
+<style lang="sass">
+.btn
+  font-size: 0
+  
+  svg
+    font-size: 22px
 </style>

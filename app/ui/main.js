@@ -4,6 +4,7 @@
  * Released under the MIT License.
  */
 
+import 'babel-polyfill'
 import Vue from 'vue'
 import router from '@ui/plugins/router.js'
 import store from '@ui/plugins/vuex.js'

@@ -40,6 +40,8 @@ export default {
 @import 'bootstrap-vue/dist/bootstrap-vue.css'
 @import 'bootstrap-vue/dist/bootstrap-vue-icons.css'
 
+@import 'common/layout.sass'
+
 // BS Overriding
 .form-control:hover,
 .form-control:focus

@@ -1,12 +1,6 @@
 <template>
   <div class="vs-file-input">
-    <Vue2Dropzone
-      ref="userFiles"
-      id="dropzone"
-      :options="dropzoneOpts"
-      @vdropzone-files-added="onUserFilesDrop"
-    />
-    <!-- <div
+    <div
       class="vs-file-input__drop-container"
       :class="{ dragging: isDragging, over: isOver, }"
       @dragstart="onDragStart"
@@ -14,7 +8,6 @@
       @dragover.prevent="onDragOver"
       @dragleave="onDragLeave"
       @drop.prevent="onDrop"
-      @click="onDropAreaClick"
     >
       <div class="vs-file-input__drop-area">
         <div>Drop files here</div>
@@ -25,18 +18,13 @@
         ref="userFiles"
         @change="onChange"
       >
-    </div> -->
+    </div>
   </div>
 </template>
 
 <script>
-import Vue2Dropzone from 'vue2-dropzone'
-
 export default {
   name: 'VSFileInput',
-  components: {
-    Vue2Dropzone,
-  },
 
   props: {
     value: {
@@ -50,61 +38,87 @@ export default {
   },
 
   data: () => ({
-    dropzoneOpts: {
-      url: 'test',
-      autoProcessQueue: false,
-      thumbnailWidth: 100,
-      thumbnailHeight: 100,
-    },
-    files: [],
-    // isDragging: false,
-    // isOver: false,
+    files: {},
+    isDragging: false,
+    isOver: false,
   }),
 
   mounted() {
-    // this.initDocumentDragEvents()
+    this.initDocumentDragEvents()
   },
 
   methods: {
-    onUserFilesDrop(files) {
-      files.map(file => {
-        console.log(file, file.fullPath);
-      })
+    initDocumentDragEvents() {
+      document.addEventListener('dragstart', this.onDragStart)
+      document.addEventListener('dragend', this.onDragEnd)
     },
-    // initDocumentDragEvents() {
-    //   document.addEventListener('dragstart', this.onDragStart)
-    //   document.addEventListener('dragend', this.onDragEnd)
-    // },
-    // onDropAreaClick() {
-    //   this.$refs.userFiles.click()
-    // },
-    // onDragStart(e) {
-    //   this.isDragging = true
-    // },
-    // onDragEnd(e) {
-    //   this.isDragging = false
-    // },
-    // onDragOver(e) {
-    //   this.isOver = true
-    // },
-    // onDragLeave(e) {
-    //   this.isOver = false
-    // },
-    // onDrop(e) {
-    //   this.isDragging = false
-    //   this.isOver = false
-    //   this.$refs.userFiles.files = e.dataTransfer.files
-    //   this.onChange()
-    // },
-    // onChange(e) {
-    //   this.files = [...this.$refs.userFiles.files]
-    // },
+    onDropAreaClick() {
+      this.$refs.userFiles.click()
+    },
+    onDragStart(e) {
+      this.isDragging = true
+    },
+    onDragEnd(e) {
+      this.isDragging = false
+    },
+    onDragOver(e) {
+      this.isOver = true
+    },
+    onDragLeave(e) {
+      this.isOver = false
+    },
+    onDrop(e) {
+      this.isDragging = false
+      this.isOver = false
+      // this.$refs.userFiles.files = e.dataTransfer.files
+      // this.onChange(e)
+      this.handleFileSystemImport(e)
+    },
+    onChange(e) {
+      
+    },
+    handleFileSystemImport(e) {
+      async function* getFilesRecursively (entry) {
+        if (entry.kind === 'file') {
+          const file = await entry.getFile()
+          if (file !== null) {
+            file.relativePath = getRelativePath(entry)
+            yield file
+          }
+        } else if (entry.kind === 'directory') {
+          for await (const handle of entry.values()) {
+            yield* getFilesRecursively(handle)
+          }
+        }
+      }
+
+      // for await (const fileHandle of getFilesRecursively(directoryHandle)) {
+      //   console.log(fileHandle);
+      // }
+
+      for (const [_, item] of Object.entries(e.dataTransfer.items)) {
+        item.getAsFileSystemHandle()
+          .then(file => {
+            console.log(getFilesRecursively(file)._invoke())
+            // if (file.kind === 'file') {
+
+            // } else if (file.kind === 'directory') {
+
+            // }
+          })
+        // item.getAsString((data) => {
+        //   console.log(data);
+        // })
+        console.log('--------------------');
+      }
+      // this.files = [...this.$refs.userFiles.files]
+    },
   },
 }
 </script>
 
 <style lang="sass">
-@import 'vue2-dropzone/dist/vue2Dropzone.min.css'
+// @import 'vue2-dropzone/dist/vue2Dropzone.min.css'
 </style>
 <style lang="sass" scoped>
 .vs-file-input__drop-container

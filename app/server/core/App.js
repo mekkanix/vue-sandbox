@@ -46,7 +46,7 @@ module.exports = class App {
     })
 
     app.listen(this.conf.port, () => {
-      console.log(`[VueSandbox] Server: OK`)
+      console.log(`[VueSandbox] Server: OK, listening at http://localhost:${this.conf.port}/`)
     })
   }
 

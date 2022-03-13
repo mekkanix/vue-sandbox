@@ -16,7 +16,7 @@ const root = process.cwd()
 
 const conf = {
   env: ENV,
-  port: 9000,
+  port: 8000,
   rootDir: root,
   static: {
     scriptFilename: ENV === 'production' ? 'vue-sandbox.min.js' : 'vue-sandbox.dev.js',

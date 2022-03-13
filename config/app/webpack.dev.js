@@ -81,10 +81,10 @@ module.exports = (env, opts) => {
               options: {
                 sassOptions: {
                   indentedSyntax: true,
+                  indentWidth: 2,
                   includePaths: [
-                    path.join(rootDir, 'node_modules'),
-                    path.join(rootDir, 'app/assets/sass'),
-                  ]
+                    path.join(rootDir, '/app/ui/assets/sass'),
+                  ],
                 },
               },
             },

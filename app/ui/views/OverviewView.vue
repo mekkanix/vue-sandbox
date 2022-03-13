@@ -1,23 +1,25 @@
 <template>
   <div class="vs-view overview">
-    <div class="user-components">
-      <h3>Components</h3>
-      <b-list-group>
-        <b-list-group-item
-          v-for="(component, i) in formattedComponents"
-          :key="i"
-          :to="component.targetRoute"
-        >
-          <div class="component-infos">
-            <div class="component-filepath">
-              <span v-html="component.relPath" />
+    <div class="vs-content">
+      <div class="user-components">
+        <h3>Components</h3>
+        <b-list-group>
+          <b-list-group-item
+            v-for="(component, i) in formattedComponents"
+            :key="i"
+            :to="component.targetRoute"
+          >
+            <div class="component-infos">
+              <div class="component-filepath">
+                <span v-html="component.relPath" />
+              </div>
+              <div class="component-name">
+                <span class="component-int-name">({{ component.name }})</span>
+              </div>
             </div>
-            <div class="component-name">
-              <span class="component-int-name">({{ component.name }})</span>
-            </div>
-          </div>
-        </b-list-group-item>
-      </b-list-group>
+          </b-list-group-item>
+        </b-list-group>
+      </div>
     </div>
   </div>
 </template>
