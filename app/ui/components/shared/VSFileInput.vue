@@ -1,6 +1,12 @@
 <template>
   <div class="vs-file-input">
-    <div
+    <Vue2Dropzone
+      ref="userFiles"
+      id="dropzone"
+      :options="dropzoneOpts"
+      @vdropzone-files-added="onUserFilesDrop"
+    />
+    <!-- <div
       class="vs-file-input__drop-container"
       :class="{ dragging: isDragging, over: isOver, }"
       @dragstart="onDragStart"
@@ -8,6 +14,7 @@
       @dragover.prevent="onDragOver"
       @dragleave="onDragLeave"
       @drop.prevent="onDrop"
+      @click="onDropAreaClick"
     >
       <div class="vs-file-input__drop-area">
         <div>Drop files here</div>
@@ -18,13 +25,18 @@
         ref="userFiles"
         @change="onChange"
       >
-    </div>
+    </div> -->
   </div>
 </template>
 
 <script>
+import Vue2Dropzone from 'vue2-dropzone'
+
 export default {
   name: 'VSFileInput',
+  components: {
+    Vue2Dropzone,
+  },
 
   props: {
     value: {
@@ -38,46 +50,62 @@ export default {
   },
 
   data: () => ({
+    dropzoneOpts: {
+      url: 'test',
+      autoProcessQueue: false,
+      thumbnailWidth: 100,
+      thumbnailHeight: 100,
+    },
     files: [],
-    isDragging: false,
-    isOver: false,
+    // isDragging: false,
+    // isOver: false,
   }),
 
   mounted() {
-    this.initDocumentDragEvents()
+    // this.initDocumentDragEvents()
   },
 
   methods: {
-    initDocumentDragEvents() {
-      document.addEventListener('dragstart', this.onDragStart)
-      document.addEventListener('dragend', this.onDragEnd)
+    onUserFilesDrop(files) {
+      files.map(file => {
+        console.log(file, file.fullPath);
+      })
     },
-    onDragStart(e) {
-      this.isDragging = true
-    },
-    onDragEnd(e) {
-      this.isDragging = false
-    },
-    onDragOver(e) {
-      this.isOver = true
-    },
-    onDragLeave(e) {
-      this.isOver = false
-    },
-    onDrop(e) {
-      this.isDragging = false
-      this.isOver = false
-      console.log(e.dataTransfer.files);
-      this.$refs.userFiles.files = e.dataTransfer.files
-      this.onChange()
-    },
-    onChange(e) {
-      this.files = [...this.$refs.userFiles.files]
-    },
+    // initDocumentDragEvents() {
+    //   document.addEventListener('dragstart', this.onDragStart)
+    //   document.addEventListener('dragend', this.onDragEnd)
+    // },
+    // onDropAreaClick() {
+    //   this.$refs.userFiles.click()
+    // },
+    // onDragStart(e) {
+    //   this.isDragging = true
+    // },
+    // onDragEnd(e) {
+    //   this.isDragging = false
+    // },
+    // onDragOver(e) {
+    //   this.isOver = true
+    // },
+    // onDragLeave(e) {
+    //   this.isOver = false
+    // },
+    // onDrop(e) {
+    //   this.isDragging = false
+    //   this.isOver = false
+    //   this.$refs.userFiles.files = e.dataTransfer.files
+    //   this.onChange()
+    // },
+    // onChange(e) {
+    //   this.files = [...this.$refs.userFiles.files]
+    // },
   },
 }
 </script>
 
+<style lang="sass">
+@import 'vue2-dropzone/dist/vue2Dropzone.min.css'
+</style>
 <style lang="sass" scoped>
 .vs-file-input__drop-container
   height: 300px
@@ -100,6 +128,7 @@ export default {
     border: 5px dashed #aaa
     align-items: center
     justify-content: center
+    cursor: pointer
 
     > div
       display: block
