@@ -55,4 +55,12 @@ export default {
   padding: 0.10rem 0.25rem
   font-size: 0.750rem
   border-radius: 0.18rem
+
+// VS-wrapper overriding "hack"
+// (TODO: remove when fixed in VS-wrapper)
+.vs-input
+  background: initial
+  border: initial
+  font-size: initial
+  outline: initial
 </style>

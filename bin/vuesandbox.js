@@ -66,7 +66,7 @@ program
     const cmdArgs = fmtArgs ? `--env ${fmtArgs}` : ''
     const cmdDevBuild = `${rootDir}/node_modules/.bin/webpack-cli build --config ${rootDir}/config/app/webpack.dev.js --watch ${cmdArgs}`
     console.log(`> Command: ${cmdDevBuild}`)
-  
+
     console.log(`\r\n[VueSandbox] Starting server...`)
     const process = cp.exec(cmdDevBuild, {}, (error, stdout, stderr) => {
       if (error) {

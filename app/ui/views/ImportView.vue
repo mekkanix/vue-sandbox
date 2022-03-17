@@ -15,7 +15,6 @@
         Select the components you want to test with VueSandbox to import them for processing.<br>
         Note that folder structure must be preserved when importing files to ensure correct processing of your components and assets.
       </p> -->
-      <VSFileImporter />
 
 
       <div style="margin-top: 100px">TODO:<br>
@@ -26,13 +25,8 @@
 </template>
 
 <script>
-import VSFileImporter from '@ui/components/layout/VSFileImporter.vue'
-
 export default {
   name: 'OverviewView',
-  components: {
-    VSFileImporter,
-  },
 }
 </script>
 

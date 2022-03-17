@@ -31,6 +31,7 @@ export default {
   components: {
     VSComponentWrapper,
   },
+
   data: () => ({
     vue: Vue,
   }),

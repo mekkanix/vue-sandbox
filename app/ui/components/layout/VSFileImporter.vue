@@ -8,7 +8,7 @@
 </template>
 
 <script>
-import VSFileInput from '@ui/components/shared/VSFileInput.vue'
+import VSFileInput from '@ui/components/shared/forms/VSFileInput.vue'
 
 export default {
   name: 'VSFileImporter',
