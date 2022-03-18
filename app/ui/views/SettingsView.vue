@@ -3,11 +3,22 @@
     <div class="vs-content">
 
       <div class="vs-content__section">
+        <h2 class="vs-content__section__title">
+          General configuration
+        </h2>
+        <VSInput
+          v-model="componentsDir"
+          label="Components directory"
+          size="small"
+          inline
+          class="vs-input-wrapper"
+        />
         <VSInput
           v-model="assetsDir"
           label="Assets directory"
           size="small"
           inline
+          class="vs-input-wrapper"
         />
       </div>
 
@@ -25,6 +36,7 @@ export default {
   },
 
   data: () => ({
+    componentsDir: null,
     assetsDir: null,
   }),
 }
@@ -34,4 +46,7 @@ export default {
 .vs-content
   max-width: 950px
   margin: 0 auto
+
+  .vs-input-wrapper
+    margin-bottom: 10px
 </style>

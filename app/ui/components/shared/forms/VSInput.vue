@@ -10,13 +10,13 @@
   >
     <label
       v-if="label"
-      :for="id"
+      :for="computedId"
     >{{ label }}</label>
     <div class="vs-input__container">
       <BFormInput
         v-model="value"
         :type="type"
-        :id="id"
+        :id="computedId"
         :size="formattedSize"
       />
     </div>
@@ -47,7 +47,7 @@ export default {
     },
     id: {
       type: String,
-      default: `vs-input-${random(16)}`,
+      default: null,
     },
     label: {
       type: String,
@@ -68,6 +68,10 @@ export default {
     },
   },
 
+  data: () => ({
+    computedId: null,
+  }),
+
   computed: {
     formattedSize() {
       const sizesMap = {
@@ -77,6 +81,16 @@ export default {
         large: 'lg',
       }
       return sizesMap[this.size]
+    },
+  },
+
+  created() {
+    this.initComputedId()
+  },
+
+  methods: {
+    initComputedId() {
+      this.computedId = this.id || `vs-input-${random(16)}`
     },
   },
 }
